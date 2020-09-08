@@ -1,0 +1,78 @@
+package com.novoseltsev.dictionaryapi.domain.entity;
+
+import com.novoseltsev.dictionaryapi.domain.role.UserRole;
+import com.novoseltsev.dictionaryapi.domain.status.UserStatus;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+
+import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.FIRST_NAME_ERROR;
+import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.LAST_NAME_ERROR;
+import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.LOGIN_ERROR;
+import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.LOGIN_PATTERN;
+import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.NAME_PATTERN;
+import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.PASSWORD_ERROR;
+
+@Data
+@EqualsAndHashCode(callSuper = true, of = "login")
+@NoArgsConstructor
+@Entity
+@Table(name = "usr", schema = "dictionary_schema")
+public class User extends AbstractEntity {
+
+    @Column(name = "first_name")
+    @NotBlank
+    @Pattern(regexp = NAME_PATTERN, message = FIRST_NAME_ERROR)
+    private String firstName;
+
+    @Column(name = "last_name")
+    @NotBlank
+    @Pattern(regexp = NAME_PATTERN, message = LAST_NAME_ERROR)
+    private String lastName;
+
+    @Column(unique = true, nullable = false)
+    @NotBlank
+    @Pattern(regexp = LOGIN_PATTERN, message = LOGIN_ERROR)
+    private String login;
+
+    @Column(nullable = false)
+    @NotBlank(message = PASSWORD_ERROR)
+    private String password;
+
+    @Column(nullable = false, length = 25)
+    @Enumerated(value = EnumType.STRING)
+    private UserRole role;
+
+    @Column(nullable = false, length = 25)
+    @Enumerated(value = EnumType.STRING)
+    private UserStatus status;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<WordSet> wordSets = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<WordSetFolder> wordSetFolders = new ArrayList<>();
+
+    public User(
+            String firstName, String lastName, String login, String password
+    ) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.login = login;
+        this.password = password;
+    }
+}
