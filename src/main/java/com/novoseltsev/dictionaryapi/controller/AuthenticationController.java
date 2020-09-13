@@ -1,8 +1,12 @@
 package com.novoseltsev.dictionaryapi.controller;
 
 import com.novoseltsev.dictionaryapi.domain.dto.AuthDto;
+import com.novoseltsev.dictionaryapi.service.AuthenticationService;
+import java.util.Map;
 import javax.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,9 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("auth")
 public class AuthenticationController {
 
-    @PostMapping
-    public void authenticate(@Valid AuthDto authDto) {
+    private final AuthenticationService authenticationService;
 
+    @Autowired
+    public AuthenticationController(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
     }
 
+    @PostMapping
+    public Map<Object, Object> authenticate(@Valid @RequestBody AuthDto authDto) {
+        return authenticationService.authenticate(authDto.getLogin(),
+                authDto.getPassword());
+    }
 }

@@ -4,7 +4,6 @@ import com.novoseltsev.dictionaryapi.security.jwt.JwtConfigurer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -17,15 +16,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String[] USER_ENDPOINTS = new String[]{"/users"};
     private static final String[] ADMIN_ENDPOINTS = new String[]{};
     private static final String[] FREE_ENDPOINTS = new String[]{
-            "/users/registration", "auth"
+            "/users/registration", "/auth"
     };
 
-    private final JwtConfigurer jwtConfigurer;
-
     @Autowired
-    public SecurityConfig(JwtConfigurer jwtConfigurer) {
-        this.jwtConfigurer = jwtConfigurer;
-    }
+    private JwtConfigurer jwtConfigurer;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -49,10 +44,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager() throws Exception{
-        return super.authenticationManager();
     }
 }

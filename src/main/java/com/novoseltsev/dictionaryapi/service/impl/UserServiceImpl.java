@@ -5,7 +5,8 @@ import com.novoseltsev.dictionaryapi.domain.entity.User;
 import com.novoseltsev.dictionaryapi.domain.status.UserStatus;
 import com.novoseltsev.dictionaryapi.exception.InvalidOldPasswordException;
 import com.novoseltsev.dictionaryapi.exception.LoginIsAlreadyUsedException;
-import com.novoseltsev.dictionaryapi.exception.ObjectNotFoundException;
+import com.novoseltsev.dictionaryapi.exception.util.ExceptionUtils;
+import com.novoseltsev.dictionaryapi.exception.util.MessageCause;
 import com.novoseltsev.dictionaryapi.repository.UserRepository;
 import com.novoseltsev.dictionaryapi.service.UserService;
 import java.util.List;
@@ -80,25 +81,25 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public User findById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(ObjectNotFoundException::new);
+                .orElseThrow(ExceptionUtils.OBJECT_NOT_FOUND);
     }
 
     @Override
     @Transactional(readOnly = true)
     public User findByLogin(String login) {
         return userRepository.findByLogin(login)
-                .orElseThrow(ObjectNotFoundException::new);
+                .orElseThrow(ExceptionUtils.OBJECT_NOT_FOUND);
     }
 
     private void checkLoginUniqueness(User user) {
         if (userRepository.findByLogin(user.getLogin()).isPresent()) {
-            throw new LoginIsAlreadyUsedException();
+            throw new LoginIsAlreadyUsedException(MessageCause.LOGIN_IS_ALREADY_USED);
         }
     }
 
     private void checkIfValidOldPassword(User user, String oldPassword) {
         if (!passwordEncoder.matches(oldPassword, user.getFirstName())) {
-            throw new InvalidOldPasswordException();
+            throw new InvalidOldPasswordException(MessageCause.INVALID_OLD_PASSWORD);
         }
     }
 }

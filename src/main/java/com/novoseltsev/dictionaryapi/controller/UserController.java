@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,14 +42,14 @@ public class UserController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<UserDto> create(@Valid SignUpUserDto signUpUserDto) {
+    public ResponseEntity<UserDto> create(@Valid @RequestBody SignUpUserDto signUpUserDto) {
         User user = signUpUserDto.toUser();
         return new ResponseEntity<>(UserDto.fromUser(userService.create(user)),
                 HttpStatus.CREATED);
     }
 
     @PutMapping
-    public UserDto update(@Valid UserDto userDto) {
+    public UserDto update(@Valid @RequestBody UserDto userDto) {
         return UserDto.fromUser(userService.update(userDto.toUser()));
     }
 

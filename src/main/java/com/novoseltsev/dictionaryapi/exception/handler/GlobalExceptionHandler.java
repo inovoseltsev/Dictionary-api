@@ -1,17 +1,22 @@
 package com.novoseltsev.dictionaryapi.exception.handler;
 
-import java.util.HashMap;
+import com.novoseltsev.dictionaryapi.exception.ObjectNotFoundException;
 import java.util.Map;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-@ControllerAdvice
+
+import static com.novoseltsev.dictionaryapi.exception.util.ExceptionUtils.getErrorResponse;
+import static com.novoseltsev.dictionaryapi.exception.util.ExceptionUtils.handleValidationErrors;
+
+@RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
@@ -20,18 +25,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatus status, WebRequest request
     ) {
         return new ResponseEntity<>(handleValidationErrors(ex),
-                HttpStatus.CONFLICT);
+                HttpStatus.BAD_REQUEST);
     }
 
-    private Map<String, String> handleValidationErrors(
-            MethodArgumentNotValidException e
+    @ExceptionHandler(ObjectNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<Object, Object> handleObjectNotFoundException(
+            ObjectNotFoundException e
     ) {
-        Map<String, String> errors = new HashMap<>();
-        e.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return errors;
+        return getErrorResponse(e);
     }
 }

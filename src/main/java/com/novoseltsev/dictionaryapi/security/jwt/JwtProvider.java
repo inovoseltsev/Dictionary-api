@@ -2,6 +2,7 @@ package com.novoseltsev.dictionaryapi.security.jwt;
 
 import com.novoseltsev.dictionaryapi.domain.role.UserRole;
 import com.novoseltsev.dictionaryapi.exception.JwtAuthenticationException;
+import com.novoseltsev.dictionaryapi.exception.util.MessageCause;
 import com.novoseltsev.dictionaryapi.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -71,16 +72,18 @@ public class JwtProvider {
     public String resolveToken(HttpServletRequest request) {
         String bearer = request.getHeader(AUTHORIZATION_HEADER);
         if (bearer == null || !bearer.startsWith(BEARER)) {
-            throw new JwtAuthenticationException();
+            return "";
         }
-        return bearer.substring(7);
+        String token = bearer.substring(7);
+        checkTokenValidity(token);
+        return token;
     }
 
-    public void checkTokenValidity(String token) {
+    private void checkTokenValidity(String token) {
         try {
             Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
         } catch (Exception e) {
-            throw new JwtAuthenticationException();
+            throw new JwtAuthenticationException(MessageCause.BAD_TOKEN);
         }
     }
 }
