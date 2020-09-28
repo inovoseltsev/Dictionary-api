@@ -63,16 +63,24 @@ public class User extends AbstractEntity {
             orphanRemoval = true)
     private List<WordSet> wordSets = new ArrayList<>();
 
+    public void addWordSet(WordSet wordSet) {
+        wordSet.setUser(this);
+        this.wordSets.add(wordSet);
+    }
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
             orphanRemoval = true)
     private List<WordSetFolder> wordSetFolders = new ArrayList<>();
 
-    public User(
-            String firstName, String lastName, String login, String password
-    ) {
+    public void addWordSetFolder(WordSetFolder folder) {
+        folder.setUser(this);
+        this.wordSetFolders.add(folder);
+    }
+
+    public User(Long id, String firstName, String lastName, String login) {
+        super(id);
         this.firstName = firstName;
         this.lastName = lastName;
         this.login = login;
-        this.password = password;
     }
 }

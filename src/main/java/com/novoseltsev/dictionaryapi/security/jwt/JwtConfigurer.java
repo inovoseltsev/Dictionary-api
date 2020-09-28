@@ -1,5 +1,6 @@
 package com.novoseltsev.dictionaryapi.security.jwt;
 
+import com.novoseltsev.dictionaryapi.filter.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

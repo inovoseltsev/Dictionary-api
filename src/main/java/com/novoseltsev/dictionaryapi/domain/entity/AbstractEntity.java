@@ -10,11 +10,13 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Data
 @EqualsAndHashCode(of = "id")
+@NoArgsConstructor
 @MappedSuperclass
 public abstract class AbstractEntity {
 
@@ -25,15 +27,14 @@ public abstract class AbstractEntity {
     @CreatedDate
     @Column(name = "created_at")
     @Temporal(value = TemporalType.TIMESTAMP)
-    private Date creationDate;
+    private Date creationDate = new Date();
 
     @LastModifiedDate
     @Temporal(value = TemporalType.TIMESTAMP)
     @Column(name = "updated_at")
-    private Date updateDate;
+    private Date updateDate = new Date();
 
-    public AbstractEntity() {
-        creationDate = new Date();
-        updateDate = new Date();
+    public AbstractEntity(Long id) {
+        this.id = id;
     }
 }

@@ -45,4 +45,10 @@ public class WordSet extends AbstractEntity {
     @JoinColumn(name = "word_set_folder_id")
     @ToString.Exclude
     private WordSetFolder wordSetFolder;
+
+    public WordSet(Long id, @NotBlank String name, @NotNull String description) {
+        super(id);
+        this.name = name;
+        this.description = description;
+    }
 }

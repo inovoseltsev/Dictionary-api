@@ -32,25 +32,25 @@ public class UserController {
 
     @GetMapping("/{id}")
     public UserDto findById(@PathVariable Long id) {
-        return UserDto.fromUser(userService.findById(id));
+        return UserDto.from(userService.findById(id));
     }
 
     @GetMapping
     public List<UserDto> findAll() {
-        return userService.findAll().stream().map(UserDto::fromUser)
+        return userService.findAll().stream().map(UserDto::from)
                 .collect(Collectors.toList());
     }
 
     @PostMapping("/registration")
     public ResponseEntity<UserDto> create(@Valid @RequestBody SignUpUserDto signUpUserDto) {
         User user = signUpUserDto.toUser();
-        return new ResponseEntity<>(UserDto.fromUser(userService.create(user)),
+        return new ResponseEntity<>(UserDto.from(userService.create(user)),
                 HttpStatus.CREATED);
     }
 
     @PutMapping
     public UserDto update(@Valid @RequestBody UserDto userDto) {
-        return UserDto.fromUser(userService.update(userDto.toUser()));
+        return UserDto.from(userService.update(userDto.toUser()));
     }
 
     @DeleteMapping("/{id}")

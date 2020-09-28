@@ -1,8 +1,9 @@
-package com.novoseltsev.dictionaryapi.security.jwt;
+package com.novoseltsev.dictionaryapi.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.novoseltsev.dictionaryapi.exception.JwtAuthenticationException;
 import com.novoseltsev.dictionaryapi.exception.util.ExceptionUtils;
+import com.novoseltsev.dictionaryapi.security.jwt.JwtProvider;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -12,6 +13,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -20,8 +22,12 @@ import org.springframework.util.StringUtils;
 @Component
 public class JwtFilter implements Filter {
 
+    private final JwtProvider jwtProvider;
+
     @Autowired
-    private JwtProvider jwtProvider;
+    public JwtFilter(@Lazy JwtProvider jwtProvider) {
+        this.jwtProvider = jwtProvider;
+    }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response,
@@ -36,11 +42,11 @@ public class JwtFilter implements Filter {
             }
             chain.doFilter(request, response);
         } catch (JwtAuthenticationException e) {
-            handleErrorResponse(response, e);
+            handleBadTokenResponse(response, e);
         }
     }
 
-    private void handleErrorResponse(
+    private void handleBadTokenResponse(
             ServletResponse response, JwtAuthenticationException e
     ) throws IOException {
         String errorResponse = new ObjectMapper()

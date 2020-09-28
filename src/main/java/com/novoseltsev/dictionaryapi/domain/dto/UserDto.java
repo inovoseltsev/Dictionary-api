@@ -42,20 +42,15 @@ public class UserDto {
     private String login;
 
     public User toUser() {
-        User user = new User();
-        user.setId(id);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setLogin(login);
-        return user;
+        return new User(id, firstName, lastName, login);
     }
 
-    public static UserDto fromUser(User user) {
+    public static UserDto from(User user) {
         return new UserDto(
                 user.getId(),
                 user.getFirstName(),
                 user.getLastName(),
                 user.getLogin()
-                );
+        );
     }
 }
