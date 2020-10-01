@@ -20,19 +20,24 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Entity
-@Table(name = "word_set_folder", schema = "dictionary_schema")
-public class WordSetFolder extends AbstractEntity {
+@Table(name = "term_group_folder", schema = "dictionary_schema")
+public class TermGroupFolder extends AbstractEntity {
 
     @Column(nullable = false, length = 50)
     @NotBlank
     private String name;
 
-    @OneToMany(mappedBy = "wordSetFolder", cascade = CascadeType.ALL,
+    @OneToMany(mappedBy = "termGroupFolder", cascade = CascadeType.ALL,
             fetch = FetchType.EAGER)
-    private List<WordSet> wordSets = new ArrayList<>();
+    private List<TermGroup> termGroups = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     @ToString.Exclude
     private User user;
+
+    public void addTermGroup(TermGroup termGroup) {
+        termGroup.setTermGroupFolder(this);
+        this.termGroups.add(termGroup);
+    }
 }

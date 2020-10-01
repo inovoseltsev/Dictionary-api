@@ -21,34 +21,40 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Entity
-@Table(name = "word_set", schema = "dictionary_schema")
-public class WordSet extends AbstractEntity {
+@Table(name = "term_group", schema = "dictionary_schema")
+public class TermGroup extends AbstractEntity {
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 80)
     @NotBlank
     private String name;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 120)
     @NotNull
     private String description;
+
+    @OneToMany(mappedBy = "termGroup", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<Term> terms = new ArrayList<>();
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            fetch = FetchType.LAZY)
+    @JoinColumn(name = "term_group_folder_id")
+    @ToString.Exclude
+    private TermGroupFolder termGroupFolder;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(nullable = false)
     @ToString.Exclude
     private User user;
 
-    @OneToMany(mappedBy = "wordSet", cascade = CascadeType.ALL,
-            orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<Word> words = new ArrayList<>();
-
-    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-    @JoinColumn(name = "word_set_folder_id")
-    @ToString.Exclude
-    private WordSetFolder wordSetFolder;
-
-    public WordSet(Long id, @NotBlank String name, @NotNull String description) {
+    public TermGroup(Long id, String name, String description) {
         super(id);
         this.name = name;
         this.description = description;
+    }
+
+    public void addTerm(Term term) {
+        term.setTermGroup(this);
+        this.terms.add(term);
     }
 }

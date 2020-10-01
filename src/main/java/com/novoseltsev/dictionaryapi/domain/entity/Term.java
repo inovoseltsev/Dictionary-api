@@ -18,18 +18,18 @@ import lombok.ToString;
 @NoArgsConstructor
 @Entity
 @Table(schema = "dictionary_schema")
-public class Word extends AbstractEntity {
+public class Term extends AbstractEntity {
 
     @Column(nullable = false, length = 60)
     @NotBlank
     private String name;
 
-    @Column(nullable = false, length = 60)
+    @Column(nullable = false, length = 100)
     @NotBlank
-    private String translation;
+    private String definition;
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-    @JoinColumn(name = "word_set_id", nullable = false)
+    @JoinColumn(name = "term_group_id", nullable = false)
     @ToString.Exclude
-    private WordSet wordSet;
+    private TermGroup termGroup;
 }

@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -60,27 +61,26 @@ public class User extends AbstractEntity {
     private UserStatus status;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
-            orphanRemoval = true)
-    private List<WordSet> wordSets = new ArrayList<>();
-
-    public void addWordSet(WordSet wordSet) {
-        wordSet.setUser(this);
-        this.wordSets.add(wordSet);
-    }
+            orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<TermGroup> termGroups = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
-            orphanRemoval = true)
-    private List<WordSetFolder> wordSetFolders = new ArrayList<>();
+            orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<TermGroupFolder> termGroupFolders = new ArrayList<>();
 
-    public void addWordSetFolder(WordSetFolder folder) {
-        folder.setUser(this);
-        this.wordSetFolders.add(folder);
-    }
-
-    public User(Long id, String firstName, String lastName, String login) {
+    public User(Long id, String firstName, String lastName) {
         super(id);
         this.firstName = firstName;
         this.lastName = lastName;
-        this.login = login;
+    }
+
+    public void addTermGroup(TermGroup termGroup) {
+        termGroup.setUser(this);
+        this.termGroups.add(termGroup);
+    }
+
+    public void addTermGroupFolders(TermGroupFolder folder) {
+        folder.setUser(this);
+        this.termGroupFolders.add(folder);
     }
 }

@@ -1,7 +1,7 @@
 package com.novoseltsev.dictionaryapi.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.novoseltsev.dictionaryapi.domain.entity.WordSet;
+import com.novoseltsev.dictionaryapi.domain.entity.TermGroup;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class WordSetDto {
+public class TermGroupDto {
 
     @Positive
     private Long id;
@@ -27,15 +27,15 @@ public class WordSetDto {
     @Size(max = 50)
     private String description;
 
-    public WordSet toWordSet() {
-        return new WordSet(id, name, description);
+    public TermGroup toWordSet() {
+        return new TermGroup(id, name, description);
     }
 
-    public static WordSetDto from(WordSet wordSet) {
-        return new WordSetDto(
-                wordSet.getId(),
-                wordSet.getName(),
-                wordSet.getDescription()
+    public static TermGroupDto from(TermGroup termGroup) {
+        return new TermGroupDto(
+                termGroup.getId(),
+                termGroup.getName(),
+                termGroup.getDescription()
         );
     }
 }

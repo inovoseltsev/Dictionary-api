@@ -14,8 +14,6 @@ import lombok.NoArgsConstructor;
 
 import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.FIRST_NAME_ERROR;
 import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.LAST_NAME_ERROR;
-import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.LOGIN_ERROR;
-import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.LOGIN_PATTERN;
 import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.NAME_PATTERN;
 
 @Data
@@ -37,20 +35,15 @@ public class UserDto {
     @Pattern(regexp = NAME_PATTERN, message = LAST_NAME_ERROR)
     private String lastName;
 
-    @NotBlank(message = LOGIN_ERROR)
-    @Pattern(regexp = LOGIN_PATTERN, message = LOGIN_ERROR)
-    private String login;
-
     public User toUser() {
-        return new User(id, firstName, lastName, login);
+        return new User(id, firstName, lastName);
     }
 
     public static UserDto from(User user) {
         return new UserDto(
                 user.getId(),
                 user.getFirstName(),
-                user.getLastName(),
-                user.getLogin()
+                user.getLastName()
         );
     }
 }
