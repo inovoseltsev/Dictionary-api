@@ -29,9 +29,21 @@ public class TermGroupController {
         this.termGroupService = termGroupService;
     }
 
+    @GetMapping("/{id}")
+    public TermGroupDto findById(@PathVariable Long id) {
+        return TermGroupDto.from(termGroupService.findById(id));
+    }
+
     @GetMapping("/users/{userId}")
     public List<TermGroupDto> findAllByUserId(@PathVariable Long userId) {
         return termGroupService.findAllByUserId(userId).stream()
+                .map(TermGroupDto::from).collect(Collectors.toList());
+    }
+
+    @GetMapping("/term-group-folders/{folderId}")
+    public List<TermGroupDto> findAllByTermGroupFolderId(
+            @PathVariable Long folderId) {
+        return termGroupService.findAllByTermGroupFolderId(folderId).stream()
                 .map(TermGroupDto::from).collect(Collectors.toList());
     }
 
@@ -41,14 +53,25 @@ public class TermGroupController {
             @PathVariable Long userId
     ) {
         TermGroup createdTermGroup =
-                termGroupService.createForUser(termGroupDto.toWordSet(), userId);
+                termGroupService.createForUser(termGroupDto.toTermGroup(), userId);
         return new ResponseEntity<>(TermGroupDto.from(createdTermGroup),
+                HttpStatus.CREATED);
+    }
+
+    @PostMapping("/term-group-folders/{folderId}")
+    public ResponseEntity<TermGroupDto> createForTermGroupFolder(
+            @Valid @RequestBody TermGroupDto termGroupDto,
+            @PathVariable Long folderId
+    ) {
+        TermGroup termGroup = termGroupService
+                .createForTermGroupFolder(termGroupDto.toTermGroup(), folderId);
+        return new ResponseEntity<>(TermGroupDto.from(termGroup),
                 HttpStatus.CREATED);
     }
 
     @PutMapping
     public TermGroupDto update(@Valid @RequestBody TermGroupDto termGroupDto) {
-        TermGroup updatedTermGroup = termGroupService.update(termGroupDto.toWordSet());
+        TermGroup updatedTermGroup = termGroupService.update(termGroupDto.toTermGroup());
         return TermGroupDto.from(updatedTermGroup);
     }
 

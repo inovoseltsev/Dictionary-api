@@ -11,6 +11,9 @@ public class ValidationUtil {
     public static final String PASSWORD_PATTERN =
             "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{4,16}$";
 
+    public static final String DESCRIPTION_PATTERN =
+            "^[A-Za-zА-Яа-я]{0,}$";
+
     private static final String BASE_MESSAGE_PART = " is not correct!";
 
     public static final String FIRST_NAME_ERROR =
@@ -27,4 +30,7 @@ public class ValidationUtil {
 
     public static final String USER_ROLE_ERROR =
             "User role" + BASE_MESSAGE_PART;
+
+    public static final String DESCRIPTION_ERROR =
+            "Description " + BASE_MESSAGE_PART;
 }

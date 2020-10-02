@@ -79,7 +79,7 @@ public class User extends AbstractEntity {
         this.termGroups.add(termGroup);
     }
 
-    public void addTermGroupFolders(TermGroupFolder folder) {
+    public void addTermGroupFolder(TermGroupFolder folder) {
         folder.setUser(this);
         this.termGroupFolders.add(folder);
     }

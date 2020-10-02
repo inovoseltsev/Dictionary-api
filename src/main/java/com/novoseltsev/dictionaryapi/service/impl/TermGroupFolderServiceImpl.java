@@ -1,11 +1,14 @@
 package com.novoseltsev.dictionaryapi.service.impl;
 
 import com.novoseltsev.dictionaryapi.domain.entity.TermGroupFolder;
+import com.novoseltsev.dictionaryapi.domain.entity.User;
+import com.novoseltsev.dictionaryapi.exception.util.ExceptionUtils;
 import com.novoseltsev.dictionaryapi.repository.TermGroupFolderRepository;
 import com.novoseltsev.dictionaryapi.service.TermGroupFolderService;
 import com.novoseltsev.dictionaryapi.service.UserService;
 import java.util.List;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class TermGroupFolderServiceImpl implements TermGroupFolderService {
@@ -22,27 +25,38 @@ public class TermGroupFolderServiceImpl implements TermGroupFolderService {
     }
 
     @Override
+    @Transactional
     public TermGroupFolder createForUser(TermGroupFolder folder, Long userId) {
-        return null;
+        User user = userService.findById(userId);
+        user.addTermGroupFolder(folder);
+        return termGroupFolderRepository.save(folder);
     }
 
     @Override
+    @Transactional
     public TermGroupFolder update(TermGroupFolder folder) {
-        return null;
+        TermGroupFolder savedFolder = findById(folder.getId());
+        savedFolder.setName(folder.getName());
+        savedFolder.setDescription(folder.getDescription());
+        return termGroupFolderRepository.save(savedFolder);
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
-
+        termGroupFolderRepository.deleteById(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TermGroupFolder findById(Long id) {
-        return null;
+        return termGroupFolderRepository.findById(id)
+                .orElseThrow(ExceptionUtils.OBJECT_NOT_FOUND);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<TermGroupFolder> findAllByUserId(Long userId) {
-        return null;
+        return termGroupFolderRepository.findAllByUserIdOrderById(userId);
     }
 }

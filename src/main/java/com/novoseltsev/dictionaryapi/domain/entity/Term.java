@@ -20,11 +20,11 @@ import lombok.ToString;
 @Table(schema = "dictionary_schema")
 public class Term extends AbstractEntity {
 
-    @Column(nullable = false, length = 60)
+    @Column(nullable = false, length = 120)
     @NotBlank
     private String name;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
     @NotBlank
     private String definition;
 
@@ -32,4 +32,10 @@ public class Term extends AbstractEntity {
     @JoinColumn(name = "term_group_id", nullable = false)
     @ToString.Exclude
     private TermGroup termGroup;
+
+    public Term(Long id, String name, String definition) {
+        super(id);
+        this.name = name;
+        this.definition = definition;
+    }
 }

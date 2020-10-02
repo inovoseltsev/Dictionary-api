@@ -11,11 +11,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
+
+import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.DESCRIPTION_ERROR;
+import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.DESCRIPTION_PATTERN;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -24,12 +28,11 @@ import lombok.ToString;
 @Table(name = "term_group", schema = "dictionary_schema")
 public class TermGroup extends AbstractEntity {
 
-    @Column(nullable = false, length = 80)
+    @Column(nullable = false)
     @NotBlank
     private String name;
 
-    @Column(nullable = false, length = 120)
-    @NotNull
+    @Pattern(regexp = DESCRIPTION_PATTERN, message = DESCRIPTION_ERROR)
     private String description;
 
     @OneToMany(mappedBy = "termGroup", cascade = CascadeType.ALL,
