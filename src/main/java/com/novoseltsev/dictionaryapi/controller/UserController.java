@@ -43,14 +43,15 @@ public class UserController {
 
     @PostMapping("/registration")
     public ResponseEntity<UserDto> create(@Valid @RequestBody SignUpUserDto signUpUserDto) {
-        User user = signUpUserDto.toUser();
-        return new ResponseEntity<>(UserDto.from(userService.create(user)),
+        User createdUser = userService.create(signUpUserDto.toUser());
+        return new ResponseEntity<>(UserDto.from(createdUser),
                 HttpStatus.CREATED);
     }
 
     @PutMapping
     public UserDto update(@Valid @RequestBody UserDto userDto) {
-        return UserDto.from(userService.update(userDto.toUser()));
+        User updatedUser = userService.update(userDto.toUser());
+        return UserDto.from(updatedUser);
     }
 
     @DeleteMapping("/{id}")

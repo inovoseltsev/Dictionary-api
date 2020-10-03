@@ -44,6 +44,12 @@ public class TermGroupFolder extends AbstractEntity {
     @ToString.Exclude
     private User user;
 
+    public TermGroupFolder(Long id, String name, String description) {
+        super(id);
+        this.name = name;
+        this.description = description;
+    }
+
     public void addTermGroup(TermGroup termGroup) {
         termGroup.setTermGroupFolder(this);
         this.termGroups.add(termGroup);

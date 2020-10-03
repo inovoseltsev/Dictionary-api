@@ -1,7 +1,7 @@
 package com.novoseltsev.dictionaryapi.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.novoseltsev.dictionaryapi.domain.entity.TermGroup;
+import com.novoseltsev.dictionaryapi.domain.entity.TermGroupFolder;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
@@ -14,10 +14,10 @@ import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.DESCRIPTIO
 import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.DESCRIPTION_PATTERN;
 
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties
 @NoArgsConstructor
 @AllArgsConstructor
-public class TermGroupDto {
+public class TermGroupFolderDto {
 
     @Positive
     private Long id;
@@ -28,15 +28,15 @@ public class TermGroupDto {
     @Pattern(regexp = DESCRIPTION_PATTERN, message = DESCRIPTION_ERROR)
     private String description;
 
-    public TermGroup toTermGroup() {
-        return new TermGroup(id, name, description);
+    public TermGroupFolder toTermGroupFolder() {
+        return new TermGroupFolder(id, name, description);
     }
 
-    public static TermGroupDto from(TermGroup termGroup) {
-        return new TermGroupDto(
-                termGroup.getId(),
-                termGroup.getName(),
-                termGroup.getDescription()
+    public static TermGroupFolderDto from(TermGroupFolder folder) {
+        return new TermGroupFolderDto(
+                folder.getId(),
+                folder.getName(),
+                folder.getDescription()
         );
     }
 }

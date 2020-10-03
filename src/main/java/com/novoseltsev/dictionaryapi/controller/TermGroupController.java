@@ -63,9 +63,9 @@ public class TermGroupController {
             @Valid @RequestBody TermGroupDto termGroupDto,
             @PathVariable Long folderId
     ) {
-        TermGroup termGroup = termGroupService
+        TermGroup createdTermGroup = termGroupService
                 .createForTermGroupFolder(termGroupDto.toTermGroup(), folderId);
-        return new ResponseEntity<>(TermGroupDto.from(termGroup),
+        return new ResponseEntity<>(TermGroupDto.from(createdTermGroup),
                 HttpStatus.CREATED);
     }
 
