@@ -43,7 +43,7 @@ public class TermServiceImpl implements TermService {
     @Override
     @Transactional
     public void deleteById(Long id) {
-        termRepository.deleteById(id);
+        termRepository.delete(findById(id));
     }
 
     @Override

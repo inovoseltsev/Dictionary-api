@@ -59,7 +59,7 @@ public class TermGroupServiceImpl implements TermGroupService {
     @Override
     @Transactional
     public void deleteById(Long id) {
-        termGroupRepository.deleteById(id);
+        termGroupRepository.delete(findById(id));
     }
 
     @Override

@@ -12,7 +12,7 @@ public class ValidationUtil {
             "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{4,16}$";
 
     public static final String DESCRIPTION_PATTERN =
-            "^[A-Za-zА-Яа-я]{0,}$";
+            "^.{0,}$";
 
     private static final String BASE_MESSAGE_PART = " is not correct!";
 

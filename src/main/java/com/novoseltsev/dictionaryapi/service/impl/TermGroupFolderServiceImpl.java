@@ -44,7 +44,7 @@ public class TermGroupFolderServiceImpl implements TermGroupFolderService {
     @Override
     @Transactional
     public void deleteById(Long id) {
-        termGroupFolderRepository.deleteById(id);
+        termGroupFolderRepository.delete(findById(id));
     }
 
     @Override
