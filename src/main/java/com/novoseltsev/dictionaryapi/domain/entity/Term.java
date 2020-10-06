@@ -33,12 +33,6 @@ public class Term extends AbstractEntity {
     @ToString.Exclude
     private TermGroup termGroup;
 
-    public Term(Long id, String name, String definition) {
-        super(id);
-        this.name = name;
-        this.definition = definition;
-    }
-
     public Term(String name, String definition) {
         this.name = name;
         this.definition = definition;

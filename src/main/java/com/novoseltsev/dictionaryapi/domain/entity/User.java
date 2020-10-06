@@ -68,12 +68,6 @@ public class User extends AbstractEntity {
             orphanRemoval = true, fetch = FetchType.LAZY)
     private List<TermGroupFolder> termGroupFolders = new ArrayList<>();
 
-    public User(Long id, String firstName, String lastName) {
-        super(id);
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
-
     public User(Long id) {
         super(id);
     }

@@ -47,9 +47,12 @@ public class TermGroupFolderController {
                 HttpStatus.CREATED);
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     public TermGroupFolderDto update(
-            @Valid @RequestBody TermGroupFolderDto folderDto) {
+            @Valid @RequestBody TermGroupFolderDto folderDto,
+            @PathVariable Long id
+    ) {
+        folderDto.setId(id);
         TermGroupFolder updatedFolder =
                 termGroupFolderService.update(folderDto.toEntity());
         return TermGroupFolderDto.from(updatedFolder);

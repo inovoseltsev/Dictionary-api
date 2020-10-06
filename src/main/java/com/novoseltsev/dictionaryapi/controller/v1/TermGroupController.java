@@ -66,8 +66,12 @@ public class TermGroupController {
                 HttpStatus.CREATED);
     }
 
-    @PutMapping
-    public TermGroupDto update(@Valid @RequestBody TermGroupDto termGroupDto) {
+    @PutMapping("/{id}")
+    public TermGroupDto update(
+            @Valid @RequestBody TermGroupDto termGroupDto,
+            @PathVariable Long id
+    ) {
+        termGroupDto.setId(id);
         TermGroup updatedTermGroup = termGroupService
                 .update(termGroupDto.toEntity());
         return TermGroupDto.from(updatedTermGroup);

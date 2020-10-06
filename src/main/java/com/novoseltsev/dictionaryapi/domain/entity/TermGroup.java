@@ -54,12 +54,6 @@ public class TermGroup extends AbstractEntity {
         super(id);
     }
 
-    public TermGroup(Long id, String name, String description) {
-        super(id);
-        this.name = name;
-        this.description = description;
-    }
-
     public TermGroup(String name, String description) {
         this.name = name;
         this.description = description;

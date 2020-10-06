@@ -49,8 +49,10 @@ public class UserController {
                 HttpStatus.CREATED);
     }
 
-    @PutMapping
-    public UserDto update(@Valid @RequestBody UserDto userDto) {
+    @PutMapping("/{id}")
+    public UserDto update(
+            @Valid @RequestBody UserDto userDto, @PathVariable Long id) {
+        userDto.setId(id);
         User updatedUser = userService.update(userDto.toEntity());
         return UserDto.from(updatedUser);
     }
