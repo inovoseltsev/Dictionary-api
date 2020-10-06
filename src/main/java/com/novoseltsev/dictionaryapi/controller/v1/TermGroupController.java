@@ -1,6 +1,7 @@
-package com.novoseltsev.dictionaryapi.controller;
+package com.novoseltsev.dictionaryapi.controller.v1;
 
-import com.novoseltsev.dictionaryapi.domain.dto.TermGroupDto;
+import com.novoseltsev.dictionaryapi.domain.dto.termGroup.TermGroupCreationDto;
+import com.novoseltsev.dictionaryapi.domain.dto.termGroup.TermGroupDto;
 import com.novoseltsev.dictionaryapi.domain.entity.TermGroup;
 import com.novoseltsev.dictionaryapi.service.TermGroupService;
 import java.util.List;
@@ -47,31 +48,28 @@ public class TermGroupController {
                 .map(TermGroupDto::from).collect(Collectors.toList());
     }
 
-    @PostMapping("users/{userId}")
+    @PostMapping("/users")
     public ResponseEntity<TermGroupDto> createForUser(
-            @Valid @RequestBody TermGroupDto termGroupDto,
-            @PathVariable Long userId
-    ) {
-        TermGroup createdTermGroup =
-                termGroupService.createForUser(termGroupDto.toTermGroup(), userId);
+            @Valid @RequestBody TermGroupCreationDto termGroupDto) {
+        TermGroup createdTermGroup = termGroupService
+                .createForUser(termGroupDto.toEntity());
         return new ResponseEntity<>(TermGroupDto.from(createdTermGroup),
                 HttpStatus.CREATED);
     }
 
-    @PostMapping("/term-group-folders/{folderId}")
+    @PostMapping("/term-group-folders")
     public ResponseEntity<TermGroupDto> createForTermGroupFolder(
-            @Valid @RequestBody TermGroupDto termGroupDto,
-            @PathVariable Long folderId
-    ) {
+            @Valid @RequestBody TermGroupCreationDto termGroupDto) {
         TermGroup createdTermGroup = termGroupService
-                .createForTermGroupFolder(termGroupDto.toTermGroup(), folderId);
+                .createForTermGroupFolder(termGroupDto.toEntity());
         return new ResponseEntity<>(TermGroupDto.from(createdTermGroup),
                 HttpStatus.CREATED);
     }
 
     @PutMapping
     public TermGroupDto update(@Valid @RequestBody TermGroupDto termGroupDto) {
-        TermGroup updatedTermGroup = termGroupService.update(termGroupDto.toTermGroup());
+        TermGroup updatedTermGroup = termGroupService
+                .update(termGroupDto.toEntity());
         return TermGroupDto.from(updatedTermGroup);
     }
 

@@ -74,6 +74,15 @@ public class User extends AbstractEntity {
         this.lastName = lastName;
     }
 
+    public User(Long id) {
+        super(id);
+    }
+
+    public User(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
     public void addTermGroup(TermGroup termGroup) {
         termGroup.setUser(this);
         this.termGroups.add(termGroup);

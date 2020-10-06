@@ -26,7 +26,8 @@ public class TermGroupFolderServiceImpl implements TermGroupFolderService {
 
     @Override
     @Transactional
-    public TermGroupFolder createForUser(TermGroupFolder folder, Long userId) {
+    public TermGroupFolder createForUser(TermGroupFolder folder) {
+        Long userId = folder.getUser().getId();
         User user = userService.findById(userId);
         user.addTermGroupFolder(folder);
         return termGroupFolderRepository.save(folder);

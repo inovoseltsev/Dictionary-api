@@ -1,31 +1,22 @@
-package com.novoseltsev.dictionaryapi.domain.dto;
+package com.novoseltsev.dictionaryapi.domain.dto.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.novoseltsev.dictionaryapi.domain.dto.DtoMapper;
 import com.novoseltsev.dictionaryapi.domain.entity.User;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Positive;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.FIRST_NAME_ERROR;
 import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.LAST_NAME_ERROR;
 import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.NAME_PATTERN;
 
-@Data
-@JsonIgnoreProperties(ignoreUnknown = true)
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
-public class UserDto {
-
-    @NotNull
-    @Positive
-    @Min(value = 1)
-    private Long id;
+public abstract class AbstractUserDto implements DtoMapper<User> {
 
     @NotBlank(message = FIRST_NAME_ERROR)
     @Pattern(regexp = NAME_PATTERN, message = FIRST_NAME_ERROR)
@@ -35,15 +26,13 @@ public class UserDto {
     @Pattern(regexp = NAME_PATTERN, message = LAST_NAME_ERROR)
     private String lastName;
 
-    public User toUser() {
-        return new User(id, firstName, lastName);
+    public AbstractUserDto(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
-    public static UserDto from(User user) {
-        return new UserDto(
-                user.getId(),
-                user.getFirstName(),
-                user.getLastName()
-        );
+    @Override
+    public User toEntity() {
+        return new User(firstName, lastName);
     }
 }

@@ -1,6 +1,6 @@
-package com.novoseltsev.dictionaryapi.controller;
+package com.novoseltsev.dictionaryapi.controller.v1;
 
-import com.novoseltsev.dictionaryapi.domain.dto.TermGroupFolderDto;
+import com.novoseltsev.dictionaryapi.domain.dto.termGroupFolder.TermGroupFolderDto;
 import com.novoseltsev.dictionaryapi.domain.entity.TermGroupFolder;
 import com.novoseltsev.dictionaryapi.service.TermGroupFolderService;
 import java.util.List;
@@ -38,13 +38,11 @@ public class TermGroupFolderController {
                 .map(TermGroupFolderDto::from).collect(Collectors.toList());
     }
 
-    @PostMapping("/users/{userId}")
+    @PostMapping("/users")
     public ResponseEntity<TermGroupFolderDto> createForUser(
-            @Valid @RequestBody TermGroupFolderDto folderDto,
-            @PathVariable Long userId
-    ) {
+            @Valid @RequestBody TermGroupFolderDto folderDto) {
         TermGroupFolder createdFolder = termGroupFolderService
-                .createForUser(folderDto.toTermGroupFolder(), userId);
+                .createForUser(folderDto.toEntity());
         return new ResponseEntity<>(TermGroupFolderDto.from(createdFolder),
                 HttpStatus.CREATED);
     }
@@ -53,7 +51,7 @@ public class TermGroupFolderController {
     public TermGroupFolderDto update(
             @Valid @RequestBody TermGroupFolderDto folderDto) {
         TermGroupFolder updatedFolder =
-                termGroupFolderService.update(folderDto.toTermGroupFolder());
+                termGroupFolderService.update(folderDto.toEntity());
         return TermGroupFolderDto.from(updatedFolder);
     }
 

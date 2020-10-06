@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface TermGroupFolderService {
 
-    TermGroupFolder createForUser(TermGroupFolder folder, Long userId);
+    TermGroupFolder createForUser(TermGroupFolder folder);
 
     TermGroupFolder update(TermGroupFolder folder);
 

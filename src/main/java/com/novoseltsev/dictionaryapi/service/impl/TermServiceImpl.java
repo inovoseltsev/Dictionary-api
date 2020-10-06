@@ -26,7 +26,8 @@ public class TermServiceImpl implements TermService {
 
     @Override
     @Transactional
-    public Term createForTermGroup(Term term, Long termGroupId) {
+    public Term createForTermGroup(Term term) {
+        Long termGroupId = term.getTermGroup().getId();
         termGroupService.findById(termGroupId).addTerm(term);
         return termRepository.save(term);
     }

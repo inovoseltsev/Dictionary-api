@@ -38,4 +38,9 @@ public class Term extends AbstractEntity {
         this.name = name;
         this.definition = definition;
     }
+
+    public Term(String name, String definition) {
+        this.name = name;
+        this.definition = definition;
+    }
 }

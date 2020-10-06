@@ -32,7 +32,8 @@ public class TermGroupServiceImpl implements TermGroupService {
 
     @Override
     @Transactional
-    public TermGroup createForUser(TermGroup termGroup, Long userId) {
+    public TermGroup createForUser(TermGroup termGroup) {
+        Long userId = termGroup.getUser().getId();
         User user = userService.findById(userId);
         user.addTermGroup(termGroup);
         return termGroupRepository.save(termGroup);
@@ -40,8 +41,8 @@ public class TermGroupServiceImpl implements TermGroupService {
 
     @Override
     @Transactional
-    public TermGroup createForTermGroupFolder(
-            TermGroup termGroup, Long folderId) {
+    public TermGroup createForTermGroupFolder(TermGroup termGroup) {
+        Long folderId = termGroup.getTermGroupFolder().getId();
         TermGroupFolder folder = termGroupFolderService.findById(folderId);
         folder.addTermGroup(termGroup);
         return termGroupRepository.save(termGroup);

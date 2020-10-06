@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface TermService {
 
-    Term createForTermGroup(Term term, Long termGroupId);
+    Term createForTermGroup(Term term);
 
     Term update(Term term);
 

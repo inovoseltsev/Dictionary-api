@@ -1,6 +1,7 @@
-package com.novoseltsev.dictionaryapi.controller;
+package com.novoseltsev.dictionaryapi.controller.v1;
 
-import com.novoseltsev.dictionaryapi.domain.dto.TermDto;
+import com.novoseltsev.dictionaryapi.domain.dto.term.TermCreationDto;
+import com.novoseltsev.dictionaryapi.domain.dto.term.TermDto;
 import com.novoseltsev.dictionaryapi.domain.entity.Term;
 import com.novoseltsev.dictionaryapi.service.TermService;
 import java.util.List;
@@ -40,16 +41,20 @@ public class TermController {
                 .map(TermDto::from).collect(Collectors.toList());
     }
 
-    @PostMapping("/term-groups/{groupId}")
+    @PostMapping
     public ResponseEntity<TermDto> createForTermGroup(
-            @Valid @RequestBody TermDto termDto, @PathVariable Long groupId) {
-        Term createdTerm = termService.createForTermGroup(termDto.toTerm(), groupId);
-        return new ResponseEntity<>(TermDto.from(createdTerm), HttpStatus.CREATED);
+            @Valid @RequestBody TermCreationDto termCreationDto) {
+        Term createdTerm =
+                termService.createForTermGroup(termCreationDto.toEntity());
+        return new ResponseEntity<>(TermDto.from(createdTerm),
+                HttpStatus.CREATED);
     }
 
-    @PutMapping
-    public TermDto update(@Valid @RequestBody TermDto termDto) {
-        Term updatedTerm = termService.update(termDto.toTerm());
+    @PutMapping("/{id}")
+    public TermDto update(
+            @Valid @RequestBody TermDto termDto, @PathVariable Long id) {
+        termDto.setId(id);
+        Term updatedTerm = termService.update(termDto.toEntity());
         return TermDto.from(updatedTerm);
     }
 

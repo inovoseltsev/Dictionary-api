@@ -1,4 +1,4 @@
-package com.novoseltsev.dictionaryapi.domain.dto;
+package com.novoseltsev.dictionaryapi.domain.dto.auth;
 
 import javax.validation.constraints.NotBlank;
 import lombok.Data;

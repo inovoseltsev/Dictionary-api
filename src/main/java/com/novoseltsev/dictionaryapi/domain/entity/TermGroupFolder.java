@@ -50,6 +50,15 @@ public class TermGroupFolder extends AbstractEntity {
         this.description = description;
     }
 
+    public TermGroupFolder(Long id) {
+        super(id);
+    }
+
+    public TermGroupFolder(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
     public void addTermGroup(TermGroup termGroup) {
         termGroup.setTermGroupFolder(this);
         this.termGroups.add(termGroup);

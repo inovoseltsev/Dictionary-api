@@ -1,30 +1,29 @@
-package com.novoseltsev.dictionaryapi.domain.dto;
+package com.novoseltsev.dictionaryapi.domain.dto.term;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.novoseltsev.dictionaryapi.domain.entity.Term;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-@NoArgsConstructor
-@AllArgsConstructor
-public class TermDto {
+public class TermDto extends AbstractTermDto {
 
     @Positive
     private Long id;
 
-    @NotBlank
-    private String name;
+    public TermDto(Long id, String name, String definition) {
+        super(name, definition);
+        this.id = id;
+    }
 
-    @NotBlank
-    private String definition;
-
-    public Term toTerm() {
-        return new Term(id, name, definition);
+    @Override
+    public Term toEntity() {
+        Term term = super.toEntity();
+        term.setId(id);
+        return term;
     }
 
     public static TermDto from(Term term) {
@@ -35,3 +34,4 @@ public class TermDto {
         );
     }
 }
+

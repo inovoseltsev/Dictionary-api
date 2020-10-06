@@ -1,6 +1,6 @@
-package com.novoseltsev.dictionaryapi.controller;
+package com.novoseltsev.dictionaryapi.controller.v1;
 
-import com.novoseltsev.dictionaryapi.domain.dto.AuthDto;
+import com.novoseltsev.dictionaryapi.domain.dto.auth.AuthDto;
 import com.novoseltsev.dictionaryapi.service.AuthenticationService;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

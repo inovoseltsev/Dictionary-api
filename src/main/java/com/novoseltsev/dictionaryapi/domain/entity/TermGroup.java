@@ -50,8 +50,17 @@ public class TermGroup extends AbstractEntity {
     @ToString.Exclude
     private User user;
 
+    public TermGroup(Long id) {
+        super(id);
+    }
+
     public TermGroup(Long id, String name, String description) {
         super(id);
+        this.name = name;
+        this.description = description;
+    }
+
+    public TermGroup(String name, String description) {
         this.name = name;
         this.description = description;
     }

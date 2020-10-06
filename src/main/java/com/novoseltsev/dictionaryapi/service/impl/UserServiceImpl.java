@@ -1,6 +1,6 @@
 package com.novoseltsev.dictionaryapi.service.impl;
 
-import com.novoseltsev.dictionaryapi.domain.dto.PasswordDto;
+import com.novoseltsev.dictionaryapi.domain.dto.user.request.ChangePasswordRequest;
 import com.novoseltsev.dictionaryapi.domain.entity.User;
 import com.novoseltsev.dictionaryapi.domain.status.UserStatus;
 import com.novoseltsev.dictionaryapi.exception.InvalidOldPasswordException;
@@ -50,10 +50,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void changePassword(Long userId, PasswordDto passwordDto) {
+    public void changePassword(
+            Long userId, ChangePasswordRequest passwordRequest) {
         User user = findById(userId);
-        checkIfValidOldPassword(user, passwordDto.getOldPassword());
-        user.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
+        checkIfValidOldPassword(user, passwordRequest.getOldPassword());
+        user.setPassword(passwordEncoder.encode(passwordRequest.getNewPassword()));
         userRepository.save(user);
     }
 

@@ -1,7 +1,7 @@
-package com.novoseltsev.dictionaryapi.controller;
+package com.novoseltsev.dictionaryapi.controller.v1;
 
-import com.novoseltsev.dictionaryapi.domain.dto.SignUpUserDto;
-import com.novoseltsev.dictionaryapi.domain.dto.UserDto;
+import com.novoseltsev.dictionaryapi.domain.dto.user.SignUpUserDto;
+import com.novoseltsev.dictionaryapi.domain.dto.user.UserDto;
 import com.novoseltsev.dictionaryapi.domain.entity.User;
 import com.novoseltsev.dictionaryapi.service.UserService;
 import java.util.List;
@@ -42,15 +42,16 @@ public class UserController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<UserDto> create(@Valid @RequestBody SignUpUserDto signUpUserDto) {
-        User createdUser = userService.create(signUpUserDto.toUser());
+    public ResponseEntity<UserDto> create(
+            @Valid @RequestBody SignUpUserDto signUpUserDto) {
+        User createdUser = userService.create(signUpUserDto.toEntity());
         return new ResponseEntity<>(UserDto.from(createdUser),
                 HttpStatus.CREATED);
     }
 
     @PutMapping
     public UserDto update(@Valid @RequestBody UserDto userDto) {
-        User updatedUser = userService.update(userDto.toUser());
+        User updatedUser = userService.update(userDto.toEntity());
         return UserDto.from(updatedUser);
     }
 
