@@ -4,12 +4,14 @@ import com.novoseltsev.dictionaryapi.domain.dto.DtoMapper;
 import com.novoseltsev.dictionaryapi.domain.entity.TermGroup;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
 import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.DESCRIPTION_ERROR;
 import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.DESCRIPTION_PATTERN;
 
+@Getter
 @NoArgsConstructor
 public abstract class AbstractTermGroupDto implements DtoMapper<TermGroup> {
 

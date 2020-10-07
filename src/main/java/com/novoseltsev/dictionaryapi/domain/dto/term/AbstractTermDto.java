@@ -3,8 +3,10 @@ package com.novoseltsev.dictionaryapi.domain.dto.term;
 import com.novoseltsev.dictionaryapi.domain.dto.DtoMapper;
 import com.novoseltsev.dictionaryapi.domain.entity.Term;
 import javax.validation.constraints.NotBlank;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @NoArgsConstructor
 public abstract class AbstractTermDto implements DtoMapper<Term> {
 

@@ -1,6 +1,6 @@
 package com.novoseltsev.dictionaryapi.controller.v1;
 
-import com.novoseltsev.dictionaryapi.domain.dto.term.TermCreationDto;
+import com.novoseltsev.dictionaryapi.domain.dto.term.GroupTermDto;
 import com.novoseltsev.dictionaryapi.domain.dto.term.TermDto;
 import com.novoseltsev.dictionaryapi.domain.entity.Term;
 import com.novoseltsev.dictionaryapi.service.TermService;
@@ -43,9 +43,9 @@ public class TermController {
 
     @PostMapping
     public ResponseEntity<TermDto> createForTermGroup(
-            @Valid @RequestBody TermCreationDto termCreationDto) {
+            @Valid @RequestBody GroupTermDto termDto) {
         Term createdTerm =
-                termService.createForTermGroup(termCreationDto.toEntity());
+                termService.createForTermGroup(termDto.toEntity());
         return new ResponseEntity<>(TermDto.from(createdTerm),
                 HttpStatus.CREATED);
     }

@@ -39,13 +39,12 @@ public class TermGroup extends AbstractEntity {
             orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Term> terms = new ArrayList<>();
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE},
-            fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "term_group_folder_id")
     @ToString.Exclude
     private TermGroupFolder termGroupFolder;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(nullable = false)
     @ToString.Exclude
     private User user;

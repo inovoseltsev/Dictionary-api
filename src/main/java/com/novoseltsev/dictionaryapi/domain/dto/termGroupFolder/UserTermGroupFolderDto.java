@@ -5,9 +5,11 @@ import com.novoseltsev.dictionaryapi.domain.entity.TermGroupFolder;
 import com.novoseltsev.dictionaryapi.domain.entity.User;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import lombok.Getter;
 
+@Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TermGroupFolderCreationDto extends AbstractTermGroupFolderDto {
+public class UserTermGroupFolderDto extends AbstractTermGroupFolderDto {
 
     @Positive
     @NotNull

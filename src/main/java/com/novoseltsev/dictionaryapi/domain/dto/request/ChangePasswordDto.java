@@ -1,4 +1,4 @@
-package com.novoseltsev.dictionaryapi.domain.dto.user.request;
+package com.novoseltsev.dictionaryapi.domain.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.validation.constraints.NotBlank;
@@ -11,7 +11,7 @@ import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.PASSWORD_P
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ChangePasswordRequest {
+public class ChangePasswordDto {
 
     @NotBlank(message = PASSWORD_ERROR)
     @Pattern(regexp = PASSWORD_PATTERN, message = PASSWORD_ERROR)

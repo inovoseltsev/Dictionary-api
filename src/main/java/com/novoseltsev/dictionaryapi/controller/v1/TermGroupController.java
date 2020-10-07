@@ -1,7 +1,8 @@
 package com.novoseltsev.dictionaryapi.controller.v1;
 
-import com.novoseltsev.dictionaryapi.domain.dto.termGroup.TermGroupCreationDto;
+import com.novoseltsev.dictionaryapi.domain.dto.termGroup.FolderTermGroupDto;
 import com.novoseltsev.dictionaryapi.domain.dto.termGroup.TermGroupDto;
+import com.novoseltsev.dictionaryapi.domain.dto.termGroup.UserTermGroupDto;
 import com.novoseltsev.dictionaryapi.domain.entity.TermGroup;
 import com.novoseltsev.dictionaryapi.service.TermGroupService;
 import java.util.List;
@@ -50,7 +51,7 @@ public class TermGroupController {
 
     @PostMapping("/users")
     public ResponseEntity<TermGroupDto> createForUser(
-            @Valid @RequestBody TermGroupCreationDto termGroupDto) {
+            @Valid @RequestBody UserTermGroupDto termGroupDto) {
         TermGroup createdTermGroup = termGroupService
                 .createForUser(termGroupDto.toEntity());
         return new ResponseEntity<>(TermGroupDto.from(createdTermGroup),
@@ -59,7 +60,7 @@ public class TermGroupController {
 
     @PostMapping("/term-group-folders")
     public ResponseEntity<TermGroupDto> createForTermGroupFolder(
-            @Valid @RequestBody TermGroupCreationDto termGroupDto) {
+            @Valid @RequestBody FolderTermGroupDto termGroupDto) {
         TermGroup createdTermGroup = termGroupService
                 .createForTermGroupFolder(termGroupDto.toEntity());
         return new ResponseEntity<>(TermGroupDto.from(createdTermGroup),
