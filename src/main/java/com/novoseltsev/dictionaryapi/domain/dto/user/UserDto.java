@@ -5,10 +5,12 @@ import com.novoseltsev.dictionaryapi.domain.entity.User;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDto extends AbstractUserDto {
 
