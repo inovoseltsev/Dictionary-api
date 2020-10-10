@@ -66,17 +66,17 @@ public class JwtProvider {
     }
 
     private Long getSubjectFromToken(String token) {
-        String subject = Jwts.parser().setSigningKey(secret)
-                .parseClaimsJws(token).getBody().getSubject();
+        String subject = Jwts.parser().setSigningKey(secret).parseClaimsJws(token)
+                .getBody().getSubject();
         return Long.valueOf(subject);
     }
 
     public String resolveToken(HttpServletRequest request) {
         String bearer = request.getHeader(AUTHORIZATION_HEADER);
-        if (bearer == null || !bearer.startsWith(BEARER)) {
-            return "";
+        String token = "";
+        if (bearer != null && bearer.startsWith(BEARER)) {
+            token = bearer.substring(7);
         }
-        String token = bearer.substring(7);
         checkTokenValidity(token);
         return token;
     }

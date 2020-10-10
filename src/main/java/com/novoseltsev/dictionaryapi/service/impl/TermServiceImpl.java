@@ -50,8 +50,7 @@ public class TermServiceImpl implements TermService {
     @Override
     @Transactional(readOnly = true)
     public Term findById(Long id) {
-        return termRepository.findById(id)
-                .orElseThrow(ExceptionUtils.OBJECT_NOT_FOUND);
+        return termRepository.findById(id).orElseThrow(ExceptionUtils.OBJECT_NOT_FOUND);
     }
 
     @Override

@@ -1,9 +1,11 @@
 package com.novoseltsev.dictionaryapi.domain.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.validation.constraints.NotBlank;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AuthDto {
 
     @NotBlank

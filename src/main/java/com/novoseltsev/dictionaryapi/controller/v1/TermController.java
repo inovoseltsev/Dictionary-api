@@ -37,17 +37,15 @@ public class TermController {
 
     @GetMapping("/term-groups/{groupId}")
     public List<TermDto> findAllByTermGroupId(@PathVariable Long groupId) {
-        return termService.findAllByTermGroupId(groupId).stream()
-                .map(TermDto::from).collect(Collectors.toList());
+        return termService.findAllByTermGroupId(groupId).stream().map(TermDto::from)
+                .collect(Collectors.toList());
     }
 
     @PostMapping
     public ResponseEntity<TermDto> createForTermGroup(
             @Valid @RequestBody GroupTermDto termDto) {
-        Term createdTerm =
-                termService.createForTermGroup(termDto.toEntity());
-        return new ResponseEntity<>(TermDto.from(createdTerm),
-                HttpStatus.CREATED);
+        Term createdTerm = termService.createForTermGroup(termDto.toEntity());
+        return new ResponseEntity<>(TermDto.from(createdTerm), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")

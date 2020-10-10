@@ -42,20 +42,15 @@ public class TermGroupFolderController {
     @PostMapping("/users")
     public ResponseEntity<TermGroupFolderDto> createForUser(
             @Valid @RequestBody UserTermGroupFolderDto folderDto) {
-        TermGroupFolder createdFolder = termGroupFolderService
-                .createForUser(folderDto.toEntity());
-        return new ResponseEntity<>(TermGroupFolderDto.from(createdFolder),
-                HttpStatus.CREATED);
+        TermGroupFolder createdFolder = termGroupFolderService.createForUser(folderDto.toEntity());
+        return new ResponseEntity<>(TermGroupFolderDto.from(createdFolder), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public TermGroupFolderDto update(
-            @Valid @RequestBody TermGroupFolderDto folderDto,
-            @PathVariable Long id
-    ) {
+            @Valid @RequestBody TermGroupFolderDto folderDto, @PathVariable Long id) {
         folderDto.setId(id);
-        TermGroupFolder updatedFolder =
-                termGroupFolderService.update(folderDto.toEntity());
+        TermGroupFolder updatedFolder = termGroupFolderService.update(folderDto.toEntity());
         return TermGroupFolderDto.from(updatedFolder);
     }
 

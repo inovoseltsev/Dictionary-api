@@ -49,8 +49,7 @@ public class JwtFilter implements Filter {
     private void handleBadTokenResponse(
             ServletResponse response, JwtAuthenticationException e
     ) throws IOException {
-        String errorResponse = new ObjectMapper()
-                .writeValueAsString(ExceptionUtils.getErrorResponse(e));
+        String errorResponse = new ObjectMapper().writeValueAsString(ExceptionUtils.getErrorResponse(e));
         HttpServletResponse resp = (HttpServletResponse) response;
         resp.setContentType("application/json; charset=utf-8");
         resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

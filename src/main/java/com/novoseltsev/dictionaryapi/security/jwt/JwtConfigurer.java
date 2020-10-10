@@ -21,7 +21,6 @@ public class JwtConfigurer extends
 
     @Override
     public void configure(HttpSecurity builder) {
-        builder.addFilterBefore(jwtFilter,
-                UsernamePasswordAuthenticationFilter.class);
+        builder.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

@@ -7,6 +7,7 @@ import com.novoseltsev.dictionaryapi.security.jwt.JwtProvider;
 import com.novoseltsev.dictionaryapi.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,14 +34,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userRepository.findByLogin(login).orElse(null);
         checkUserCredentialsValidity(user, password);
         String token = jwtProvider.createToken(user.getId(), user.getRole());
-        SecurityContextHolder.getContext()
-                .setAuthentication(jwtProvider.getAuthentication(token));
+        Authentication authentication = jwtProvider.getAuthentication(token);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         return token;
     }
 
     private void checkUserCredentialsValidity(User user, String password) {
-        if (user == null || !passwordEncoder.matches(password,
-                user.getPassword())) {
+        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
             throw new BadCredentialsException(MessageCause.BAD_CREDENTIALS);
         }
     }

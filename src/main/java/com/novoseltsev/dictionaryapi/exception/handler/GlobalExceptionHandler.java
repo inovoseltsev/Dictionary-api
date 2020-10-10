@@ -24,15 +24,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             MethodArgumentNotValidException ex, HttpHeaders headers,
             HttpStatus status, WebRequest request
     ) {
-        return new ResponseEntity<>(handleValidationErrors(ex),
-                HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(handleValidationErrors(ex), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ObjectNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<Object, Object> handleObjectNotFoundException(
-            ObjectNotFoundException e
-    ) {
+    public Map<Object, Object> handleObjectNotFoundException(ObjectNotFoundException e) {
         return getErrorResponse(e);
     }
 }

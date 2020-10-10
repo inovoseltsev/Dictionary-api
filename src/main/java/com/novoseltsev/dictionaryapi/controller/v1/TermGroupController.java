@@ -38,13 +38,12 @@ public class TermGroupController {
 
     @GetMapping("/users/{userId}")
     public List<TermGroupDto> findAllByUserId(@PathVariable Long userId) {
-        return termGroupService.findAllByUserId(userId).stream()
-                .map(TermGroupDto::from).collect(Collectors.toList());
+        return termGroupService.findAllByUserId(userId).stream().map(TermGroupDto::from)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/term-group-folders/{folderId}")
-    public List<TermGroupDto> findAllByTermGroupFolderId(
-            @PathVariable Long folderId) {
+    public List<TermGroupDto> findAllByTermGroupFolderId(@PathVariable Long folderId) {
         return termGroupService.findAllByTermGroupFolderId(folderId).stream()
                 .map(TermGroupDto::from).collect(Collectors.toList());
     }
@@ -52,29 +51,22 @@ public class TermGroupController {
     @PostMapping("/users")
     public ResponseEntity<TermGroupDto> createForUser(
             @Valid @RequestBody UserTermGroupDto termGroupDto) {
-        TermGroup createdTermGroup = termGroupService
-                .createForUser(termGroupDto.toEntity());
-        return new ResponseEntity<>(TermGroupDto.from(createdTermGroup),
-                HttpStatus.CREATED);
+        TermGroup createdTermGroup = termGroupService.createForUser(termGroupDto.toEntity());
+        return new ResponseEntity<>(TermGroupDto.from(createdTermGroup), HttpStatus.CREATED);
     }
 
     @PostMapping("/term-group-folders")
     public ResponseEntity<TermGroupDto> createForTermGroupFolder(
             @Valid @RequestBody FolderTermGroupDto termGroupDto) {
-        TermGroup createdTermGroup = termGroupService
-                .createForTermGroupFolder(termGroupDto.toEntity());
-        return new ResponseEntity<>(TermGroupDto.from(createdTermGroup),
-                HttpStatus.CREATED);
+        TermGroup createdTermGroup = termGroupService.createForTermGroupFolder(termGroupDto.toEntity());
+        return new ResponseEntity<>(TermGroupDto.from(createdTermGroup), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public TermGroupDto update(
-            @Valid @RequestBody TermGroupDto termGroupDto,
-            @PathVariable Long id
-    ) {
+            @Valid @RequestBody TermGroupDto termGroupDto, @PathVariable Long id) {
         termGroupDto.setId(id);
-        TermGroup updatedTermGroup = termGroupService
-                .update(termGroupDto.toEntity());
+        TermGroup updatedTermGroup = termGroupService.update(termGroupDto.toEntity());
         return TermGroupDto.from(updatedTermGroup);
     }
 

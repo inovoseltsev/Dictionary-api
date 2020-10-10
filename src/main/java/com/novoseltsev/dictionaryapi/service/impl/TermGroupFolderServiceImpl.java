@@ -51,8 +51,7 @@ public class TermGroupFolderServiceImpl implements TermGroupFolderService {
     @Override
     @Transactional(readOnly = true)
     public TermGroupFolder findById(Long id) {
-        return termGroupFolderRepository.findById(id)
-                .orElseThrow(ExceptionUtils.OBJECT_NOT_FOUND);
+        return termGroupFolderRepository.findById(id).orElseThrow(ExceptionUtils.OBJECT_NOT_FOUND);
     }
 
     @Override

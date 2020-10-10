@@ -66,8 +66,7 @@ public class TermGroupServiceImpl implements TermGroupService {
     @Override
     @Transactional(readOnly = true)
     public TermGroup findById(Long id) {
-        return termGroupRepository.findById(id)
-                .orElseThrow(ExceptionUtils.OBJECT_NOT_FOUND);
+        return termGroupRepository.findById(id).orElseThrow(ExceptionUtils.OBJECT_NOT_FOUND);
     }
 
     @Override

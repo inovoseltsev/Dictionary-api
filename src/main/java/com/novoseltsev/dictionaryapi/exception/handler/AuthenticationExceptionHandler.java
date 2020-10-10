@@ -15,9 +15,7 @@ public class AuthenticationExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    private Map<Object, Object> handleBadCredentialsException(
-            BadCredentialsException e
-    ) {
+    private Map<Object, Object> handleBadCredentialsException(BadCredentialsException e) {
         return getErrorResponse(e);
     }
 }

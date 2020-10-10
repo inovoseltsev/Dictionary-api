@@ -22,9 +22,9 @@ public class CsrfTokenRepositoryImpl implements CsrfTokenRepository {
     }
 
     @Override
-    public void saveToken(CsrfToken csrfToken,
-                          HttpServletRequest httpServletRequest,
-                          HttpServletResponse httpServletResponse
+    public void saveToken(
+            CsrfToken csrfToken, HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse
     ) {
 
     }

@@ -38,6 +38,12 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    private void checkLoginUniqueness(User user) {
+        if (userRepository.findByLogin(user.getLogin()).isPresent()) {
+            throw new LoginIsAlreadyUsedException(MessageCause.LOGIN_IS_ALREADY_USED);
+        }
+    }
+
     @Override
     @Transactional
     public User update(User user) {
@@ -55,6 +61,12 @@ public class UserServiceImpl implements UserService {
         checkIfValidOldPassword(user, passwordDto.getOldPassword());
         user.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
         userRepository.save(user);
+    }
+
+    private void checkIfValidOldPassword(User user, String oldPassword) {
+        if (!passwordEncoder.matches(oldPassword, user.getFirstName())) {
+            throw new InvalidOldPasswordException(MessageCause.INVALID_OLD_PASSWORD);
+        }
     }
 
     @Override
@@ -80,26 +92,12 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public User findById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(ExceptionUtils.OBJECT_NOT_FOUND);
+        return userRepository.findById(id).orElseThrow(ExceptionUtils.OBJECT_NOT_FOUND);
     }
 
     @Override
     @Transactional(readOnly = true)
     public User findByLogin(String login) {
-        return userRepository.findByLogin(login)
-                .orElseThrow(ExceptionUtils.OBJECT_NOT_FOUND);
-    }
-
-    private void checkLoginUniqueness(User user) {
-        if (userRepository.findByLogin(user.getLogin()).isPresent()) {
-            throw new LoginIsAlreadyUsedException(MessageCause.LOGIN_IS_ALREADY_USED);
-        }
-    }
-
-    private void checkIfValidOldPassword(User user, String oldPassword) {
-        if (!passwordEncoder.matches(oldPassword, user.getFirstName())) {
-            throw new InvalidOldPasswordException(MessageCause.INVALID_OLD_PASSWORD);
-        }
+        return userRepository.findByLogin(login).orElseThrow(ExceptionUtils.OBJECT_NOT_FOUND);
     }
 }

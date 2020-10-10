@@ -16,17 +16,13 @@ public class UserExceptionHandler {
 
     @ExceptionHandler(LoginIsAlreadyUsedException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public Map<Object, Object> handleLoginIsAlreadyUsedException(
-            LoginIsAlreadyUsedException e
-    ) {
+    public Map<Object, Object> handleLoginIsAlreadyUsedException(LoginIsAlreadyUsedException e) {
         return getErrorResponse(e);
     }
 
     @ExceptionHandler(InvalidOldPasswordException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public Map<Object, Object> handleInvalidOldPasswordException(
-            InvalidOldPasswordException e
-    ) {
+    public Map<Object, Object> handleInvalidOldPasswordException(InvalidOldPasswordException e) {
         return getErrorResponse(e);
     }
 }

@@ -22,7 +22,8 @@ public class AuthenticationController {
 
     @PostMapping
     public String authenticate(@Valid @RequestBody AuthDto authDto) {
-        return authenticationService.authenticate(authDto.getLogin(),
-                authDto.getPassword());
+        String login = authDto.getLogin();
+        String password = authDto.getPassword();
+        return authenticationService.authenticate(login, password);
     }
 }

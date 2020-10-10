@@ -3,13 +3,13 @@ package com.novoseltsev.dictionaryapi.domain.dto.request;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import lombok.Data;
+import lombok.Getter;
 
 
 import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.PASSWORD_ERROR;
 import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.PASSWORD_PATTERN;
 
-@Data
+@Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ChangePasswordDto {
 

@@ -37,16 +37,14 @@ public class UserController {
 
     @GetMapping
     public List<UserDto> findAll() {
-        return userService.findAll().stream().map(UserDto::from)
-                .collect(Collectors.toList());
+        return userService.findAll().stream().map(UserDto::from).collect(Collectors.toList());
     }
 
     @PostMapping("/registration")
     public ResponseEntity<UserDto> create(
             @Valid @RequestBody SignUpUserDto signUpUserDto) {
         User createdUser = userService.create(signUpUserDto.toEntity());
-        return new ResponseEntity<>(UserDto.from(createdUser),
-                HttpStatus.CREATED);
+        return new ResponseEntity<>(UserDto.from(createdUser), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
