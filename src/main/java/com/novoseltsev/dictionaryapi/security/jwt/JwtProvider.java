@@ -76,8 +76,8 @@ public class JwtProvider {
         String token = "";
         if (bearer != null && bearer.startsWith(BEARER)) {
             token = bearer.substring(7);
+            checkTokenValidity(token);
         }
-        checkTokenValidity(token);
         return token;
     }
 

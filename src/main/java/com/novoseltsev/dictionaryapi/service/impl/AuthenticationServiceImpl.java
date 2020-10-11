@@ -1,5 +1,7 @@
 package com.novoseltsev.dictionaryapi.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.novoseltsev.dictionaryapi.domain.entity.User;
 import com.novoseltsev.dictionaryapi.exception.util.MessageCause;
 import com.novoseltsev.dictionaryapi.repository.UserRepository;
@@ -30,18 +32,32 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public String authenticate(String login, String password) {
+    public String login(String login, String password) {
         User user = userRepository.findByLogin(login).orElse(null);
         checkUserCredentialsValidity(user, password);
+        String token = authenticate(user);
+        return convertToJsonString(token);
+    }
+
+    private void checkUserCredentialsValidity(User user, String password) {
+        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
+            throw new BadCredentialsException(MessageCause.BAD_CREDENTIALS);
+        }
+    }
+
+    private String authenticate(User user) {
         String token = jwtProvider.createToken(user.getId(), user.getRole());
         Authentication authentication = jwtProvider.getAuthentication(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return token;
     }
 
-    private void checkUserCredentialsValidity(User user, String password) {
-        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
-            throw new BadCredentialsException(MessageCause.BAD_CREDENTIALS);
+    private String convertToJsonString(String token) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(token);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Cannot create token string!", e);
         }
     }
 }
