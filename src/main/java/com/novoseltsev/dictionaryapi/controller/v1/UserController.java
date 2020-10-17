@@ -41,15 +41,13 @@ public class UserController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<UserDto> create(
-            @Valid @RequestBody SignUpUserDto signUpUserDto) {
+    public ResponseEntity<UserDto> create(@Valid @RequestBody SignUpUserDto signUpUserDto) {
         User createdUser = userService.create(signUpUserDto.toEntity());
         return new ResponseEntity<>(UserDto.from(createdUser), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public UserDto update(
-            @Valid @RequestBody UserDto userDto, @PathVariable Long id) {
+    public UserDto update(@Valid @RequestBody UserDto userDto, @PathVariable Long id) {
         userDto.setId(id);
         User updatedUser = userService.update(userDto.toEntity());
         return UserDto.from(updatedUser);

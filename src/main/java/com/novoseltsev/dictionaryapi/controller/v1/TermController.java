@@ -42,15 +42,13 @@ public class TermController {
     }
 
     @PostMapping
-    public ResponseEntity<TermDto> createForTermGroup(
-            @Valid @RequestBody GroupTermDto termDto) {
+    public ResponseEntity<TermDto> createForTermGroup(@Valid @RequestBody GroupTermDto termDto) {
         Term createdTerm = termService.createForTermGroup(termDto.toEntity());
         return new ResponseEntity<>(TermDto.from(createdTerm), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public TermDto update(
-            @Valid @RequestBody TermDto termDto, @PathVariable Long id) {
+    public TermDto update(@Valid @RequestBody TermDto termDto, @PathVariable Long id) {
         termDto.setId(id);
         Term updatedTerm = termService.update(termDto.toEntity());
         return TermDto.from(updatedTerm);

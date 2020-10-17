@@ -6,6 +6,7 @@ import com.novoseltsev.dictionaryapi.domain.role.UserRole;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import lombok.Getter;
 
 
 import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.LOGIN_ERROR;
@@ -15,6 +16,7 @@ import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.PASSWORD_P
 import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.USER_ROLE_ERROR;
 
 
+@Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SignUpUserDto extends AbstractUserDto {
 

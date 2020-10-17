@@ -38,7 +38,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String token = authenticate(user);
         return convertToJsonString(token);
     }
-
+    
     private void checkUserCredentialsValidity(User user, String password) {
         if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
             throw new BadCredentialsException(MessageCause.BAD_CREDENTIALS);
