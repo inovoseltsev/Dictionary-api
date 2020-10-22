@@ -44,7 +44,10 @@ public class TermGroupServiceImpl implements TermGroupService {
     public TermGroup createForTermGroupFolder(TermGroup termGroup) {
         Long folderId = termGroup.getTermGroupFolder().getId();
         TermGroupFolder folder = termGroupFolderService.findById(folderId);
+        Long userId = folder.getUser().getId();
+        User user = userService.findById(userId);
         folder.addTermGroup(termGroup);
+        user.addTermGroup(termGroup);
         return termGroupRepository.save(termGroup);
     }
 
