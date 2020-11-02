@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
-import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.FIRST_NAME_ERROR;
-import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.LAST_NAME_ERROR;
-import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.NAME_PATTERN;
+import static com.novoseltsev.dictionaryapi.validation.Pattern.NAME_PATTERN;
+import static com.novoseltsev.dictionaryapi.validation.ValidationMessage.FIRST_NAME_ERROR;
+import static com.novoseltsev.dictionaryapi.validation.ValidationMessage.LAST_NAME_ERROR;
 
 @Getter
 @Setter

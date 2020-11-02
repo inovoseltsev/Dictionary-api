@@ -28,6 +28,12 @@ public class Term extends AbstractEntity {
     @NotBlank
     private String definition;
 
+    @Pattern(regexp = KEY_WORD_PATTERN)
+    private String keyword;
+
+    @Lob
+    private Byte[] image;
+
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "term_group_id", nullable = false)
     @ToString.Exclude

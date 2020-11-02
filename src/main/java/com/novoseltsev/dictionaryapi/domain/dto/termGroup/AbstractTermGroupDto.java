@@ -8,8 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
-import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.DESCRIPTION_ERROR;
-import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.DESCRIPTION_PATTERN;
+import static com.novoseltsev.dictionaryapi.validation.Pattern.DESCRIPTION_PATTERN;
+import static com.novoseltsev.dictionaryapi.validation.ValidationMessage.DESCRIPTION_ERROR;
 
 @Getter
 @NoArgsConstructor

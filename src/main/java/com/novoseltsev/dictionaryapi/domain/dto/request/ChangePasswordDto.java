@@ -6,8 +6,8 @@ import javax.validation.constraints.Pattern;
 import lombok.Getter;
 
 
-import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.PASSWORD_ERROR;
-import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.PASSWORD_PATTERN;
+import static com.novoseltsev.dictionaryapi.validation.Pattern.PASSWORD_PATTERN;
+import static com.novoseltsev.dictionaryapi.validation.ValidationMessage.PASSWORD_ERROR;
 
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)

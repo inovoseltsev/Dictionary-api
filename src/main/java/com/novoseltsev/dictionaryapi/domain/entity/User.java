@@ -19,12 +19,12 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 
-import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.FIRST_NAME_ERROR;
-import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.LAST_NAME_ERROR;
-import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.LOGIN_ERROR;
-import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.LOGIN_PATTERN;
-import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.NAME_PATTERN;
-import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.PASSWORD_ERROR;
+import static com.novoseltsev.dictionaryapi.validation.Pattern.LOGIN_PATTERN;
+import static com.novoseltsev.dictionaryapi.validation.Pattern.NAME_PATTERN;
+import static com.novoseltsev.dictionaryapi.validation.ValidationMessage.FIRST_NAME_ERROR;
+import static com.novoseltsev.dictionaryapi.validation.ValidationMessage.LAST_NAME_ERROR;
+import static com.novoseltsev.dictionaryapi.validation.ValidationMessage.LOGIN_ERROR;
+import static com.novoseltsev.dictionaryapi.validation.ValidationMessage.PASSWORD_ERROR;
 
 @Data
 @EqualsAndHashCode(callSuper = true, of = "login")

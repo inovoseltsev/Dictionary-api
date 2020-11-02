@@ -9,11 +9,11 @@ import javax.validation.constraints.Pattern;
 import lombok.Getter;
 
 
-import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.LOGIN_ERROR;
-import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.LOGIN_PATTERN;
-import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.PASSWORD_ERROR;
-import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.PASSWORD_PATTERN;
-import static com.novoseltsev.dictionaryapi.validation.ValidationUtil.USER_ROLE_ERROR;
+import static com.novoseltsev.dictionaryapi.validation.Pattern.LOGIN_PATTERN;
+import static com.novoseltsev.dictionaryapi.validation.Pattern.PASSWORD_PATTERN;
+import static com.novoseltsev.dictionaryapi.validation.ValidationMessage.LOGIN_ERROR;
+import static com.novoseltsev.dictionaryapi.validation.ValidationMessage.PASSWORD_ERROR;
+import static com.novoseltsev.dictionaryapi.validation.ValidationMessage.USER_ROLE_ERROR;
 
 
 @Getter
