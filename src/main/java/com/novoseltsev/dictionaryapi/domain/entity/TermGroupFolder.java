@@ -40,6 +40,10 @@ public class TermGroupFolder extends AbstractEntity {
     private List<TermGroup> termGroups = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private Specialization specialization;
+
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     @ToString.Exclude
     private User user;

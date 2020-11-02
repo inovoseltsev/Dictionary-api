@@ -68,6 +68,11 @@ public class User extends AbstractEntity {
             orphanRemoval = true, fetch = FetchType.LAZY)
     private List<TermGroupFolder> termGroupFolders = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Specialization> specializations = new ArrayList<>();
+
+
     public User(Long id) {
         super(id);
     }
@@ -85,5 +90,10 @@ public class User extends AbstractEntity {
     public void addTermGroupFolder(TermGroupFolder folder) {
         folder.setUser(this);
         this.termGroupFolders.add(folder);
+    }
+
+    public void addSpecialization(Specialization specialization) {
+        specialization.setUser(this);
+        this.specializations.add(specialization);
     }
 }
