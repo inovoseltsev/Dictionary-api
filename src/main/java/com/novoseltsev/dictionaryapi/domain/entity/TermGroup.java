@@ -44,6 +44,11 @@ public class TermGroup extends AbstractEntity {
     @ToString.Exclude
     private TermGroupFolder termGroupFolder;
 
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "specialization_id")
+    @ToString.Exclude
+    private Specialization specialization;
+
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(nullable = false)
     @ToString.Exclude

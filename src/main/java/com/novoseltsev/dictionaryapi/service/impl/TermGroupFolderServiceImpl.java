@@ -57,6 +57,6 @@ public class TermGroupFolderServiceImpl implements TermGroupFolderService {
     @Override
     @Transactional(readOnly = true)
     public List<TermGroupFolder> findAllByUserId(Long userId) {
-        return termGroupFolderRepository.findAllByUserIdOrderById(userId);
+        return termGroupFolderRepository.findAllByUserIdOrderByIdDesc(userId);
     }
 }

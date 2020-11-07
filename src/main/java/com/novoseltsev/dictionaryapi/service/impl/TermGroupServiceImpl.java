@@ -75,12 +75,12 @@ public class TermGroupServiceImpl implements TermGroupService {
     @Override
     @Transactional(readOnly = true)
     public List<TermGroup> findAllByUserId(Long userId) {
-        return termGroupRepository.findAllByUserIdOrderById(userId);
+        return termGroupRepository.findAllByUserIdOrderByIdDesc(userId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<TermGroup> findAllByTermGroupFolderId(Long folderId) {
-        return termGroupRepository.findAllByTermGroupFolderIdOrderById(folderId);
+        return termGroupRepository.findAllByTermGroupFolderIdOrderByIdDesc(folderId);
     }
 }

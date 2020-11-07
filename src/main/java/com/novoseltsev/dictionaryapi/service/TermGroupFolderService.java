@@ -16,5 +16,4 @@ public interface TermGroupFolderService {
     TermGroupFolder findById(Long id);
 
     List<TermGroupFolder> findAllByUserId(Long userId);
-
 }
