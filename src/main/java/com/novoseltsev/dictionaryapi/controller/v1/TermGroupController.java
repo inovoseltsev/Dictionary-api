@@ -1,6 +1,7 @@
 package com.novoseltsev.dictionaryapi.controller.v1;
 
 import com.novoseltsev.dictionaryapi.domain.dto.termGroup.FolderTermGroupDto;
+import com.novoseltsev.dictionaryapi.domain.dto.termGroup.SpecializationTermGroupDto;
 import com.novoseltsev.dictionaryapi.domain.dto.termGroup.TermGroupDto;
 import com.novoseltsev.dictionaryapi.domain.dto.termGroup.UserTermGroupDto;
 import com.novoseltsev.dictionaryapi.domain.entity.TermGroup;
@@ -38,13 +39,19 @@ public class TermGroupController {
 
     @GetMapping("/users/{userId}")
     public List<TermGroupDto> findAllByUserId(@PathVariable Long userId) {
-        return termGroupService.findAllByUserIdDesc(userId).stream().map(TermGroupDto::from)
-                .collect(Collectors.toList());
+        return termGroupService.findAllByUserIdDesc(userId).stream()
+                .map(TermGroupDto::from).collect(Collectors.toList());
     }
 
     @GetMapping("/term-group-folders/{folderId}")
     public List<TermGroupDto> findAllByTermGroupFolderId(@PathVariable Long folderId) {
         return termGroupService.findAllByTermGroupFolderIdDesc(folderId).stream()
+                .map(TermGroupDto::from).collect(Collectors.toList());
+    }
+
+    @GetMapping("/specializations/{specializationId}")
+    public List<TermGroupDto> findAllBySpecializationId(@PathVariable Long specializationId) {
+        return termGroupService.findAllBySpecializationIdDesc(specializationId).stream()
                 .map(TermGroupDto::from).collect(Collectors.toList());
     }
 
@@ -59,6 +66,13 @@ public class TermGroupController {
     public ResponseEntity<TermGroupDto> createForTermGroupFolder(
             @Valid @RequestBody FolderTermGroupDto termGroupDto) {
         TermGroup createdTermGroup = termGroupService.createForTermGroupFolder(termGroupDto.toEntity());
+        return new ResponseEntity<>(TermGroupDto.from(createdTermGroup), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/specializations")
+    public ResponseEntity<TermGroupDto> createForSpecialization(
+            @Valid @RequestBody SpecializationTermGroupDto termGroupDto) {
+        TermGroup createdTermGroup = termGroupService.createForSpecialization(termGroupDto.toEntity());
         return new ResponseEntity<>(TermGroupDto.from(createdTermGroup), HttpStatus.CREATED);
     }
 
