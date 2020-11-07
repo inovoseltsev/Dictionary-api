@@ -11,13 +11,17 @@ public interface TermGroupService {
 
     TermGroup createForTermGroupFolder(TermGroup termGroup);
 
+    TermGroup createForSpecialization(TermGroup termGroup);
+
     TermGroup update(TermGroup termGroup);
 
     void deleteById(Long id);
 
     TermGroup findById(Long id);
 
-    List<TermGroup> findAllByUserId(Long userId);
+    List<TermGroup> findAllByUserIdDesc(Long userId);
 
-    List<TermGroup> findAllByTermGroupFolderId(Long folderId);
+    List<TermGroup> findAllByTermGroupFolderIdDesc(Long folderId);
+
+    List<TermGroup> findAllBySpecializationIdDesc(Long specializationId);
 }

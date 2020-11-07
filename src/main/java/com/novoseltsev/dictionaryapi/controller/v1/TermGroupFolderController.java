@@ -1,5 +1,6 @@
 package com.novoseltsev.dictionaryapi.controller.v1;
 
+import com.novoseltsev.dictionaryapi.domain.dto.termGroupFolder.SpecializationTermGroupFolderDto;
 import com.novoseltsev.dictionaryapi.domain.dto.termGroupFolder.TermGroupFolderDto;
 import com.novoseltsev.dictionaryapi.domain.dto.termGroupFolder.UserTermGroupFolderDto;
 import com.novoseltsev.dictionaryapi.domain.entity.TermGroupFolder;
@@ -35,7 +36,13 @@ public class TermGroupFolderController {
 
     @GetMapping("/users/{userId}")
     public List<TermGroupFolderDto> findAllByUserId(@PathVariable Long userId) {
-        return termGroupFolderService.findAllByUserId(userId).stream()
+        return termGroupFolderService.findAllByUserIdDesc(userId).stream()
+                .map(TermGroupFolderDto::from).collect(Collectors.toList());
+    }
+
+    @GetMapping("/specializations/{specializationId}")
+    public List<TermGroupFolderDto> findAllBySpecializationId(@PathVariable Long specializationId) {
+        return termGroupFolderService.findAllBySpecializationIdDesc(specializationId).stream()
                 .map(TermGroupFolderDto::from).collect(Collectors.toList());
     }
 
@@ -46,9 +53,16 @@ public class TermGroupFolderController {
         return new ResponseEntity<>(TermGroupFolderDto.from(createdFolder), HttpStatus.CREATED);
     }
 
+    @PostMapping("/specializations")
+    public ResponseEntity<TermGroupFolderDto> createForSpecialization(
+            @Valid @RequestBody SpecializationTermGroupFolderDto folderDto) {
+        TermGroupFolder createdFolder = termGroupFolderService.createForSpecialization(folderDto.toEntity());
+        return new ResponseEntity<>(TermGroupFolderDto.from(createdFolder), HttpStatus.CREATED);
+    }
+
     @PutMapping("/{id}")
     public TermGroupFolderDto update(
-            @Valid @RequestBody TermGroupFolderDto folderDto, @PathVariable Long id) {
+            @PathVariable Long id, @Valid @RequestBody TermGroupFolderDto folderDto) {
         folderDto.setId(id);
         TermGroupFolder updatedFolder = termGroupFolderService.update(folderDto.toEntity());
         return TermGroupFolderDto.from(updatedFolder);

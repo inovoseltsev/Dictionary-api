@@ -25,7 +25,7 @@ import static com.novoseltsev.dictionaryapi.validation.Pattern.KEY_WORD_PATTERN;
 @Table(schema = "dictionary_schema")
 public class Term extends AbstractEntity {
 
-    @Column(nullable = false, length = 120)
+    @Column(nullable = false)
     @NotBlank
     private String name;
 

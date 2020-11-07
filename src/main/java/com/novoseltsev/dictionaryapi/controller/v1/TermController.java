@@ -48,7 +48,7 @@ public class TermController {
     }
 
     @PutMapping("/{id}")
-    public TermDto update(@Valid @RequestBody TermDto termDto, @PathVariable Long id) {
+    public TermDto update(@PathVariable Long id, @Valid @RequestBody TermDto termDto) {
         termDto.setId(id);
         Term updatedTerm = termService.update(termDto.toEntity());
         return TermDto.from(updatedTerm);

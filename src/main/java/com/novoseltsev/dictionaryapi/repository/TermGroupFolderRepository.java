@@ -6,7 +6,9 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TermGroupFolderRepository extends CrudRepository<TermGroupFolder, Long>  {
+public interface TermGroupFolderRepository extends CrudRepository<TermGroupFolder, Long> {
 
-    List<TermGroupFolder> findAllByUserIdOrderById(Long userId);
+    List<TermGroupFolder> findAllByUserIdOrderByIdDesc(Long userId);
+
+    List<TermGroupFolder> findAllBySpecializationIdOrderByIdDesc(Long specializationId);
 }

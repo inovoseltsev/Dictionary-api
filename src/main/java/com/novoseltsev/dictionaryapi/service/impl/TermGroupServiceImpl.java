@@ -1,10 +1,12 @@
 package com.novoseltsev.dictionaryapi.service.impl;
 
+import com.novoseltsev.dictionaryapi.domain.entity.Specialization;
 import com.novoseltsev.dictionaryapi.domain.entity.TermGroup;
 import com.novoseltsev.dictionaryapi.domain.entity.TermGroupFolder;
 import com.novoseltsev.dictionaryapi.domain.entity.User;
 import com.novoseltsev.dictionaryapi.exception.util.ExceptionUtils;
 import com.novoseltsev.dictionaryapi.repository.TermGroupRepository;
+import com.novoseltsev.dictionaryapi.service.SpecializationService;
 import com.novoseltsev.dictionaryapi.service.TermGroupFolderService;
 import com.novoseltsev.dictionaryapi.service.TermGroupService;
 import com.novoseltsev.dictionaryapi.service.UserService;
@@ -19,15 +21,19 @@ public class TermGroupServiceImpl implements TermGroupService {
     private final TermGroupRepository termGroupRepository;
     private final UserService userService;
     private final TermGroupFolderService termGroupFolderService;
+    private final SpecializationService specializationService;
 
     @Autowired
     public TermGroupServiceImpl(
-            TermGroupRepository termGroupRepository, UserService userService,
-            TermGroupFolderService termGroupFolderService
+            TermGroupRepository termGroupRepository,
+            UserService userService,
+            TermGroupFolderService termGroupFolderService,
+            SpecializationService specializationService
     ) {
         this.termGroupRepository = termGroupRepository;
         this.userService = userService;
         this.termGroupFolderService = termGroupFolderService;
+        this.specializationService = specializationService;
     }
 
     @Override
@@ -44,10 +50,16 @@ public class TermGroupServiceImpl implements TermGroupService {
     public TermGroup createForTermGroupFolder(TermGroup termGroup) {
         Long folderId = termGroup.getTermGroupFolder().getId();
         TermGroupFolder folder = termGroupFolderService.findById(folderId);
-        Long userId = folder.getUser().getId();
-        User user = userService.findById(userId);
         folder.addTermGroup(termGroup);
-        user.addTermGroup(termGroup);
+        return termGroupRepository.save(termGroup);
+    }
+
+    @Override
+    @Transactional
+    public TermGroup createForSpecialization(TermGroup termGroup) {
+        Long specializationId = termGroup.getSpecialization().getId();
+        Specialization specialization = specializationService.findById(specializationId);
+        specialization.addTermGroup(termGroup);
         return termGroupRepository.save(termGroup);
     }
 
@@ -74,13 +86,19 @@ public class TermGroupServiceImpl implements TermGroupService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<TermGroup> findAllByUserId(Long userId) {
-        return termGroupRepository.findAllByUserIdOrderById(userId);
+    public List<TermGroup> findAllByUserIdDesc(Long userId) {
+        return termGroupRepository.findAllByUserIdOrderByIdDesc(userId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<TermGroup> findAllByTermGroupFolderId(Long folderId) {
-        return termGroupRepository.findAllByTermGroupFolderIdOrderById(folderId);
+    public List<TermGroup> findAllByTermGroupFolderIdDesc(Long folderId) {
+        return termGroupRepository.findAllByTermGroupFolderIdOrderByIdDesc(folderId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TermGroup> findAllBySpecializationIdDesc(Long specializationId) {
+        return termGroupRepository.findAllBySpecializationIdOrderByIdDesc(specializationId);
     }
 }
