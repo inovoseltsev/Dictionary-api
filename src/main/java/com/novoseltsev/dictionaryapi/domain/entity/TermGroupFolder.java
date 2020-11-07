@@ -60,5 +60,6 @@ public class TermGroupFolder extends AbstractEntity {
     public void addTermGroup(TermGroup termGroup) {
         termGroup.setTermGroupFolder(this);
         this.termGroups.add(termGroup);
+        this.user.addTermGroup(termGroup);
     }
 }

@@ -35,7 +35,7 @@ public class TermGroupFolderController {
 
     @GetMapping("/users/{userId}")
     public List<TermGroupFolderDto> findAllByUserId(@PathVariable Long userId) {
-        return termGroupFolderService.findAllByUserId(userId).stream()
+        return termGroupFolderService.findAllByUserIdDesc(userId).stream()
                 .map(TermGroupFolderDto::from).collect(Collectors.toList());
     }
 

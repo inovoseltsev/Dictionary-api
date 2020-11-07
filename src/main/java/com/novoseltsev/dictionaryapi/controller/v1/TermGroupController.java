@@ -38,13 +38,13 @@ public class TermGroupController {
 
     @GetMapping("/users/{userId}")
     public List<TermGroupDto> findAllByUserId(@PathVariable Long userId) {
-        return termGroupService.findAllByUserId(userId).stream().map(TermGroupDto::from)
+        return termGroupService.findAllByUserIdDesc(userId).stream().map(TermGroupDto::from)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/term-group-folders/{folderId}")
     public List<TermGroupDto> findAllByTermGroupFolderId(@PathVariable Long folderId) {
-        return termGroupService.findAllByTermGroupFolderId(folderId).stream()
+        return termGroupService.findAllByTermGroupFolderIdDesc(folderId).stream()
                 .map(TermGroupDto::from).collect(Collectors.toList());
     }
 

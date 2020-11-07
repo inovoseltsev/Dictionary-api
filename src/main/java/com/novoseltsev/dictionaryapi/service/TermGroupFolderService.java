@@ -9,11 +9,15 @@ public interface TermGroupFolderService {
 
     TermGroupFolder createForUser(TermGroupFolder folder);
 
+    TermGroupFolder createForSpecialization(TermGroupFolder folder);
+
     TermGroupFolder update(TermGroupFolder folder);
 
     void deleteById(Long id);
 
     TermGroupFolder findById(Long id);
 
-    List<TermGroupFolder> findAllByUserId(Long userId);
+    List<TermGroupFolder> findAllByUserIdDesc(Long userId);
+
+    List<TermGroupFolder> findAllBySpecializationIdDesc(Long specializationId);
 }

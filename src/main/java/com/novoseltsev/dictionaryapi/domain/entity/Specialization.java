@@ -58,10 +58,12 @@ public class Specialization extends AbstractEntity {
     public void addTermGroupFolder(TermGroupFolder folder) {
         folder.setSpecialization(this);
         this.folders.add(folder);
+        this.user.addTermGroupFolder(folder);
     }
 
     public void addTermGroup(TermGroup termGroup) {
         termGroup.setSpecialization(this);
         this.termGroups.add(termGroup);
+        this.user.addTermGroup(termGroup);
     }
 }

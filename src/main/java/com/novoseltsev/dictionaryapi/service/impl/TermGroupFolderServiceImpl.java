@@ -1,9 +1,11 @@
 package com.novoseltsev.dictionaryapi.service.impl;
 
+import com.novoseltsev.dictionaryapi.domain.entity.Specialization;
 import com.novoseltsev.dictionaryapi.domain.entity.TermGroupFolder;
 import com.novoseltsev.dictionaryapi.domain.entity.User;
 import com.novoseltsev.dictionaryapi.exception.util.ExceptionUtils;
 import com.novoseltsev.dictionaryapi.repository.TermGroupFolderRepository;
+import com.novoseltsev.dictionaryapi.service.SpecializationService;
 import com.novoseltsev.dictionaryapi.service.TermGroupFolderService;
 import com.novoseltsev.dictionaryapi.service.UserService;
 import java.util.List;
@@ -15,13 +17,16 @@ public class TermGroupFolderServiceImpl implements TermGroupFolderService {
 
     private final TermGroupFolderRepository termGroupFolderRepository;
     private final UserService userService;
+    private final SpecializationService specializationService;
 
     public TermGroupFolderServiceImpl(
             TermGroupFolderRepository termGroupFolderRepository,
-            UserService userService
+            UserService userService,
+            SpecializationService specializationService
     ) {
         this.termGroupFolderRepository = termGroupFolderRepository;
         this.userService = userService;
+        this.specializationService = specializationService;
     }
 
     @Override
@@ -30,6 +35,15 @@ public class TermGroupFolderServiceImpl implements TermGroupFolderService {
         Long userId = folder.getUser().getId();
         User user = userService.findById(userId);
         user.addTermGroupFolder(folder);
+        return termGroupFolderRepository.save(folder);
+    }
+
+    @Override
+    @Transactional
+    public TermGroupFolder createForSpecialization(TermGroupFolder folder) {
+        Long specializationId = folder.getSpecialization().getId();
+        Specialization specialization = specializationService.findById(specializationId);
+        specialization.addTermGroupFolder(folder);
         return termGroupFolderRepository.save(folder);
     }
 
@@ -56,7 +70,13 @@ public class TermGroupFolderServiceImpl implements TermGroupFolderService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<TermGroupFolder> findAllByUserId(Long userId) {
+    public List<TermGroupFolder> findAllByUserIdDesc(Long userId) {
         return termGroupFolderRepository.findAllByUserIdOrderByIdDesc(userId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TermGroupFolder> findAllBySpecializationIdDesc(Long specializationId) {
+        return termGroupFolderRepository.findAllBySpecializationIdOrderByIdDesc(specializationId);
     }
 }
