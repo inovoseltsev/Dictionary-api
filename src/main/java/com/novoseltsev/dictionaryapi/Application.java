@@ -14,3 +14,5 @@ public class Application extends SpringBootServletInitializer {
         SpringApplication.run(Application.class);
     }
 }
+
+// Чел, ну какое rest api, ну ты мне скажи...
