@@ -5,7 +5,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -36,16 +35,17 @@ public class Term extends AbstractEntity {
     @Pattern(regexp = KEY_WORD_PATTERN)
     private String keyword;
 
-    @Lob
-    private Byte[] image;
+    @Column(unique = true)
+    private String imagePath;
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "term_group_id", nullable = false)
     @ToString.Exclude
     private TermGroup termGroup;
 
-    public Term(String name, String definition) {
+    public Term(String name, String definition, String keyword) {
         this.name = name;
         this.definition = definition;
+        this.keyword = keyword;
     }
 }

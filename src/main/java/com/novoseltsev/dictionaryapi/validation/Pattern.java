@@ -2,7 +2,7 @@ package com.novoseltsev.dictionaryapi.validation;
 
 public interface Pattern {
 
-    String NAME_PATTERN = "^[a-zA-Zа-яА-я]{1,100}$";
+    String NAME_PATTERN = "^[a-zA-Zа-яА-яА-Яа-яёЁЇїІіЄєҐґ ]{1,100}$";
 
     String LOGIN_PATTERN = "^[a-z0-9_.-]{3,16}$";
 
@@ -13,5 +13,4 @@ public interface Pattern {
     String WORD_DEFINITION_PATTERN = "^[A-Za-zА-Яа-яА-Яа-яёЁЇїІіЄєҐґ ]{1,}$";
 
     String KEY_WORD_PATTERN = "^[A-Za-zА-Яа-яА-Яа-яёЁЇїІіЄєҐґ ]{0,}$";
-
 }
