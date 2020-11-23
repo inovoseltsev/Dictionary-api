@@ -6,6 +6,8 @@ import com.novoseltsev.dictionaryapi.domain.entity.Term;
 import com.novoseltsev.dictionaryapi.domain.status.TermAwareStatus;
 import com.novoseltsev.dictionaryapi.service.TermService;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,10 +47,44 @@ public class TermController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("studying/term-groups/{groupId}")
-    public List<TermDto> getStudySet(@PathVariable Long groupId) {
-        return termService.createStudySetFromTermGroup(groupId).stream()
-                .map(TermDto::from).collect(Collectors.toList());
+    @GetMapping("/studying/term-groups/{groupId}")
+    public List<TermDto> getStudySet(@PathVariable Long groupId,
+                                     @RequestParam boolean shuffle) {
+        List<Term> studySet = termService.createStudySetFromTermGroup(groupId);
+        if (shuffle) {
+            Collections.shuffle(studySet);
+        }
+        return studySet.stream().map(TermDto::from).collect(Collectors.toList());
+    }
+
+    @GetMapping("/studying/keywords/term-groups/{groupId}")
+    public List<TermDto> getStudySetWithKeywords(@PathVariable Long groupId,
+                                                 @RequestParam boolean shuffle) {
+        List<Term> studySet = termService.createStudySetWithKeywordsFromTermGroup(groupId);
+        if (shuffle) {
+            Collections.shuffle(studySet);
+        }
+        return studySet.stream().map(TermDto::from).collect(Collectors.toList());
+    }
+
+    @GetMapping("/studying/images/term-groups/{groupId}")
+    public List<TermDto> getStudySetWithImages(@PathVariable Long groupId,
+                                               @RequestParam boolean shuffle) {
+        List<Term> studySet = termService.createStudySetWithImagesFromTermGroup(groupId);
+        if (shuffle) {
+            Collections.shuffle(studySet);
+        }
+        return studySet.stream().map(TermDto::from).collect(Collectors.toList());
+    }
+
+    @GetMapping("/studying/chunks/term-groups/{groupId}")
+    public List<List<TermDto>> getStudySetInChunks(@PathVariable Long groupId) {
+        List<List<Term>> studyChunks = termService.createStudySetInChunksFromTermGroup(groupId);
+        List<List<TermDto>> studyChunksDto = new ArrayList<>();
+        for (List<Term> chunk : studyChunks) {
+            studyChunksDto.add(chunk.stream().map(TermDto::from).collect(Collectors.toList()));
+        }
+        return studyChunksDto;
     }
 
     @PostMapping
