@@ -1,6 +1,7 @@
 package com.novoseltsev.dictionaryapi.service.impl;
 
 import com.novoseltsev.dictionaryapi.domain.entity.Term;
+import com.novoseltsev.dictionaryapi.domain.status.TermAwareStatus;
 import com.novoseltsev.dictionaryapi.exception.util.ExceptionUtils;
 import com.novoseltsev.dictionaryapi.repository.TermRepository;
 import com.novoseltsev.dictionaryapi.service.TermGroupService;
@@ -9,14 +10,23 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import org.apache.commons.collections4.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+
+import static com.novoseltsev.dictionaryapi.domain.status.TermAwareStatus.PERFECT;
 
 @Component
 public class TermServiceImpl implements TermService {
@@ -90,5 +100,66 @@ public class TermServiceImpl implements TermService {
         String filePath = uploadPath + "/" + uniqueFileName;
         Files.write(Paths.get(filePath), image.getBytes());
         return filePath;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Term> createStudySetFromTermGroup(Long termGroupId) {
+        List<Term> groupTerms = findAllByTermGroupId(termGroupId);
+        return getUnlearnedTermsSortedByAwareStatusFrom(groupTerms);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Term> createStudySetWithKeywordsFromTermGroup(Long groupId) {
+        List<Term> terms = findAllByTermGroupId(groupId);
+        List<Term> groupTerms = terms.stream().filter(el -> Objects.nonNull(el.getKeyword()))
+                .collect(Collectors.toList());
+        return getUnlearnedTermsSortedByAwareStatusFrom(groupTerms);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Term> createStudySetWithImagesFromTermGroup(Long termGroupId) {
+        List<Term> terms = findAllByTermGroupId(termGroupId);
+        List<Term> groupTerms = terms.stream().filter(el -> Objects.nonNull(el.getImagePath()))
+                .collect(Collectors.toList());
+        return getUnlearnedTermsSortedByAwareStatusFrom(groupTerms);
+    }
+
+    private List<Term> getUnlearnedTermsSortedByAwareStatusFrom(List<Term> terms) {
+        List<Term> unlearnedTerms = new ArrayList<>();
+        for (Term term : terms) {
+            if (!term.getAwareStatus().equals(PERFECT)) {
+                unlearnedTerms.add(term);
+            }
+        }
+        unlearnedTerms.sort(Comparator.comparing(Term::getAwareStatus));
+        return unlearnedTerms;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<List<Term>> createStudySetInChunksFromTermGroup(Long termGroupId) {
+        List<Term> terms = findAllByTermGroupId(termGroupId);
+        List<Term> unlearnedTerms = terms.stream()
+                .filter(el -> !el.getAwareStatus().equals(PERFECT)).collect(Collectors.toList());
+        Collections.shuffle(unlearnedTerms);
+        return ListUtils.partition(unlearnedTerms, 4);
+    }
+
+    @Override
+    @Transactional
+    public void changeAwareStatus(Long termId, TermAwareStatus awareStatus) {
+        Term term = findById(termId);
+        term.setAwareStatus(awareStatus);
+    }
+
+    @Override
+    @Transactional
+    public void resetAwareStatusForAllInTermGroup(Long groupId) {
+        List<Term> terms = findAllByTermGroupId(groupId);
+        terms.forEach(el -> el.setAwareStatus(TermAwareStatus.BAD));
+        termRepository.saveAll(terms);
     }
 }

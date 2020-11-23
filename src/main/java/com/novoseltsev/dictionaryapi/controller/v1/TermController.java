@@ -3,6 +3,7 @@ package com.novoseltsev.dictionaryapi.controller.v1;
 import com.novoseltsev.dictionaryapi.domain.dto.term.GroupTermDto;
 import com.novoseltsev.dictionaryapi.domain.dto.term.TermDto;
 import com.novoseltsev.dictionaryapi.domain.entity.Term;
+import com.novoseltsev.dictionaryapi.domain.status.TermAwareStatus;
 import com.novoseltsev.dictionaryapi.service.TermService;
 import java.io.IOException;
 import java.util.List;
@@ -43,6 +44,12 @@ public class TermController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("studying/term-groups/{groupId}")
+    public List<TermDto> getStudySet(@PathVariable Long groupId) {
+        return termService.createStudySetFromTermGroup(groupId).stream()
+                .map(TermDto::from).collect(Collectors.toList());
+    }
+
     @PostMapping
     public ResponseEntity<TermDto> createForTermGroup(
             @RequestPart @Valid GroupTermDto groupTermDto,
@@ -67,6 +74,11 @@ public class TermController {
         }
         Term updatedTerm = termService.update(term);
         return TermDto.from(updatedTerm);
+    }
+
+    @PutMapping("/terms/studying/{termId}")
+    public void changeTermAwareStatus(@PathVariable Long termId, TermAwareStatus awareStatus) {
+        termService.changeAwareStatus(termId, awareStatus);
     }
 
     @DeleteMapping("/{id}")

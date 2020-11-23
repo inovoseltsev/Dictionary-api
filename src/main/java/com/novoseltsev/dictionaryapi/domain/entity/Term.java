@@ -1,8 +1,11 @@
 package com.novoseltsev.dictionaryapi.domain.entity;
 
+import com.novoseltsev.dictionaryapi.domain.status.TermAwareStatus;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -37,6 +40,10 @@ public class Term extends AbstractEntity {
 
     @Column(unique = true)
     private String imagePath;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "aware_status", length = 7)
+    private TermAwareStatus awareStatus;
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "term_group_id", nullable = false)
