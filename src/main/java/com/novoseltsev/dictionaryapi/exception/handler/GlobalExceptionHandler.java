@@ -1,6 +1,7 @@
 package com.novoseltsev.dictionaryapi.exception.handler;
 
 import com.novoseltsev.dictionaryapi.exception.ObjectNotFoundException;
+import java.io.IOException;
 import java.util.Map;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ObjectNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<Object, Object> handleObjectNotFoundException(ObjectNotFoundException e) {
+        return getErrorResponse(e);
+    }
+
+    @ExceptionHandler(IOException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<Object, Object> handleIOException(IOException e) {
         return getErrorResponse(e);
     }
 }
