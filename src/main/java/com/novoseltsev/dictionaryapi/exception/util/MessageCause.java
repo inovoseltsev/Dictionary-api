@@ -11,4 +11,6 @@ public interface MessageCause {
     String INVALID_OLD_PASSWORD = "Old password is incorrect";
 
     String BAD_CREDENTIALS = "Login or password is invalid";
+
+    String USER_ACCOUNT_HAVE_NO_ACCESS = "Account is deleted or banned";
 }

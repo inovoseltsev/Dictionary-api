@@ -2,6 +2,7 @@ package com.novoseltsev.dictionaryapi.service;
 
 import com.novoseltsev.dictionaryapi.domain.dto.request.ChangePasswordDto;
 import com.novoseltsev.dictionaryapi.domain.entity.User;
+import com.novoseltsev.dictionaryapi.domain.status.UserStatus;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,8 @@ public interface UserService {
     User update(User user);
 
     void changePassword(Long userId, ChangePasswordDto passwordRequest);
+
+    void changeUserStatus(Long userId, UserStatus status);
 
     void markAsDeletedById(Long id);
 

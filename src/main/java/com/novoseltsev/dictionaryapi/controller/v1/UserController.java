@@ -1,8 +1,10 @@
 package com.novoseltsev.dictionaryapi.controller.v1;
 
+import com.novoseltsev.dictionaryapi.domain.dto.request.ChangePasswordDto;
 import com.novoseltsev.dictionaryapi.domain.dto.user.SignUpUserDto;
 import com.novoseltsev.dictionaryapi.domain.dto.user.UserDto;
 import com.novoseltsev.dictionaryapi.domain.entity.User;
+import com.novoseltsev.dictionaryapi.domain.status.UserStatus;
 import com.novoseltsev.dictionaryapi.service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,6 +53,17 @@ public class UserController {
         userDto.setId(id);
         User updatedUser = userService.update(userDto.toEntity());
         return UserDto.from(updatedUser);
+    }
+
+    @PutMapping("/password/{id}")
+    public void changePassword(@PathVariable Long id,
+                               @Valid @RequestBody ChangePasswordDto passwordDto) {
+        userService.changePassword(id, passwordDto);
+    }
+
+    @PutMapping("/user-status/{id}")
+    public void changeUserStatus(@PathVariable Long id, UserStatus status) {
+        userService.changeUserStatus(id, status);
     }
 
     @DeleteMapping("/{id}")
