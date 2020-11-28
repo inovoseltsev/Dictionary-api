@@ -49,27 +49,29 @@ public class TermController {
 
     @GetMapping("/studying/term-groups/{groupId}")
     public List<TermDto> getStudySet(@PathVariable Long groupId,
-                                     @RequestParam boolean shuffle) {
+                                     @RequestParam(required = false) boolean shuffle) {
         List<Term> studySet = termService.createStudySetFromTermGroup(groupId);
         if (shuffle) {
             Collections.shuffle(studySet);
         }
-        return studySet.stream().map(TermDto::from).collect(Collectors.toList());
+        return studySet.stream().map(TermDto::fromTermWithoutImages)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/studying/keywords/term-groups/{groupId}")
     public List<TermDto> getStudySetWithKeywords(@PathVariable Long groupId,
-                                                 @RequestParam boolean shuffle) {
+                                                 @RequestParam(required = false) boolean shuffle) {
         List<Term> studySet = termService.createStudySetWithKeywordsFromTermGroup(groupId);
         if (shuffle) {
             Collections.shuffle(studySet);
         }
-        return studySet.stream().map(TermDto::from).collect(Collectors.toList());
+        return studySet.stream().map(TermDto::fromTermWithoutImages)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/studying/images/term-groups/{groupId}")
     public List<TermDto> getStudySetWithImages(@PathVariable Long groupId,
-                                               @RequestParam boolean shuffle) {
+                                               @RequestParam(required = false) boolean shuffle) {
         List<Term> studySet = termService.createStudySetWithImagesFromTermGroup(groupId);
         if (shuffle) {
             Collections.shuffle(studySet);
@@ -82,7 +84,8 @@ public class TermController {
         List<List<Term>> studyChunks = termService.createStudySetInChunksFromTermGroup(groupId);
         List<List<TermDto>> studyChunksDto = new ArrayList<>();
         for (List<Term> chunk : studyChunks) {
-            studyChunksDto.add(chunk.stream().map(TermDto::from).collect(Collectors.toList()));
+            studyChunksDto.add(chunk.stream().map(TermDto::fromTermWithoutImages)
+                    .collect(Collectors.toList()));
         }
         return studyChunksDto;
     }
@@ -113,9 +116,10 @@ public class TermController {
         return TermDto.from(updatedTerm);
     }
 
-    @PutMapping("/terms/studying/{termId}")
-    public void changeTermAwareStatus(@PathVariable Long termId, TermAwareStatus awareStatus) {
-        termService.changeAwareStatus(termId, awareStatus);
+    @PutMapping("/studying/{id}")
+    public void changeTermAwareStatus(@PathVariable Long id,
+                                      @RequestParam TermAwareStatus awareStatus) {
+        termService.changeAwareStatus(id, awareStatus);
     }
 
     @DeleteMapping("/{id}")

@@ -28,6 +28,11 @@ public class TermDto extends AbstractTermDto {
         this.image = image;
     }
 
+    public TermDto(Long id, String name, String definition, String keyword) {
+        super(name, definition, keyword);
+        this.id = id;
+    }
+
     @Override
     public Term toEntity() {
         Term term = super.toEntity();
@@ -50,6 +55,15 @@ public class TermDto extends AbstractTermDto {
                 term.getDefinition(),
                 term.getKeyword(),
                 image
+        );
+    }
+
+    public static TermDto fromTermWithoutImages(Term term) {
+        return new TermDto(
+                term.getId(),
+                term.getName(),
+                term.getDefinition(),
+                term.getKeyword()
         );
     }
 }

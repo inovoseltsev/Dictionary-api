@@ -73,6 +73,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void changeUserStatus(Long userId, UserStatus status) {
         User user = findById(userId);
         user.setStatus(status);
