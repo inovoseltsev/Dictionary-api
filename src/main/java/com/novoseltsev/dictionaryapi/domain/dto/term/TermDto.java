@@ -5,6 +5,8 @@ import com.novoseltsev.dictionaryapi.domain.entity.Term;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 import javax.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,12 +22,12 @@ public class TermDto extends AbstractTermDto {
     @Positive
     private Long id;
 
-    private byte[] image;
+    private Map<String, Object> imageFile;
 
-    public TermDto(Long id, String name, String definition, String keyword, byte[] image) {
+    public TermDto(Long id, String name, String definition, String keyword, Map<String, Object> imageFile) {
         super(name, definition, keyword);
         this.id = id;
-        this.image = image;
+        this.imageFile = imageFile;
     }
 
     public TermDto(Long id, String name, String definition, String keyword) {
@@ -41,20 +43,26 @@ public class TermDto extends AbstractTermDto {
     }
 
     public static TermDto from(Term term) {
-        byte[] image = new byte[]{};
-        if (!StringUtils.isEmpty(term.getImagePath())) {
+        Map<String, Object> imageFile = new HashMap<>();
+        byte[] imageContent = new byte[]{};
+        String imagePath = term.getImagePath();
+        String imageName = "";
+        if (!StringUtils.isEmpty(imagePath)) {
+            imageName = imagePath.substring(imagePath.indexOf(".") + 1);
             try {
-                image = Files.readAllBytes(new File(term.getImagePath()).toPath());
+                imageContent = Files.readAllBytes(new File(term.getImagePath()).toPath());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
+        imageFile.put("name", imageName);
+        imageFile.put("content", imageContent);
         return new TermDto(
                 term.getId(),
                 term.getName(),
                 term.getDefinition(),
                 term.getKeyword(),
-                image
+                imageFile
         );
     }
 
