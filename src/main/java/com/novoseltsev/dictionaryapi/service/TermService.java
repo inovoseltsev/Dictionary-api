@@ -18,7 +18,7 @@ public interface TermService {
 
     Term findById(Long id);
 
-    List<Term> findAllByTermGroupId(Long groupId);
+    List<Term> findAllByTermGroupIdDesc(Long groupId);
 
     String uploadTermImage(MultipartFile image) throws IOException;
 

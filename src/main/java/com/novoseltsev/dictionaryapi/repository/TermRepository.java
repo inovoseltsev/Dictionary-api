@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TermRepository extends CrudRepository<Term, Long> {
 
-    List<Term> findAllByTermGroupIdOrderById(Long wordSetId);
+    List<Term> findAllByTermGroupIdOrderByIdDesc(Long wordSetId);
 }

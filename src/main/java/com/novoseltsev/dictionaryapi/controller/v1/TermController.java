@@ -43,7 +43,7 @@ public class TermController {
 
     @GetMapping("/term-groups/{groupId}")
     public List<TermDto> findAllByTermGroupId(@PathVariable Long groupId) {
-        return termService.findAllByTermGroupId(groupId).stream().map(TermDto::from)
+        return termService.findAllByTermGroupIdDesc(groupId).stream().map(TermDto::from)
                 .collect(Collectors.toList());
     }
 

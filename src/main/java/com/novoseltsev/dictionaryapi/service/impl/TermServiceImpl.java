@@ -57,18 +57,21 @@ public class TermServiceImpl implements TermService {
     @Transactional
     public Term update(Term term) throws IOException {
         Term savedTerm = findById(term.getId());
-        changePreviousImage(term.getImagePath(), savedTerm.getImagePath());
+        String imagePath = updateImagePathIfNeeded(term.getImagePath(), savedTerm.getImagePath());
         savedTerm.setName(term.getName());
         savedTerm.setDefinition(term.getDefinition());
         savedTerm.setKeyword(term.getKeyword());
-        savedTerm.setImagePath(term.getImagePath());
+        savedTerm.setImagePath(imagePath);
         return termRepository.save(savedTerm);
     }
 
-    private void changePreviousImage(String newPath, String previousPath) throws IOException {
+    private String updateImagePathIfNeeded(String newPath, String previousPath) throws IOException {
+        String imagePath = previousPath;
         if (!StringUtils.isEmpty(newPath)) {
             Files.delete(Paths.get(previousPath));
+            imagePath = newPath;
         }
+        return imagePath;
     }
 
     @Override
@@ -85,8 +88,8 @@ public class TermServiceImpl implements TermService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Term> findAllByTermGroupId(Long termGroupId) {
-        return termRepository.findAllByTermGroupIdOrderById(termGroupId);
+    public List<Term> findAllByTermGroupIdDesc(Long termGroupId) {
+        return termRepository.findAllByTermGroupIdOrderByIdDesc(termGroupId);
     }
 
     @Override
@@ -105,14 +108,14 @@ public class TermServiceImpl implements TermService {
     @Override
     @Transactional(readOnly = true)
     public List<Term> createStudySetFromTermGroup(Long termGroupId) {
-        List<Term> groupTerms = findAllByTermGroupId(termGroupId);
+        List<Term> groupTerms = findAllByTermGroupIdDesc(termGroupId);
         return getUnlearnedTermsSortedByAwareStatusFrom(groupTerms);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Term> createStudySetWithKeywordsFromTermGroup(Long groupId) {
-        List<Term> terms = findAllByTermGroupId(groupId);
+        List<Term> terms = findAllByTermGroupIdDesc(groupId);
         List<Term> groupTerms = terms.stream().filter(el -> Objects.nonNull(el.getKeyword()))
                 .collect(Collectors.toList());
         return getUnlearnedTermsSortedByAwareStatusFrom(groupTerms);
@@ -121,7 +124,7 @@ public class TermServiceImpl implements TermService {
     @Override
     @Transactional(readOnly = true)
     public List<Term> createStudySetWithImagesFromTermGroup(Long termGroupId) {
-        List<Term> terms = findAllByTermGroupId(termGroupId);
+        List<Term> terms = findAllByTermGroupIdDesc(termGroupId);
         List<Term> groupTerms = terms.stream().filter(el -> Objects.nonNull(el.getImagePath()))
                 .collect(Collectors.toList());
         return getUnlearnedTermsSortedByAwareStatusFrom(groupTerms);
@@ -141,7 +144,7 @@ public class TermServiceImpl implements TermService {
     @Override
     @Transactional(readOnly = true)
     public List<List<Term>> createStudySetInChunksFromTermGroup(Long termGroupId) {
-        List<Term> terms = findAllByTermGroupId(termGroupId);
+        List<Term> terms = findAllByTermGroupIdDesc(termGroupId);
         List<Term> unlearnedTerms = terms.stream()
                 .filter(el -> !el.getAwareStatus().equals(PERFECT)).collect(Collectors.toList());
         Collections.shuffle(unlearnedTerms);
@@ -158,7 +161,7 @@ public class TermServiceImpl implements TermService {
     @Override
     @Transactional
     public void resetAwareStatusForAllInTermGroup(Long groupId) {
-        List<Term> terms = findAllByTermGroupId(groupId);
+        List<Term> terms = findAllByTermGroupIdDesc(groupId);
         terms.forEach(el -> el.setAwareStatus(TermAwareStatus.BAD));
         termRepository.saveAll(terms);
     }
