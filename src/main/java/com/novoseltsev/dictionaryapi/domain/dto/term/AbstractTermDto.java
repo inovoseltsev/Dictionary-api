@@ -23,6 +23,8 @@ public abstract class AbstractTermDto implements DtoMapper<Term> {
     @Pattern(regexp = KEY_WORD_PATTERN)
     private String keyword;
 
+    //TODO Add aware status
+
     public AbstractTermDto(String name, String definition, String keyword) {
         this.name = name;
         this.definition = definition;

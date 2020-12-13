@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,11 @@ public class TermController {
     public List<TermDto> findAllByTermGroupId(@PathVariable Long groupId) {
         return termService.findAllByTermGroupIdDesc(groupId).stream().map(TermDto::from)
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/studying/answers/{termId}")
+    public List<Map<String, Object>> getAnswerVariantsForTerm(@PathVariable Long termId) {
+        return termService.createAnswerVariantsForTerm(termId);
     }
 
     @GetMapping("/studying/term-groups/{groupId}")
@@ -117,9 +123,9 @@ public class TermController {
     }
 
     @PutMapping("/studying/{id}")
-    public void changeTermAwareStatus(@PathVariable Long id,
-                                      @RequestParam TermAwareStatus awareStatus) {
-        termService.changeAwareStatus(id, awareStatus);
+    public void updateAwareStatus(@PathVariable Long id,
+                                  @RequestParam TermAwareStatus awareStatus) {
+        termService.updateAwareStatus(id, awareStatus);
     }
 
     @DeleteMapping("/{id}")

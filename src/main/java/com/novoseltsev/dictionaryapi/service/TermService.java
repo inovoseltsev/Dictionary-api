@@ -4,6 +4,7 @@ import com.novoseltsev.dictionaryapi.domain.entity.Term;
 import com.novoseltsev.dictionaryapi.domain.status.TermAwareStatus;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,7 +31,9 @@ public interface TermService {
 
     List<List<Term>> createStudySetInChunksFromTermGroup(Long termGroupId);
 
-    void changeAwareStatus(Long termId, TermAwareStatus awareStatus);
+    List<Map<String, Object>> createAnswerVariantsForTerm(Long termId);
+
+    void updateAwareStatus(Long termId, TermAwareStatus awareStatus);
 
     void resetAwareStatusForAllInTermGroup(Long termGroupId);
 }
