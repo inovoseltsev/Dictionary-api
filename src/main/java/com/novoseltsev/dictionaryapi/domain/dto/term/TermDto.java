@@ -2,6 +2,7 @@ package com.novoseltsev.dictionaryapi.domain.dto.term;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.novoseltsev.dictionaryapi.domain.entity.Term;
+import com.novoseltsev.dictionaryapi.domain.status.TermAwareStatus;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,17 +23,22 @@ public class TermDto extends AbstractTermDto {
     @Positive
     private Long id;
 
+    TermAwareStatus awareStatus;
+
     private Map<String, Object> imageFile;
 
-    public TermDto(Long id, String name, String definition, String keyword, Map<String, Object> imageFile) {
+    public TermDto(Long id, String name, String definition, String keyword, TermAwareStatus awareStatus,
+                   Map<String, Object> imageFile) {
         super(name, definition, keyword);
         this.id = id;
+        this.awareStatus = awareStatus;
         this.imageFile = imageFile;
     }
 
-    public TermDto(Long id, String name, String definition, String keyword) {
+    public TermDto(Long id, String name, String definition, String keyword, TermAwareStatus awareStatus) {
         super(name, definition, keyword);
         this.id = id;
+        this.awareStatus = awareStatus;
     }
 
     @Override
@@ -62,6 +68,7 @@ public class TermDto extends AbstractTermDto {
                 term.getName(),
                 term.getDefinition(),
                 term.getKeyword(),
+                term.getAwareStatus(),
                 imageFile
         );
     }
@@ -71,7 +78,8 @@ public class TermDto extends AbstractTermDto {
                 term.getId(),
                 term.getName(),
                 term.getDefinition(),
-                term.getKeyword()
+                term.getKeyword(),
+                term.getAwareStatus()
         );
     }
 }
