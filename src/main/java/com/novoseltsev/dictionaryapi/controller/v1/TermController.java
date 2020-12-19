@@ -122,10 +122,15 @@ public class TermController {
         return TermDto.from(updatedTerm);
     }
 
-    @PutMapping("/studying/{id}")
+    @PutMapping("/studying/aware-status/{id}")
     public void updateAwareStatus(@PathVariable Long id,
                                   @RequestParam TermAwareStatus awareStatus) {
         termService.updateAwareStatus(id, awareStatus);
+    }
+
+    @PutMapping("/studying/aware-status/reset/{groupId}")
+    public void resetAwareStatusForTermGroup(@PathVariable Long groupId) {
+        termService.resetAwareStatusForAllInTermGroup(groupId);
     }
 
     @DeleteMapping("/{id}")
