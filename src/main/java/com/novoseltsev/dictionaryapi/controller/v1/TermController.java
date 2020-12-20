@@ -123,8 +123,7 @@ public class TermController {
     }
 
     @PutMapping("/studying/aware-status/{id}")
-    public void updateAwareStatus(@PathVariable Long id,
-                                  @RequestParam TermAwareStatus awareStatus) {
+    public void updateAwareStatus(@PathVariable Long id, @RequestParam TermAwareStatus awareStatus) {
         termService.updateAwareStatus(id, awareStatus);
     }
 

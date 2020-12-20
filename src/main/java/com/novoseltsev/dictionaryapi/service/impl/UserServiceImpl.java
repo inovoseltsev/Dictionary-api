@@ -2,6 +2,7 @@ package com.novoseltsev.dictionaryapi.service.impl;
 
 import com.novoseltsev.dictionaryapi.domain.dto.request.ChangePasswordDto;
 import com.novoseltsev.dictionaryapi.domain.entity.User;
+import com.novoseltsev.dictionaryapi.domain.role.UserRole;
 import com.novoseltsev.dictionaryapi.domain.status.UserStatus;
 import com.novoseltsev.dictionaryapi.exception.InvalidOldPasswordException;
 import com.novoseltsev.dictionaryapi.exception.LoginIsAlreadyUsedException;
@@ -9,6 +10,7 @@ import com.novoseltsev.dictionaryapi.exception.UserAccountAccessForbiddenExcepti
 import com.novoseltsev.dictionaryapi.repository.UserRepository;
 import com.novoseltsev.dictionaryapi.service.UserService;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -97,7 +99,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public List<User> findAll() {
-        return (List<User>) userRepository.findAll();
+        List<User> users = (List<User>) userRepository.findAll();
+        return users.stream().filter(user -> !user.getRole().equals(UserRole.ADMIN))
+                .collect(Collectors.toList());
     }
 
     @Override

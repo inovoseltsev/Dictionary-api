@@ -1,6 +1,7 @@
 package com.novoseltsev.dictionaryapi.controller.v1;
 
 import com.novoseltsev.dictionaryapi.domain.dto.request.ChangePasswordDto;
+import com.novoseltsev.dictionaryapi.domain.dto.user.AdminUserDto;
 import com.novoseltsev.dictionaryapi.domain.dto.user.SignUpUserDto;
 import com.novoseltsev.dictionaryapi.domain.dto.user.UserDto;
 import com.novoseltsev.dictionaryapi.domain.entity.User;
@@ -38,8 +39,8 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserDto> findAll() {
-        return userService.findAll().stream().map(UserDto::from).collect(Collectors.toList());
+    public List<AdminUserDto> findAll() {
+        return userService.findAll().stream().map(AdminUserDto::from).collect(Collectors.toList());
     }
 
     @PostMapping("/registration")
