@@ -44,8 +44,7 @@ public class TermController {
 
     @GetMapping("/term-groups/{groupId}")
     public List<TermDto> findAllByTermGroupId(@PathVariable Long groupId) {
-        return termService.findAllByTermGroupIdDesc(groupId).stream().map(TermDto::from)
-                .collect(Collectors.toList());
+        return termService.findAllByTermGroupIdDesc(groupId).stream().map(TermDto::from).collect(Collectors.toList());
     }
 
     @GetMapping("/studying/answers/{termId}")
@@ -60,8 +59,7 @@ public class TermController {
         if (shuffle) {
             Collections.shuffle(studySet);
         }
-        return studySet.stream().map(TermDto::fromTermWithoutImages)
-                .collect(Collectors.toList());
+        return studySet.stream().map(TermDto::fromTermWithoutImages).collect(Collectors.toList());
     }
 
     @GetMapping("/studying/keywords/term-groups/{groupId}")
@@ -71,8 +69,7 @@ public class TermController {
         if (shuffle) {
             Collections.shuffle(studySet);
         }
-        return studySet.stream().map(TermDto::fromTermWithoutImages)
-                .collect(Collectors.toList());
+        return studySet.stream().map(TermDto::fromTermWithoutImages).collect(Collectors.toList());
     }
 
     @GetMapping("/studying/images/term-groups/{groupId}")
@@ -90,16 +87,14 @@ public class TermController {
         List<List<Term>> studyChunks = termService.createStudySetInChunksFromTermGroup(groupId);
         List<List<TermDto>> studyChunksDto = new ArrayList<>();
         for (List<Term> chunk : studyChunks) {
-            studyChunksDto.add(chunk.stream().map(TermDto::fromTermWithoutImages)
-                    .collect(Collectors.toList()));
+            studyChunksDto.add(chunk.stream().map(TermDto::fromTermWithoutImages).collect(Collectors.toList()));
         }
         return studyChunksDto;
     }
 
     @PostMapping
-    public ResponseEntity<TermDto> createForTermGroup(
-            @RequestPart @Valid GroupTermDto groupTermDto,
-            @RequestPart(required = false) MultipartFile termImage) throws IOException {
+    public ResponseEntity<TermDto> createForTermGroup(@RequestPart @Valid GroupTermDto groupTermDto,
+                                                      @RequestPart(required = false) MultipartFile termImage) throws IOException {
         Term term = groupTermDto.toEntity();
         if (termImage != null) {
             String imagePath = termService.uploadTermImage(termImage);

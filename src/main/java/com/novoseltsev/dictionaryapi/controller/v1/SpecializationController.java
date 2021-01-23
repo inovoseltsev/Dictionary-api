@@ -37,20 +37,18 @@ public class SpecializationController {
 
     @GetMapping("/users/{userId}")
     public List<SpecializationDto> findAllByUserId(@PathVariable Long userId) {
-        return specializationService.findAllByUserIdDesc(userId).stream()
-                .map(SpecializationDto::from).collect(Collectors.toList());
+        return specializationService.findAllByUserIdDesc(userId).stream().map(SpecializationDto::from)
+                .collect(Collectors.toList());
     }
 
     @PostMapping
-    public ResponseEntity<SpecializationDto> create(
-            @Valid @RequestBody UserSpecializationDto specializationDto) {
+    public ResponseEntity<SpecializationDto> create(@Valid @RequestBody UserSpecializationDto specializationDto) {
         Specialization createdSpecialization = specializationService.create(specializationDto.toEntity());
         return new ResponseEntity<>(SpecializationDto.from(createdSpecialization), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public SpecializationDto update(
-            @PathVariable Long id, @Valid @RequestBody SpecializationDto specializationDto) {
+    public SpecializationDto update(@PathVariable Long id, @Valid @RequestBody SpecializationDto specializationDto) {
         specializationDto.setId(id);
         Specialization updatedSpecialization = specializationService.update(specializationDto.toEntity());
         return SpecializationDto.from(updatedSpecialization);

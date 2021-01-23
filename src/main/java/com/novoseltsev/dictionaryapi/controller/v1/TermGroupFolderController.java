@@ -36,8 +36,8 @@ public class TermGroupFolderController {
 
     @GetMapping("/users/{userId}")
     public List<TermGroupFolderDto> findAllByUserId(@PathVariable Long userId) {
-        return termGroupFolderService.findAllByUserIdDesc(userId).stream()
-                .map(TermGroupFolderDto::from).collect(Collectors.toList());
+        return termGroupFolderService.findAllByUserIdDesc(userId).stream().map(TermGroupFolderDto::from)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/specializations/{specializationId}")
@@ -61,8 +61,7 @@ public class TermGroupFolderController {
     }
 
     @PutMapping("/{id}")
-    public TermGroupFolderDto update(
-            @PathVariable Long id, @Valid @RequestBody TermGroupFolderDto folderDto) {
+    public TermGroupFolderDto update(@PathVariable Long id, @Valid @RequestBody TermGroupFolderDto folderDto) {
         folderDto.setId(id);
         TermGroupFolder updatedFolder = termGroupFolderService.update(folderDto.toEntity());
         return TermGroupFolderDto.from(updatedFolder);
