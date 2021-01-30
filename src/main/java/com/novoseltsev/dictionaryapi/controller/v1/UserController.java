@@ -56,20 +56,13 @@ public class UserController {
     }
 
     @PutMapping("/password/{id}")
-    public void changePassword(@PathVariable Long id,
-                               @Valid @RequestBody ChangePasswordDto passwordDto) {
-        userService.changePassword(id, passwordDto);
+    public void updatePassword(@PathVariable Long id, @Valid @RequestBody ChangePasswordDto passwordDto) {
+        userService.updatePassword(id, passwordDto);
     }
 
     @PutMapping("/user-status/{id}")
-    public void changeUserStatus(@PathVariable Long id, UserStatus status) {
-        userService.changeUserStatus(id, status);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> markAsDeletedById(@PathVariable Long id) {
-        userService.markAsDeletedById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public void updateUserStatus(@PathVariable Long id, UserStatus status) {
+        userService.updateUserStatus(id, status);
     }
 
     @DeleteMapping("/full-deletion/{id}")

@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void changePassword(Long userId, ChangePasswordDto passwordDto) {
+    public void updatePassword(Long userId, ChangePasswordDto passwordDto) {
         User user = findById(userId);
         checkIfValidOldPassword(user, passwordDto.getOldPassword());
         user.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
@@ -76,17 +76,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void changeUserStatus(Long userId, UserStatus status) {
+    public void updateUserStatus(Long userId, UserStatus status) {
         User user = findById(userId);
         user.setStatus(status);
-        userRepository.save(user);
-    }
-
-    @Override
-    @Transactional
-    public void markAsDeletedById(Long id) {
-        User user = findById(id);
-        user.setStatus(UserStatus.DELETED);
         userRepository.save(user);
     }
 

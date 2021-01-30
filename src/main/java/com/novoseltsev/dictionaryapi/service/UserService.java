@@ -13,11 +13,9 @@ public interface UserService {
 
     User update(User user);
 
-    void changePassword(Long userId, ChangePasswordDto passwordRequest);
+    void updatePassword(Long userId, ChangePasswordDto passwordRequest);
 
-    void changeUserStatus(Long userId, UserStatus status);
-
-    void markAsDeletedById(Long id);
+    void updateUserStatus(Long userId, UserStatus status);
 
     void deleteById(Long id);
 
