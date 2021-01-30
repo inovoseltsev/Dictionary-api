@@ -61,13 +61,11 @@ public class JwtProvider {
         Long userId = getSubjectFromToken(token);
         UserDetails userDetails = new AuthUser(userService.findById(userId));
         String credentials = "";
-        return new UsernamePasswordAuthenticationToken(userDetails, credentials,
-                userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, credentials, userDetails.getAuthorities());
     }
 
     private Long getSubjectFromToken(String token) {
-        String subject = Jwts.parser().setSigningKey(secret).parseClaimsJws(token)
-                .getBody().getSubject();
+        String subject = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
         return Long.valueOf(subject);
     }
 

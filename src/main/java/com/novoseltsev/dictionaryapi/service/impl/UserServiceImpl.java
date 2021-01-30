@@ -6,23 +6,18 @@ import com.novoseltsev.dictionaryapi.domain.role.UserRole;
 import com.novoseltsev.dictionaryapi.domain.status.UserStatus;
 import com.novoseltsev.dictionaryapi.exception.InvalidOldPasswordException;
 import com.novoseltsev.dictionaryapi.exception.LoginIsAlreadyUsedException;
+import com.novoseltsev.dictionaryapi.exception.ObjectNotFoundException;
 import com.novoseltsev.dictionaryapi.exception.UserAccountAccessForbiddenException;
 import com.novoseltsev.dictionaryapi.repository.UserRepository;
 import com.novoseltsev.dictionaryapi.service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-
-import static com.novoseltsev.dictionaryapi.exception.util.ExceptionUtils.OBJECT_NOT_FOUND;
-import static com.novoseltsev.dictionaryapi.exception.util.MessageCause.INVALID_OLD_PASSWORD;
-import static com.novoseltsev.dictionaryapi.exception.util.MessageCause.LOGIN_IS_ALREADY_USED;
-import static com.novoseltsev.dictionaryapi.exception.util.MessageCause.USER_HAVE_NO_ACCOUNT_ACCESS;
 
 @Component
 @Transactional
@@ -30,26 +25,27 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final MessageSource messageSource;
+    private final MessageSourceAccessor messageAccessor;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, MessageSource messageSource) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
+                           MessageSourceAccessor messageAccessor) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.messageSource = messageSource;
+        this.messageAccessor = messageAccessor;
     }
 
     @Override
     public User create(User user) {
-        checkLoginUniqueness(user);
+        checkLoginUniqueness(user.getLogin());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setStatus(UserStatus.ACTIVE);
         return userRepository.save(user);
     }
 
-    private void checkLoginUniqueness(User user) {
-        if (userRepository.findByLogin(user.getLogin()).isPresent()) {
-            throw new LoginIsAlreadyUsedException(LOGIN_IS_ALREADY_USED);
+    private void checkLoginUniqueness(String login) {
+        if (userRepository.findByLogin(login).isPresent()) {
+            throw new LoginIsAlreadyUsedException(messageAccessor.getMessage("login.is.used"));
         }
     }
 
@@ -71,7 +67,7 @@ public class UserServiceImpl implements UserService {
 
     private void checkIfValidOldPassword(User user, String oldPassword) {
         if (!passwordEncoder.matches(oldPassword, user.getFirstName())) {
-            throw new InvalidOldPasswordException(INVALID_OLD_PASSWORD);
+            throw new InvalidOldPasswordException(messageAccessor.getMessage("invalid.old.password"));
         }
     }
 
@@ -97,9 +93,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public User findById(Long id) {
-        User user = userRepository.findById(id).orElseThrow(OBJECT_NOT_FOUND);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(messageAccessor.getMessage("user.not.found")));
         if (!user.getStatus().equals(UserStatus.ACTIVE)) {
-            throw new UserAccountAccessForbiddenException(USER_HAVE_NO_ACCOUNT_ACCESS);
+            throw new UserAccountAccessForbiddenException(messageAccessor.getMessage("no.user.account.access"));
         }
         return user;
     }
@@ -107,6 +104,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public User findByLogin(String login) {
-        return userRepository.findByLogin(login).orElseThrow(OBJECT_NOT_FOUND);
+        return userRepository.findByLogin(login)
+                .orElseThrow(() -> new ObjectNotFoundException(messageAccessor.getMessage("user.not.found")));
     }
 }

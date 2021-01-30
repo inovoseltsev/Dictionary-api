@@ -15,7 +15,7 @@ public final class ExceptionUtils {
 
     public static Map<String, String> handleValidationErrors(
             MethodArgumentNotValidException e) {
-        return new HashMap<String, String>() {{
+        return new HashMap<>() {{
             e.getBindingResult().getAllErrors().forEach((error) -> {
                 String fieldName = ((FieldError) error).getField();
                 String errorMessage = error.getDefaultMessage();
@@ -25,7 +25,7 @@ public final class ExceptionUtils {
     }
 
     public static Map<Object, Object> getErrorResponse(Exception e) {
-        return new HashMap<Object, Object>() {{
+        return new HashMap<>() {{
             put("error", e.getMessage());
         }};
     }
