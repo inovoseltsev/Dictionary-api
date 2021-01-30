@@ -53,8 +53,7 @@ public class TermController {
     }
 
     @GetMapping("/studying/term-groups/{groupId}")
-    public List<TermDto> getStudySet(@PathVariable Long groupId,
-                                     @RequestParam(required = false) boolean shuffle) {
+    public List<TermDto> getStudySet(@PathVariable Long groupId, @RequestParam(required = false) boolean shuffle) {
         List<Term> studySet = termService.createStudySetFromTermGroup(groupId);
         if (shuffle) {
             Collections.shuffle(studySet);
@@ -63,8 +62,7 @@ public class TermController {
     }
 
     @GetMapping("/studying/keywords/term-groups/{groupId}")
-    public List<TermDto> getStudySetWithKeywords(@PathVariable Long groupId,
-                                                 @RequestParam(required = false) boolean shuffle) {
+    public List<TermDto> getStudySetWithKeywords(@PathVariable Long groupId, @RequestParam(required = false) boolean shuffle) {
         List<Term> studySet = termService.createStudySetWithKeywordsFromTermGroup(groupId);
         if (shuffle) {
             Collections.shuffle(studySet);
@@ -73,8 +71,7 @@ public class TermController {
     }
 
     @GetMapping("/studying/images/term-groups/{groupId}")
-    public List<TermDto> getStudySetWithImages(@PathVariable Long groupId,
-                                               @RequestParam(required = false) boolean shuffle) {
+    public List<TermDto> getStudySetWithImages(@PathVariable Long groupId, @RequestParam(required = false) boolean shuffle) {
         List<Term> studySet = termService.createStudySetWithImagesFromTermGroup(groupId);
         if (shuffle) {
             Collections.shuffle(studySet);

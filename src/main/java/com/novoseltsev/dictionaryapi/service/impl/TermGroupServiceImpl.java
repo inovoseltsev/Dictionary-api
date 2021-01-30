@@ -13,23 +13,21 @@ import com.novoseltsev.dictionaryapi.service.UserService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
+@Transactional
 public class TermGroupServiceImpl implements TermGroupService {
 
     private final TermGroupRepository termGroupRepository;
-    private final UserService userService;
     private final TermGroupFolderService termGroupFolderService;
     private final SpecializationService specializationService;
+    private final UserService userService;
 
     @Autowired
-    public TermGroupServiceImpl(
-            TermGroupRepository termGroupRepository,
-            UserService userService,
-            TermGroupFolderService termGroupFolderService,
-            SpecializationService specializationService
-    ) {
+    public TermGroupServiceImpl(TermGroupRepository termGroupRepository, TermGroupFolderService termGroupFolderService,
+                                SpecializationService specializationService, UserService userService) {
         this.termGroupRepository = termGroupRepository;
         this.userService = userService;
         this.termGroupFolderService = termGroupFolderService;
@@ -37,7 +35,6 @@ public class TermGroupServiceImpl implements TermGroupService {
     }
 
     @Override
-    @Transactional
     public TermGroup createForUser(TermGroup termGroup) {
         Long userId = termGroup.getUser().getId();
         User user = userService.findById(userId);
@@ -46,7 +43,6 @@ public class TermGroupServiceImpl implements TermGroupService {
     }
 
     @Override
-    @Transactional
     public TermGroup createForTermGroupFolder(TermGroup termGroup) {
         Long folderId = termGroup.getTermGroupFolder().getId();
         TermGroupFolder folder = termGroupFolderService.findById(folderId);
@@ -55,7 +51,6 @@ public class TermGroupServiceImpl implements TermGroupService {
     }
 
     @Override
-    @Transactional
     public TermGroup createForSpecialization(TermGroup termGroup) {
         Long specializationId = termGroup.getSpecialization().getId();
         Specialization specialization = specializationService.findById(specializationId);
@@ -64,7 +59,6 @@ public class TermGroupServiceImpl implements TermGroupService {
     }
 
     @Override
-    @Transactional
     public TermGroup update(TermGroup termGroup) {
         TermGroup savedTermGroup = findById(termGroup.getId());
         savedTermGroup.setName(termGroup.getName());
@@ -73,31 +67,30 @@ public class TermGroupServiceImpl implements TermGroupService {
     }
 
     @Override
-    @Transactional
     public void deleteById(Long id) {
         termGroupRepository.delete(findById(id));
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public TermGroup findById(Long id) {
         return termGroupRepository.findById(id).orElseThrow(ExceptionUtils.OBJECT_NOT_FOUND);
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<TermGroup> findAllByUserIdDesc(Long userId) {
         return termGroupRepository.findAllByUserIdOrderByIdDesc(userId);
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<TermGroup> findAllByTermGroupFolderIdDesc(Long folderId) {
         return termGroupRepository.findAllByTermGroupFolderIdOrderByIdDesc(folderId);
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<TermGroup> findAllBySpecializationIdDesc(Long specializationId) {
         return termGroupRepository.findAllBySpecializationIdOrderByIdDesc(specializationId);
     }

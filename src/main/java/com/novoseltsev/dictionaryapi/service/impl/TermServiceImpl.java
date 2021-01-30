@@ -20,7 +20,6 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.ListUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -39,10 +38,7 @@ public class TermServiceImpl implements TermService {
     private final TermRepository termRepository;
     private final TermGroupService termGroupService;
 
-    @Autowired
-    public TermServiceImpl(
-            TermRepository termRepository, TermGroupService termGroupService
-    ) {
+    public TermServiceImpl(TermRepository termRepository, TermGroupService termGroupService) {
         this.termRepository = termRepository;
         this.termGroupService = termGroupService;
     }

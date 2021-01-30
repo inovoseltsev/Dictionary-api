@@ -22,10 +22,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtProvider jwtProvider;
 
     @Autowired
-    public AuthenticationServiceImpl(
-            UserRepository userRepository, PasswordEncoder passwordEncoder,
-            JwtProvider jwtProvider
-    ) {
+    public AuthenticationServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtProvider jwtProvider) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtProvider = jwtProvider;
@@ -38,7 +35,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String token = authenticate(user);
         return convertToJsonString(token);
     }
-    
+
     private void checkUserCredentialsValidity(User user, String password) {
         if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
             throw new BadCredentialsException(MessageCause.BAD_CREDENTIALS);
@@ -57,7 +54,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(token);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Cannot create token string!", e);
+            throw new RuntimeException("Cannot create token string", e);
         }
     }
 }

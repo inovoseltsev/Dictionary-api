@@ -12,31 +12,34 @@ import com.novoseltsev.dictionaryapi.service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 
 import static com.novoseltsev.dictionaryapi.exception.util.ExceptionUtils.OBJECT_NOT_FOUND;
 import static com.novoseltsev.dictionaryapi.exception.util.MessageCause.INVALID_OLD_PASSWORD;
 import static com.novoseltsev.dictionaryapi.exception.util.MessageCause.LOGIN_IS_ALREADY_USED;
-import static com.novoseltsev.dictionaryapi.exception.util.MessageCause.USER_ACCOUNT_HAVE_NO_ACCESS;
+import static com.novoseltsev.dictionaryapi.exception.util.MessageCause.USER_HAVE_NO_ACCOUNT_ACCESS;
 
 @Component
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
     private final PasswordEncoder passwordEncoder;
+    private final MessageSource messageSource;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, MessageSource messageSource) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.messageSource = messageSource;
     }
 
     @Override
-    @Transactional
     public User create(User user) {
         checkLoginUniqueness(user);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -51,7 +54,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public User update(User user) {
         User savedUser = findById(user.getId());
         savedUser.setFirstName(user.getFirstName());
@@ -60,7 +62,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public void updatePassword(Long userId, ChangePasswordDto passwordDto) {
         User user = findById(userId);
         checkIfValidOldPassword(user, passwordDto.getOldPassword());
@@ -75,7 +76,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public void updateUserStatus(Long userId, UserStatus status) {
         User user = findById(userId);
         user.setStatus(status);
@@ -83,31 +83,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public void deleteById(Long id) {
         userRepository.delete(findById(id));
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<User> findAll() {
         List<User> users = (List<User>) userRepository.findAll();
-        return users.stream().filter(user -> !user.getRole().equals(UserRole.ADMIN))
-                .collect(Collectors.toList());
+        return users.stream().filter(user -> !user.getRole().equals(UserRole.ADMIN)).collect(Collectors.toList());
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public User findById(Long id) {
         User user = userRepository.findById(id).orElseThrow(OBJECT_NOT_FOUND);
         if (!user.getStatus().equals(UserStatus.ACTIVE)) {
-            throw new UserAccountAccessForbiddenException(USER_ACCOUNT_HAVE_NO_ACCESS);
+            throw new UserAccountAccessForbiddenException(USER_HAVE_NO_ACCOUNT_ACCESS);
         }
         return user;
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public User findByLogin(String login) {
         return userRepository.findByLogin(login).orElseThrow(OBJECT_NOT_FOUND);
     }

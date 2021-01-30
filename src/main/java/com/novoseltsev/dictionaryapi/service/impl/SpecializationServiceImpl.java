@@ -9,9 +9,11 @@ import com.novoseltsev.dictionaryapi.service.UserService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
+@Transactional
 public class SpecializationServiceImpl implements SpecializationService {
 
     private final SpecializationRepository specializationRepository;
@@ -23,9 +25,7 @@ public class SpecializationServiceImpl implements SpecializationService {
         this.userService = userService;
     }
 
-
     @Override
-    @Transactional
     public Specialization create(Specialization specialization) {
         Long userId = specialization.getUser().getId();
         User user = userService.findById(userId);
@@ -34,7 +34,6 @@ public class SpecializationServiceImpl implements SpecializationService {
     }
 
     @Override
-    @Transactional
     public Specialization update(Specialization specialization) {
         Specialization savedSpecialization = findById(specialization.getId());
         savedSpecialization.setName(specialization.getName());
@@ -49,13 +48,13 @@ public class SpecializationServiceImpl implements SpecializationService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public Specialization findById(Long id) {
         return specializationRepository.findById(id).orElseThrow(ExceptionUtils.OBJECT_NOT_FOUND);
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<Specialization> findAllByUserIdDesc(Long userId) {
         return specializationRepository.findAllByUserIdOrderByIdDesc(userId);
     }

@@ -2,7 +2,7 @@ package com.novoseltsev.dictionaryapi.validation;
 
 public class ValidationMessage {
 
-    private static final String BASE_MESSAGE_PART = " is not correct!";
+    private static final String BASE_MESSAGE_PART = " is not correct";
 
     public static final String FIRST_NAME_ERROR = "User last name" + BASE_MESSAGE_PART;
 
