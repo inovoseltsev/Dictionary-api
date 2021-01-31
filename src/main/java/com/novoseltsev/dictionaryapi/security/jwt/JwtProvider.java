@@ -2,7 +2,6 @@ package com.novoseltsev.dictionaryapi.security.jwt;
 
 import com.novoseltsev.dictionaryapi.domain.role.UserRole;
 import com.novoseltsev.dictionaryapi.exception.JwtAuthenticationException;
-import com.novoseltsev.dictionaryapi.exception.util.MessageCause;
 import com.novoseltsev.dictionaryapi.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -13,6 +12,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,10 +31,12 @@ public class JwtProvider {
     private long validityTime;
 
     private final UserService userService;
+    private final MessageSourceAccessor messageAccessor;
 
     @Autowired
-    public JwtProvider(UserService userService) {
+    public JwtProvider(UserService userService, MessageSourceAccessor messageAccessor) {
         this.userService = userService;
+        this.messageAccessor = messageAccessor;
     }
 
     @PostConstruct
@@ -83,7 +85,7 @@ public class JwtProvider {
         try {
             Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
         } catch (Exception e) {
-            throw new JwtAuthenticationException(MessageCause.BAD_TOKEN);
+            throw new JwtAuthenticationException(messageAccessor.getMessage("bad.token"));
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.novoseltsev.dictionaryapi.service.impl;
 
-import com.novoseltsev.dictionaryapi.domain.dto.request.ChangePasswordDto;
 import com.novoseltsev.dictionaryapi.domain.entity.User;
 import com.novoseltsev.dictionaryapi.domain.role.UserRole;
 import com.novoseltsev.dictionaryapi.domain.status.UserStatus;
@@ -58,16 +57,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updatePassword(Long userId, ChangePasswordDto passwordDto) {
+    public void updatePassword(Long userId, String oldPassword, String newPassword) {
         User user = findById(userId);
-        checkIfValidOldPassword(user, passwordDto.getOldPassword());
-        user.setPassword(passwordEncoder.encode(passwordDto.getNewPassword()));
+        checkIfValidOldPassword(user, oldPassword);
+        user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
 
     private void checkIfValidOldPassword(User user, String oldPassword) {
-        if (!passwordEncoder.matches(oldPassword, user.getFirstName())) {
-            throw new InvalidOldPasswordException(messageAccessor.getMessage("invalid.old.password"));
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new InvalidOldPasswordException(messageAccessor.getMessage("incorrect.old.password"));
         }
     }
 
@@ -87,14 +86,16 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<User> findAll() {
         List<User> users = (List<User>) userRepository.findAll();
-        return users.stream().filter(user -> !user.getRole().equals(UserRole.ADMIN)).collect(Collectors.toList());
+        return users.stream()
+                .filter(user -> !user.getRole().equals(UserRole.ADMIN))
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public User findById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(messageAccessor.getMessage("user.not.found")));
+        String errorMessage = messageAccessor.getMessage("user.not.found");
+        User user = userRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(errorMessage));
         if (!user.getStatus().equals(UserStatus.ACTIVE)) {
             throw new UserAccountAccessForbiddenException(messageAccessor.getMessage("no.user.account.access"));
         }
@@ -104,7 +105,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public User findByLogin(String login) {
-        return userRepository.findByLogin(login)
-                .orElseThrow(() -> new ObjectNotFoundException(messageAccessor.getMessage("user.not.found")));
+        String errorMessage = messageAccessor.getMessage("user.not.found");
+        return userRepository.findByLogin(login).orElseThrow(() -> new ObjectNotFoundException(errorMessage));
     }
 }

@@ -1,10 +1,10 @@
 package com.novoseltsev.dictionaryapi.service;
 
+import com.novoseltsev.dictionaryapi.domain.dto.term.AnswerDto;
 import com.novoseltsev.dictionaryapi.domain.entity.Term;
 import com.novoseltsev.dictionaryapi.domain.status.TermAwareStatus;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,19 +19,19 @@ public interface TermService {
 
     Term findById(Long id);
 
-    List<Term> findAllByTermGroupIdDesc(Long groupId);
+    List<Term> findAllByTermGroupId(Long groupId);
 
-    String uploadTermImage(MultipartFile image) throws IOException;
+    void uploadTermImage(MultipartFile image, Term term) throws IOException;
 
-    List<Term> createStudySetFromTermGroup(Long termGroupId);
+    List<Term> getDefaultStudySet(Long termGroupId);
 
-    List<Term> createStudySetWithKeywordsFromTermGroup(Long termGroupId);
+    List<Term> getStudySetWithKeywords(Long termGroupId);
 
-    List<Term> createStudySetWithImagesFromTermGroup(Long termGroupId);
+    List<Term> getStudySetWithImages(Long termGroupId);
 
-    List<List<Term>> createStudySetInChunksFromTermGroup(Long termGroupId);
+    List<List<Term>> getStudySetInChunks(Long termGroupId);
 
-    List<Map<String, Object>> createAnswerVariantsForTerm(Long termId);
+    List<AnswerDto> getAnswersForTerm(Long termId);
 
     void updateAwareStatus(Long termId, TermAwareStatus awareStatus);
 

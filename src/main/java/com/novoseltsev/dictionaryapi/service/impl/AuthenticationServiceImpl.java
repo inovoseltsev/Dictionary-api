@@ -3,11 +3,11 @@ package com.novoseltsev.dictionaryapi.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.novoseltsev.dictionaryapi.domain.entity.User;
-import com.novoseltsev.dictionaryapi.exception.util.MessageCause;
 import com.novoseltsev.dictionaryapi.repository.UserRepository;
 import com.novoseltsev.dictionaryapi.security.jwt.JwtProvider;
 import com.novoseltsev.dictionaryapi.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,12 +20,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final MessageSourceAccessor messageAccessor;
 
     @Autowired
-    public AuthenticationServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtProvider jwtProvider) {
+    public AuthenticationServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtProvider jwtProvider,
+                                     MessageSourceAccessor messageAccessor) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtProvider = jwtProvider;
+        this.messageAccessor = messageAccessor;
     }
 
     @Override
@@ -38,7 +41,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private void checkUserCredentialsValidity(User user, String password) {
         if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
-            throw new BadCredentialsException(MessageCause.BAD_CREDENTIALS);
+            throw new BadCredentialsException(messageAccessor.getMessage("bad.credentials"));
         }
     }
 
@@ -54,7 +57,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(token);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Cannot create token string", e);
+            throw new RuntimeException(messageAccessor.getMessage("create.token.error"), e);
         }
     }
 }

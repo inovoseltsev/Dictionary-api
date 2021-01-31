@@ -39,19 +39,19 @@ public class TermGroupController {
 
     @GetMapping("/users/{userId}")
     public List<TermGroupDto> findAllByUserId(@PathVariable Long userId) {
-        return termGroupService.findAllByUserIdDesc(userId).stream().map(TermGroupDto::from)
+        return termGroupService.findAllByUserId(userId).stream().map(TermGroupDto::from)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/term-group-folders/{folderId}")
     public List<TermGroupDto> findAllByTermGroupFolderId(@PathVariable Long folderId) {
-        return termGroupService.findAllByTermGroupFolderIdDesc(folderId).stream().map(TermGroupDto::from)
+        return termGroupService.findAllByTermGroupFolderId(folderId).stream().map(TermGroupDto::from)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/specializations/{specializationId}")
     public List<TermGroupDto> findAllBySpecializationId(@PathVariable Long specializationId) {
-        return termGroupService.findAllBySpecializationIdDesc(specializationId).stream().map(TermGroupDto::from)
+        return termGroupService.findAllBySpecializationId(specializationId).stream().map(TermGroupDto::from)
                 .collect(Collectors.toList());
     }
 

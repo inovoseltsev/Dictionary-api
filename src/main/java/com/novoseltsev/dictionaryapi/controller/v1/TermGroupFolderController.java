@@ -36,13 +36,13 @@ public class TermGroupFolderController {
 
     @GetMapping("/users/{userId}")
     public List<TermGroupFolderDto> findAllByUserId(@PathVariable Long userId) {
-        return termGroupFolderService.findAllByUserIdDesc(userId).stream().map(TermGroupFolderDto::from)
+        return termGroupFolderService.findAllByUserId(userId).stream().map(TermGroupFolderDto::from)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/specializations/{specializationId}")
     public List<TermGroupFolderDto> findAllBySpecializationId(@PathVariable Long specializationId) {
-        return termGroupFolderService.findAllBySpecializationIdDesc(specializationId).stream()
+        return termGroupFolderService.findAllBySpecializationId(specializationId).stream()
                 .map(TermGroupFolderDto::from).collect(Collectors.toList());
     }
 

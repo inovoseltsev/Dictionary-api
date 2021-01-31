@@ -1,8 +1,9 @@
 package com.novoseltsev.dictionaryapi.service.impl;
 
+import com.novoseltsev.dictionaryapi.domain.dto.term.AnswerDto;
 import com.novoseltsev.dictionaryapi.domain.entity.Term;
 import com.novoseltsev.dictionaryapi.domain.status.TermAwareStatus;
-import com.novoseltsev.dictionaryapi.exception.util.ExceptionUtils;
+import com.novoseltsev.dictionaryapi.exception.ObjectNotFoundException;
 import com.novoseltsev.dictionaryapi.repository.TermRepository;
 import com.novoseltsev.dictionaryapi.service.TermGroupService;
 import com.novoseltsev.dictionaryapi.service.TermService;
@@ -10,21 +11,18 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.ListUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -35,16 +33,19 @@ import static com.novoseltsev.dictionaryapi.domain.status.TermAwareStatus.PERFEC
 @Transactional
 public class TermServiceImpl implements TermService {
 
-    private final TermRepository termRepository;
-    private final TermGroupService termGroupService;
-
-    public TermServiceImpl(TermRepository termRepository, TermGroupService termGroupService) {
-        this.termRepository = termRepository;
-        this.termGroupService = termGroupService;
-    }
-
     @Value("${upload.path}")
     private String uploadPath;
+
+    private final TermRepository termRepository;
+    private final TermGroupService termGroupService;
+    private final MessageSourceAccessor messageAccessor;
+
+    public TermServiceImpl(TermRepository termRepository, TermGroupService termGroupService,
+                           MessageSourceAccessor messageAccessor) {
+        this.termRepository = termRepository;
+        this.termGroupService = termGroupService;
+        this.messageAccessor = messageAccessor;
+    }
 
     @Override
     public Term createForTermGroup(Term term) {
@@ -67,7 +68,7 @@ public class TermServiceImpl implements TermService {
 
     private String updateImagePathIfNeeded(String newPath, String previousPath) throws IOException {
         String imagePath = previousPath;
-        if (!StringUtils.isEmpty(newPath)) {
+        if (newPath != null && !newPath.isBlank()) {
             Files.delete(Paths.get(previousPath));
             imagePath = newPath;
         }
@@ -82,102 +83,97 @@ public class TermServiceImpl implements TermService {
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public Term findById(Long id) {
-        return termRepository.findById(id).orElseThrow(ExceptionUtils.OBJECT_NOT_FOUND);
+        String errorMessage = messageAccessor.getMessage("term.not.found");
+        return termRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(errorMessage));
     }
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public List<Term> findAllByTermGroupIdDesc(Long termGroupId) {
+    public List<Term> findAllByTermGroupId(Long termGroupId) {
         return termRepository.findAllByTermGroupIdOrderByIdDesc(termGroupId);
     }
 
     @Override
-    public String uploadTermImage(MultipartFile image) throws IOException {
-        File uploadDir = new File(uploadPath);
-        if (!Files.exists(uploadDir.toPath())) {
-            Files.createDirectory(uploadDir.toPath());
-        }
-        String fileUUID = UUID.randomUUID().toString();
-        String uniqueFileName = fileUUID + "." + image.getOriginalFilename();
-        String filePath = uploadPath + "/" + uniqueFileName;
-        Files.write(Paths.get(filePath), image.getBytes());
-        return filePath;
-    }
-
-    @Override
-    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public List<Term> createStudySetFromTermGroup(Long termGroupId) {
-        List<Term> groupTerms = findAllByTermGroupIdDesc(termGroupId);
-        return getUnlearnedTermsSortedByAwareStatusFrom(groupTerms);
-    }
-
-    @Override
-    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public List<Term> createStudySetWithKeywordsFromTermGroup(Long groupId) {
-        List<Term> terms = findAllByTermGroupIdDesc(groupId);
-        List<Term> groupTerms = terms.stream().filter(el -> Objects.nonNull(el.getKeyword()))
-                .collect(Collectors.toList());
-        return getUnlearnedTermsSortedByAwareStatusFrom(groupTerms);
-    }
-
-    @Override
-    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public List<Term> createStudySetWithImagesFromTermGroup(Long termGroupId) {
-        List<Term> terms = findAllByTermGroupIdDesc(termGroupId);
-        List<Term> groupTerms = terms.stream().filter(el -> Objects.nonNull(el.getImagePath()))
-                .collect(Collectors.toList());
-        return getUnlearnedTermsSortedByAwareStatusFrom(groupTerms);
-    }
-
-    private List<Term> getUnlearnedTermsSortedByAwareStatusFrom(List<Term> terms) {
-        List<Term> unlearnedTerms = new ArrayList<>();
-        for (Term term : terms) {
-            if (!term.getAwareStatus().equals(PERFECT)) {
-                unlearnedTerms.add(term);
+    public void uploadTermImage(MultipartFile image, Term term) throws IOException {
+        if (image != null) {
+            File uploadDir = new File(uploadPath);
+            if (!Files.exists(uploadDir.toPath())) {
+                Files.createDirectory(uploadDir.toPath());
             }
+            String fileUUID = UUID.randomUUID().toString();
+            String uniqueFileName = fileUUID + "." + image.getOriginalFilename();
+            String filePath = uploadPath + "/" + uniqueFileName;
+            Files.write(Paths.get(filePath), image.getBytes());
+            term.setImagePath(filePath);
         }
-        unlearnedTerms.sort(Comparator.comparing(Term::getAwareStatus));
-        return unlearnedTerms;
     }
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public List<List<Term>> createStudySetInChunksFromTermGroup(Long termGroupId) {
-        List<Term> terms = findAllByTermGroupIdDesc(termGroupId);
+    public List<Term> getDefaultStudySet(Long termGroupId) {
+        List<Term> groupTerms = findAllByTermGroupId(termGroupId);
+        return getUnlearnedTermsSortedByAwareStatus(groupTerms);
+    }
+
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+    public List<Term> getStudySetWithKeywords(Long groupId) {
+        List<Term> terms = findAllByTermGroupId(groupId);
+        List<Term> groupTerms = terms.stream()
+                .filter(el -> Objects.nonNull(el.getKeyword()))
+                .collect(Collectors.toList());
+        return getUnlearnedTermsSortedByAwareStatus(groupTerms);
+    }
+
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+    public List<Term> getStudySetWithImages(Long termGroupId) {
+        List<Term> terms = findAllByTermGroupId(termGroupId);
+        List<Term> groupTerms = terms.stream()
+                .filter(el -> Objects.nonNull(el.getImagePath()))
+                .collect(Collectors.toList());
+        return getUnlearnedTermsSortedByAwareStatus(groupTerms);
+    }
+
+    private List<Term> getUnlearnedTermsSortedByAwareStatus(List<Term> terms) {
+        return terms.stream()
+                .filter(term -> !term.getAwareStatus().equals(PERFECT))
+                .sorted(Comparator.comparing(Term::getAwareStatus))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+    public List<List<Term>> getStudySetInChunks(Long termGroupId) {
+        List<Term> terms = findAllByTermGroupId(termGroupId);
         List<Term> unlearnedTerms = terms.stream()
-                .filter(el -> !el.getAwareStatus().equals(PERFECT)).collect(Collectors.toList());
+                .filter(el -> !el.getAwareStatus().equals(PERFECT))
+                .collect(Collectors.toList());
         Collections.shuffle(unlearnedTerms);
         return ListUtils.partition(unlearnedTerms, 4);
     }
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public List<Map<String, Object>> createAnswerVariantsForTerm(Long termId) {
-        List<Map<String, Object>> answers = new ArrayList<>();
-        List<Term> termVariants = getAnswerVariants(termId);
-        for (Term term : termVariants) {
-            Map<String, Object> answer = new HashMap<>();
-            boolean isCorrect = false;
-            if (term.getId().equals(termId)) {
-                isCorrect = true;
-            }
-            answer.put("id", term.getId());
-            answer.put("definition", term.getDefinition());
-            answer.put("isCorrect", isCorrect);
-            answers.add(answer);
-        }
+    public List<AnswerDto> getAnswersForTerm(Long termId) {
+        List<Term> answerVariants = getAnswerVariants(termId);
+        List<AnswerDto> answers = answerVariants.stream()
+                .map(term -> new AnswerDto(term, term.getId().equals(termId)))
+                .collect(Collectors.toList());
         Collections.shuffle(answers);
         return answers;
     }
 
     private List<Term> getAnswerVariants(Long termId) {
         Term correctVariant = findById(termId);
-        List<Term> terms = correctVariant.getTermGroup().getTerms();
-        terms = terms.stream().filter(el -> !el.getId().equals(termId)).limit(3)
+        List<Term> answerVariants = correctVariant.getTermGroup().getTerms();
+        Collections.shuffle(answerVariants);
+        answerVariants = answerVariants.stream()
+                .filter(el -> !el.getId().equals(termId))
+                .limit(3)
                 .collect(Collectors.toList());
-        terms.add(correctVariant);
-        Collections.shuffle(terms);
-        return terms;
+        answerVariants.add(correctVariant);
+        return answerVariants;
     }
 
     @Override
@@ -189,7 +185,7 @@ public class TermServiceImpl implements TermService {
 
     @Override
     public void resetAwareStatusForAllInTermGroup(Long groupId) {
-        List<Term> terms = findAllByTermGroupIdDesc(groupId);
+        List<Term> terms = findAllByTermGroupId(groupId);
         terms.forEach(el -> el.setAwareStatus(TermAwareStatus.BAD));
         termRepository.saveAll(terms);
     }

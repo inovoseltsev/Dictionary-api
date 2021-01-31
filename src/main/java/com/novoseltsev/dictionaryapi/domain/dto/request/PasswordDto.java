@@ -11,7 +11,7 @@ import static com.novoseltsev.dictionaryapi.validation.ValidationMessage.PASSWOR
 
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ChangePasswordDto {
+public class PasswordDto {
 
     @NotBlank(message = PASSWORD_ERROR)
     @Pattern(regexp = PASSWORD_PATTERN, message = PASSWORD_ERROR)

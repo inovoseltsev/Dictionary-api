@@ -1,6 +1,6 @@
 package com.novoseltsev.dictionaryapi.controller.v1;
 
-import com.novoseltsev.dictionaryapi.domain.dto.request.ChangePasswordDto;
+import com.novoseltsev.dictionaryapi.domain.dto.request.PasswordDto;
 import com.novoseltsev.dictionaryapi.domain.dto.user.AdminUserDto;
 import com.novoseltsev.dictionaryapi.domain.dto.user.SignUpUserDto;
 import com.novoseltsev.dictionaryapi.domain.dto.user.UserDto;
@@ -56,8 +56,8 @@ public class UserController {
     }
 
     @PutMapping("/password/{id}")
-    public void updatePassword(@PathVariable Long id, @Valid @RequestBody ChangePasswordDto passwordDto) {
-        userService.updatePassword(id, passwordDto);
+    public void updatePassword(@PathVariable Long id, @Valid @RequestBody PasswordDto passwordDto) {
+        userService.updatePassword(id, passwordDto.getOldPassword(), passwordDto.getNewPassword());
     }
 
     @PutMapping("/user-status/{id}")

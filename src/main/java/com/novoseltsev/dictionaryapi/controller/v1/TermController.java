@@ -1,5 +1,6 @@
 package com.novoseltsev.dictionaryapi.controller.v1;
 
+import com.novoseltsev.dictionaryapi.domain.dto.term.AnswerDto;
 import com.novoseltsev.dictionaryapi.domain.dto.term.GroupTermDto;
 import com.novoseltsev.dictionaryapi.domain.dto.term.TermDto;
 import com.novoseltsev.dictionaryapi.domain.entity.Term;
@@ -9,7 +10,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,17 +44,17 @@ public class TermController {
 
     @GetMapping("/term-groups/{groupId}")
     public List<TermDto> findAllByTermGroupId(@PathVariable Long groupId) {
-        return termService.findAllByTermGroupIdDesc(groupId).stream().map(TermDto::from).collect(Collectors.toList());
+        return termService.findAllByTermGroupId(groupId).stream().map(TermDto::from).collect(Collectors.toList());
     }
 
     @GetMapping("/studying/answers/{termId}")
-    public List<Map<String, Object>> getAnswerVariantsForTerm(@PathVariable Long termId) {
-        return termService.createAnswerVariantsForTerm(termId);
+    public List<AnswerDto> getAnswersForTerm(@PathVariable Long termId) {
+        return termService.getAnswersForTerm(termId);
     }
 
     @GetMapping("/studying/term-groups/{groupId}")
     public List<TermDto> getStudySet(@PathVariable Long groupId, @RequestParam(required = false) boolean shuffle) {
-        List<Term> studySet = termService.createStudySetFromTermGroup(groupId);
+        List<Term> studySet = termService.getDefaultStudySet(groupId);
         if (shuffle) {
             Collections.shuffle(studySet);
         }
@@ -63,7 +63,7 @@ public class TermController {
 
     @GetMapping("/studying/keywords/term-groups/{groupId}")
     public List<TermDto> getStudySetWithKeywords(@PathVariable Long groupId, @RequestParam(required = false) boolean shuffle) {
-        List<Term> studySet = termService.createStudySetWithKeywordsFromTermGroup(groupId);
+        List<Term> studySet = termService.getStudySetWithKeywords(groupId);
         if (shuffle) {
             Collections.shuffle(studySet);
         }
@@ -72,7 +72,7 @@ public class TermController {
 
     @GetMapping("/studying/images/term-groups/{groupId}")
     public List<TermDto> getStudySetWithImages(@PathVariable Long groupId, @RequestParam(required = false) boolean shuffle) {
-        List<Term> studySet = termService.createStudySetWithImagesFromTermGroup(groupId);
+        List<Term> studySet = termService.getStudySetWithImages(groupId);
         if (shuffle) {
             Collections.shuffle(studySet);
         }
@@ -81,7 +81,7 @@ public class TermController {
 
     @GetMapping("/studying/chunks/term-groups/{groupId}")
     public List<List<TermDto>> getStudySetInChunks(@PathVariable Long groupId) {
-        List<List<Term>> studyChunks = termService.createStudySetInChunksFromTermGroup(groupId);
+        List<List<Term>> studyChunks = termService.getStudySetInChunks(groupId);
         List<List<TermDto>> studyChunksDto = new ArrayList<>();
         for (List<Term> chunk : studyChunks) {
             studyChunksDto.add(chunk.stream().map(TermDto::fromTermWithoutImages).collect(Collectors.toList()));
@@ -93,10 +93,7 @@ public class TermController {
     public ResponseEntity<TermDto> createForTermGroup(@RequestPart @Valid GroupTermDto groupTermDto,
                                                       @RequestPart(required = false) MultipartFile termImage) throws IOException {
         Term term = groupTermDto.toEntity();
-        if (termImage != null) {
-            String imagePath = termService.uploadTermImage(termImage);
-            term.setImagePath(imagePath);
-        }
+        termService.uploadTermImage(termImage, term);
         TermDto termDto = TermDto.from(termService.createForTermGroup(term));
         return new ResponseEntity<>(termDto, HttpStatus.CREATED);
     }
@@ -106,10 +103,7 @@ public class TermController {
                           @RequestPart(required = false) MultipartFile termImage) throws IOException {
         termDto.setId(id);
         Term term = termDto.toEntity();
-        if (termImage != null) {
-            String imagePath = termService.uploadTermImage(termImage);
-            term.setImagePath(imagePath);
-        }
+        termService.uploadTermImage(termImage, term);
         Term updatedTerm = termService.update(term);
         return TermDto.from(updatedTerm);
     }

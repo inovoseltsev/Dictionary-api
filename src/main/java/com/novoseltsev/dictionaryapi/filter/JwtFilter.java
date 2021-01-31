@@ -17,7 +17,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 @Component
 public class JwtFilter implements Filter {
@@ -30,11 +29,10 @@ public class JwtFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response,
-                         FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         try {
             String token = jwtProvider.resolveToken((HttpServletRequest) request);
-            if (!StringUtils.isEmpty(token)) {
+            if (token != null && !token.isBlank()) {
                 Authentication auth = jwtProvider.getAuthentication(token);
                 if (auth != null) {
                     SecurityContextHolder.getContext().setAuthentication(auth);
@@ -46,9 +44,7 @@ public class JwtFilter implements Filter {
         }
     }
 
-    private void handleBadTokenResponse(
-            ServletResponse response, JwtAuthenticationException e
-    ) throws IOException {
+    private void handleBadTokenResponse(ServletResponse response, JwtAuthenticationException e) throws IOException {
         String errorResponse = new ObjectMapper().writeValueAsString(ExceptionUtils.getErrorResponse(e));
         HttpServletResponse resp = (HttpServletResponse) response;
         resp.setContentType("application/json; charset=utf-8");

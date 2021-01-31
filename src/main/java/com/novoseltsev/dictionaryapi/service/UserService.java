@@ -1,6 +1,5 @@
 package com.novoseltsev.dictionaryapi.service;
 
-import com.novoseltsev.dictionaryapi.domain.dto.request.ChangePasswordDto;
 import com.novoseltsev.dictionaryapi.domain.entity.User;
 import com.novoseltsev.dictionaryapi.domain.status.UserStatus;
 import java.util.List;
@@ -13,7 +12,7 @@ public interface UserService {
 
     User update(User user);
 
-    void updatePassword(Long userId, ChangePasswordDto passwordRequest);
+    void updatePassword(Long userId, String oldPassword, String newPassword);
 
     void updateUserStatus(Long userId, UserStatus status);
 

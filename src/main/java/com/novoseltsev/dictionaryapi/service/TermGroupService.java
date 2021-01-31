@@ -19,9 +19,9 @@ public interface TermGroupService {
 
     TermGroup findById(Long id);
 
-    List<TermGroup> findAllByUserIdDesc(Long userId);
+    List<TermGroup> findAllByUserId(Long userId);
 
-    List<TermGroup> findAllByTermGroupFolderIdDesc(Long folderId);
+    List<TermGroup> findAllByTermGroupFolderId(Long folderId);
 
-    List<TermGroup> findAllBySpecializationIdDesc(Long specializationId);
+    List<TermGroup> findAllBySpecializationId(Long specializationId);
 }

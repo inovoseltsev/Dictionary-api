@@ -37,7 +37,7 @@ public class SpecializationController {
 
     @GetMapping("/users/{userId}")
     public List<SpecializationDto> findAllByUserId(@PathVariable Long userId) {
-        return specializationService.findAllByUserIdDesc(userId).stream().map(SpecializationDto::from)
+        return specializationService.findAllByUserId(userId).stream().map(SpecializationDto::from)
                 .collect(Collectors.toList());
     }
 

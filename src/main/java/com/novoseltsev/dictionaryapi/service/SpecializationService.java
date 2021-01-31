@@ -15,5 +15,5 @@ public interface SpecializationService {
 
     Specialization findById(Long id);
 
-    List<Specialization> findAllByUserIdDesc(Long userId);
+    List<Specialization> findAllByUserId(Long userId);
 }

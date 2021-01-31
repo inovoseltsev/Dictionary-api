@@ -12,7 +12,6 @@ import javax.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.util.StringUtils;
 
 @Getter
 @Setter
@@ -53,7 +52,7 @@ public class TermDto extends AbstractTermDto {
         byte[] imageContent = new byte[]{};
         String imagePath = term.getImagePath();
         String imageName = "";
-        if (!StringUtils.isEmpty(imagePath)) {
+        if (imagePath != null && !imagePath.isBlank()) {
             imageName = imagePath.substring(imagePath.indexOf(".") + 1);
             try {
                 imageContent = Files.readAllBytes(new File(term.getImagePath()).toPath());
