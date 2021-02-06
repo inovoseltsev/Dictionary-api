@@ -1,7 +1,7 @@
-package com.novoseltsev.dictionaryapi.domain.dto.specialization;
+package com.novoseltsev.dictionaryapi.domain.dto.activity;
 
 import com.novoseltsev.dictionaryapi.domain.dto.DtoMapper;
-import com.novoseltsev.dictionaryapi.domain.entity.Specialization;
+import com.novoseltsev.dictionaryapi.domain.entity.Activity;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import static com.novoseltsev.dictionaryapi.validation.ValidationMessage.DESCRIP
 
 @Getter
 @NoArgsConstructor
-public abstract class AbstractSpecializationDto implements DtoMapper<Specialization> {
+public abstract class AbstractActivityDto implements DtoMapper<Activity> {
 
     @NotBlank
     String name;
@@ -21,13 +21,13 @@ public abstract class AbstractSpecializationDto implements DtoMapper<Specializat
     @Pattern(regexp = DESCRIPTION_PATTERN, message = DESCRIPTION_ERROR)
     String description;
 
-    public AbstractSpecializationDto(String name, String description) {
+    public AbstractActivityDto(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
     @Override
-    public Specialization toEntity() {
-        return new Specialization(name, description);
+    public Activity toEntity() {
+        return new Activity(name, description);
     }
 }

@@ -1,6 +1,6 @@
 package com.novoseltsev.dictionaryapi.controller.v1;
 
-import com.novoseltsev.dictionaryapi.domain.dto.termGroupFolder.SpecializationTermGroupFolderDto;
+import com.novoseltsev.dictionaryapi.domain.dto.termGroupFolder.ActivityTermGroupFolderDto;
 import com.novoseltsev.dictionaryapi.domain.dto.termGroupFolder.TermGroupFolderDto;
 import com.novoseltsev.dictionaryapi.domain.dto.termGroupFolder.UserTermGroupFolderDto;
 import com.novoseltsev.dictionaryapi.domain.entity.TermGroupFolder;
@@ -40,9 +40,9 @@ public class TermGroupFolderController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/specializations/{specializationId}")
-    public List<TermGroupFolderDto> findAllBySpecializationId(@PathVariable Long specializationId) {
-        return termGroupFolderService.findAllBySpecializationId(specializationId).stream()
+    @GetMapping("/activities/{activityId}")
+    public List<TermGroupFolderDto> findAllByActivityId(@PathVariable Long activityId) {
+        return termGroupFolderService.findAllByActivityId(activityId).stream()
                 .map(TermGroupFolderDto::from).collect(Collectors.toList());
     }
 
@@ -53,10 +53,10 @@ public class TermGroupFolderController {
         return new ResponseEntity<>(TermGroupFolderDto.from(createdFolder), HttpStatus.CREATED);
     }
 
-    @PostMapping("/specializations")
-    public ResponseEntity<TermGroupFolderDto> createForSpecialization(
-            @Valid @RequestBody SpecializationTermGroupFolderDto folderDto) {
-        TermGroupFolder createdFolder = termGroupFolderService.createForSpecialization(folderDto.toEntity());
+    @PostMapping("/activities")
+    public ResponseEntity<TermGroupFolderDto> createForActivity(
+            @Valid @RequestBody ActivityTermGroupFolderDto folderDto) {
+        TermGroupFolder createdFolder = termGroupFolderService.createForActivity(folderDto.toEntity());
         return new ResponseEntity<>(TermGroupFolderDto.from(createdFolder), HttpStatus.CREATED);
     }
 

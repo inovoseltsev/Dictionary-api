@@ -70,7 +70,7 @@ public class User extends AbstractEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
             orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Specialization> specializations = new ArrayList<>();
+    private List<Activity> activities = new ArrayList<>();
 
 
     public User(Long id) {
@@ -92,8 +92,8 @@ public class User extends AbstractEntity {
         this.termGroupFolders.add(folder);
     }
 
-    public void addSpecialization(Specialization specialization) {
-        specialization.setUser(this);
-        this.specializations.add(specialization);
+    public void addActivity(Activity activity) {
+        activity.setUser(this);
+        this.activities.add(activity);
     }
 }

@@ -10,5 +10,5 @@ public interface TermGroupFolderRepository extends CrudRepository<TermGroupFolde
 
     List<TermGroupFolder> findAllByUserIdOrderByIdDesc(Long userId);
 
-    List<TermGroupFolder> findAllBySpecializationIdOrderByIdDesc(Long specializationId);
+    List<TermGroupFolder> findAllByActivityIdOrderByIdDesc(Long activityId);
 }

@@ -9,7 +9,7 @@ public interface TermGroupFolderService {
 
     TermGroupFolder createForUser(TermGroupFolder folder);
 
-    TermGroupFolder createForSpecialization(TermGroupFolder folder);
+    TermGroupFolder createForActivity(TermGroupFolder folder);
 
     TermGroupFolder update(TermGroupFolder folder);
 
@@ -19,5 +19,5 @@ public interface TermGroupFolderService {
 
     List<TermGroupFolder> findAllByUserId(Long userId);
 
-    List<TermGroupFolder> findAllBySpecializationId(Long specializationId);
+    List<TermGroupFolder> findAllByActivityId(Long activityId);
 }

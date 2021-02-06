@@ -1,11 +1,11 @@
 package com.novoseltsev.dictionaryapi.service.impl;
 
-import com.novoseltsev.dictionaryapi.domain.entity.Specialization;
+import com.novoseltsev.dictionaryapi.domain.entity.Activity;
 import com.novoseltsev.dictionaryapi.domain.entity.TermGroupFolder;
 import com.novoseltsev.dictionaryapi.domain.entity.User;
 import com.novoseltsev.dictionaryapi.exception.ObjectNotFoundException;
 import com.novoseltsev.dictionaryapi.repository.TermGroupFolderRepository;
-import com.novoseltsev.dictionaryapi.service.SpecializationService;
+import com.novoseltsev.dictionaryapi.service.ActivityService;
 import com.novoseltsev.dictionaryapi.service.TermGroupFolderService;
 import com.novoseltsev.dictionaryapi.service.UserService;
 import java.util.List;
@@ -20,15 +20,15 @@ public class TermGroupFolderServiceImpl implements TermGroupFolderService {
 
     private final TermGroupFolderRepository termGroupFolderRepository;
     private final UserService userService;
-    private final SpecializationService specializationService;
+    private final ActivityService activityService;
     private final MessageSourceAccessor messageAccessor;
 
 
     public TermGroupFolderServiceImpl(TermGroupFolderRepository termGroupFolderRepository, UserService userService,
-                                      SpecializationService specializationService, MessageSourceAccessor messageAccessor) {
+                                      ActivityService activityService, MessageSourceAccessor messageAccessor) {
         this.termGroupFolderRepository = termGroupFolderRepository;
         this.userService = userService;
-        this.specializationService = specializationService;
+        this.activityService = activityService;
         this.messageAccessor = messageAccessor;
     }
 
@@ -41,10 +41,10 @@ public class TermGroupFolderServiceImpl implements TermGroupFolderService {
     }
 
     @Override
-    public TermGroupFolder createForSpecialization(TermGroupFolder folder) {
-        Long specializationId = folder.getSpecialization().getId();
-        Specialization specialization = specializationService.findById(specializationId);
-        specialization.addTermGroupFolder(folder);
+    public TermGroupFolder createForActivity(TermGroupFolder folder) {
+        Long activityId = folder.getActivity().getId();
+        Activity activity = activityService.findById(activityId);
+        activity.addTermGroupFolder(folder);
         return termGroupFolderRepository.save(folder);
     }
 
@@ -76,7 +76,7 @@ public class TermGroupFolderServiceImpl implements TermGroupFolderService {
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public List<TermGroupFolder> findAllBySpecializationId(Long specializationId) {
-        return termGroupFolderRepository.findAllBySpecializationIdOrderByIdDesc(specializationId);
+    public List<TermGroupFolder> findAllByActivityId(Long activityId) {
+        return termGroupFolderRepository.findAllByActivityIdOrderByIdDesc(activityId);
     }
 }

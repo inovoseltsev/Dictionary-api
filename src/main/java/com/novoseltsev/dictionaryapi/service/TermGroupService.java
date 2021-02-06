@@ -11,7 +11,7 @@ public interface TermGroupService {
 
     TermGroup createForTermGroupFolder(TermGroup termGroup);
 
-    TermGroup createForSpecialization(TermGroup termGroup);
+    TermGroup createForActivity(TermGroup termGroup);
 
     TermGroup update(TermGroup termGroup);
 
@@ -23,5 +23,5 @@ public interface TermGroupService {
 
     List<TermGroup> findAllByTermGroupFolderId(Long folderId);
 
-    List<TermGroup> findAllBySpecializationId(Long specializationId);
+    List<TermGroup> findAllByActivityId(Long activityId);
 }

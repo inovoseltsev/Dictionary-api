@@ -24,8 +24,8 @@ import static com.novoseltsev.dictionaryapi.validation.ValidationMessage.DESCRIP
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Entity
-@Table(schema = "dictionary_schema")
-public class Specialization extends AbstractEntity {
+@Table(name = "activity", schema = "dictionary_schema")
+public class Activity extends AbstractEntity {
 
     @Column(nullable = false)
     @NotBlank
@@ -34,11 +34,11 @@ public class Specialization extends AbstractEntity {
     @Pattern(regexp = DESCRIPTION_PATTERN, message = DESCRIPTION_ERROR)
     private String description;
 
-    @OneToMany(mappedBy = "specialization", cascade = CascadeType.ALL,
+    @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL,
             orphanRemoval = true, fetch = FetchType.LAZY)
     private List<TermGroupFolder> folders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "specialization", cascade = CascadeType.ALL,
+    @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL,
             orphanRemoval = true, fetch = FetchType.LAZY)
     private List<TermGroup> termGroups = new ArrayList<>();
 
@@ -46,23 +46,23 @@ public class Specialization extends AbstractEntity {
     @ToString.Exclude
     private User user;
 
-    public Specialization(Long id) {
+    public Activity(Long id) {
         super(id);
     }
 
-    public Specialization(String name, String description) {
+    public Activity(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
     public void addTermGroupFolder(TermGroupFolder folder) {
-        folder.setSpecialization(this);
+        folder.setActivity(this);
         this.folders.add(folder);
         this.user.addTermGroupFolder(folder);
     }
 
     public void addTermGroup(TermGroup termGroup) {
-        termGroup.setSpecialization(this);
+        termGroup.setActivity(this);
         this.termGroups.add(termGroup);
         this.user.addTermGroup(termGroup);
     }

@@ -1,12 +1,12 @@
 package com.novoseltsev.dictionaryapi.service.impl;
 
-import com.novoseltsev.dictionaryapi.domain.entity.Specialization;
+import com.novoseltsev.dictionaryapi.domain.entity.Activity;
 import com.novoseltsev.dictionaryapi.domain.entity.TermGroup;
 import com.novoseltsev.dictionaryapi.domain.entity.TermGroupFolder;
 import com.novoseltsev.dictionaryapi.domain.entity.User;
 import com.novoseltsev.dictionaryapi.exception.ObjectNotFoundException;
 import com.novoseltsev.dictionaryapi.repository.TermGroupRepository;
-import com.novoseltsev.dictionaryapi.service.SpecializationService;
+import com.novoseltsev.dictionaryapi.service.ActivityService;
 import com.novoseltsev.dictionaryapi.service.TermGroupFolderService;
 import com.novoseltsev.dictionaryapi.service.TermGroupService;
 import com.novoseltsev.dictionaryapi.service.UserService;
@@ -23,18 +23,18 @@ public class TermGroupServiceImpl implements TermGroupService {
 
     private final TermGroupRepository termGroupRepository;
     private final TermGroupFolderService termGroupFolderService;
-    private final SpecializationService specializationService;
+    private final ActivityService activityService;
     private final UserService userService;
     private final MessageSourceAccessor messageAccessor;
 
     @Autowired
     public TermGroupServiceImpl(TermGroupRepository termGroupRepository, TermGroupFolderService termGroupFolderService,
-                                SpecializationService specializationService, UserService userService,
+                                ActivityService activityService, UserService userService,
                                 MessageSourceAccessor messageAccessor) {
         this.termGroupRepository = termGroupRepository;
         this.userService = userService;
         this.termGroupFolderService = termGroupFolderService;
-        this.specializationService = specializationService;
+        this.activityService = activityService;
         this.messageAccessor = messageAccessor;
     }
 
@@ -55,10 +55,10 @@ public class TermGroupServiceImpl implements TermGroupService {
     }
 
     @Override
-    public TermGroup createForSpecialization(TermGroup termGroup) {
-        Long specializationId = termGroup.getSpecialization().getId();
-        Specialization specialization = specializationService.findById(specializationId);
-        specialization.addTermGroup(termGroup);
+    public TermGroup createForActivity(TermGroup termGroup) {
+        Long activityId = termGroup.getActivity().getId();
+        Activity activity = activityService.findById(activityId);
+        activity.addTermGroup(termGroup);
         return termGroupRepository.save(termGroup);
     }
 
@@ -96,7 +96,7 @@ public class TermGroupServiceImpl implements TermGroupService {
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public List<TermGroup> findAllBySpecializationId(Long specializationId) {
-        return termGroupRepository.findAllBySpecializationIdOrderByIdDesc(specializationId);
+    public List<TermGroup> findAllByActivityId(Long activityId) {
+        return termGroupRepository.findAllByActivityIdOrderByIdDesc(activityId);
     }
 }
