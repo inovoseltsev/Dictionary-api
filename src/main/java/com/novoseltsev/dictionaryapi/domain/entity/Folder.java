@@ -25,8 +25,8 @@ import static com.novoseltsev.dictionaryapi.validation.ValidationMessage.DESCRIP
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Entity
-@Table(name = "term_group_folder", schema = "dictionary_schema")
-public class TermGroupFolder extends AbstractEntity {
+@Table(name = "folder", schema = "dictionary_schema")
+public class Folder extends AbstractEntity {
 
     @Column(nullable = false)
     @NotBlank
@@ -35,7 +35,7 @@ public class TermGroupFolder extends AbstractEntity {
     @Pattern(regexp = DESCRIPTION_PATTERN, message = DESCRIPTION_ERROR)
     private String description;
 
-    @OneToMany(mappedBy = "termGroupFolder", cascade = CascadeType.ALL,
+    @OneToMany(mappedBy = "folder", cascade = CascadeType.ALL,
             fetch = FetchType.EAGER)
     private List<TermGroup> termGroups = new ArrayList<>();
 
@@ -49,17 +49,17 @@ public class TermGroupFolder extends AbstractEntity {
     @ToString.Exclude
     private User user;
 
-    public TermGroupFolder(Long id) {
+    public Folder(Long id) {
         super(id);
     }
 
-    public TermGroupFolder(String name, String description) {
+    public Folder(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
     public void addTermGroup(TermGroup termGroup) {
-        termGroup.setTermGroupFolder(this);
+        termGroup.setFolder(this);
         this.termGroups.add(termGroup);
         this.user.addTermGroup(termGroup);
     }

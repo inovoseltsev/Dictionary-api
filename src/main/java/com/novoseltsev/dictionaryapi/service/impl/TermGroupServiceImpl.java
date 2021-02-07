@@ -1,13 +1,13 @@
 package com.novoseltsev.dictionaryapi.service.impl;
 
 import com.novoseltsev.dictionaryapi.domain.entity.Activity;
+import com.novoseltsev.dictionaryapi.domain.entity.Folder;
 import com.novoseltsev.dictionaryapi.domain.entity.TermGroup;
-import com.novoseltsev.dictionaryapi.domain.entity.TermGroupFolder;
 import com.novoseltsev.dictionaryapi.domain.entity.User;
 import com.novoseltsev.dictionaryapi.exception.ObjectNotFoundException;
 import com.novoseltsev.dictionaryapi.repository.TermGroupRepository;
 import com.novoseltsev.dictionaryapi.service.ActivityService;
-import com.novoseltsev.dictionaryapi.service.TermGroupFolderService;
+import com.novoseltsev.dictionaryapi.service.FolderService;
 import com.novoseltsev.dictionaryapi.service.TermGroupService;
 import com.novoseltsev.dictionaryapi.service.UserService;
 import java.util.List;
@@ -22,18 +22,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class TermGroupServiceImpl implements TermGroupService {
 
     private final TermGroupRepository termGroupRepository;
-    private final TermGroupFolderService termGroupFolderService;
+    private final FolderService folderService;
     private final ActivityService activityService;
     private final UserService userService;
     private final MessageSourceAccessor messageAccessor;
 
     @Autowired
-    public TermGroupServiceImpl(TermGroupRepository termGroupRepository, TermGroupFolderService termGroupFolderService,
+    public TermGroupServiceImpl(TermGroupRepository termGroupRepository, FolderService folderService,
                                 ActivityService activityService, UserService userService,
                                 MessageSourceAccessor messageAccessor) {
         this.termGroupRepository = termGroupRepository;
         this.userService = userService;
-        this.termGroupFolderService = termGroupFolderService;
+        this.folderService = folderService;
         this.activityService = activityService;
         this.messageAccessor = messageAccessor;
     }
@@ -47,9 +47,9 @@ public class TermGroupServiceImpl implements TermGroupService {
     }
 
     @Override
-    public TermGroup createForTermGroupFolder(TermGroup termGroup) {
-        Long folderId = termGroup.getTermGroupFolder().getId();
-        TermGroupFolder folder = termGroupFolderService.findById(folderId);
+    public TermGroup createForFolder(TermGroup termGroup) {
+        Long folderId = termGroup.getFolder().getId();
+        Folder folder = folderService.findById(folderId);
         folder.addTermGroup(termGroup);
         return termGroupRepository.save(termGroup);
     }
@@ -90,8 +90,8 @@ public class TermGroupServiceImpl implements TermGroupService {
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public List<TermGroup> findAllByTermGroupFolderId(Long folderId) {
-        return termGroupRepository.findAllByTermGroupFolderIdOrderByIdDesc(folderId);
+    public List<TermGroup> findAllByFolderId(Long folderId) {
+        return termGroupRepository.findAllByFolderIdOrderByIdDesc(folderId);
     }
 
     @Override

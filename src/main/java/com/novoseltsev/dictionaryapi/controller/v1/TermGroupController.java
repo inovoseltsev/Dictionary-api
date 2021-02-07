@@ -44,8 +44,8 @@ public class TermGroupController {
     }
 
     @GetMapping("/term-group-folders/{folderId}")
-    public List<TermGroupDto> findAllByTermGroupFolderId(@PathVariable Long folderId) {
-        return termGroupService.findAllByTermGroupFolderId(folderId).stream().map(TermGroupDto::from)
+    public List<TermGroupDto> findAllByFolderId(@PathVariable Long folderId) {
+        return termGroupService.findAllByFolderId(folderId).stream().map(TermGroupDto::from)
                 .collect(Collectors.toList());
     }
 
@@ -63,9 +63,9 @@ public class TermGroupController {
     }
 
     @PostMapping("/term-group-folders")
-    public ResponseEntity<TermGroupDto> createForTermGroupFolder(
+    public ResponseEntity<TermGroupDto> createForFolder(
             @Valid @RequestBody FolderTermGroupDto termGroupDto) {
-        TermGroup createdTermGroup = termGroupService.createForTermGroupFolder(termGroupDto.toEntity());
+        TermGroup createdTermGroup = termGroupService.createForFolder(termGroupDto.toEntity());
         return new ResponseEntity<>(TermGroupDto.from(createdTermGroup), HttpStatus.CREATED);
     }
 

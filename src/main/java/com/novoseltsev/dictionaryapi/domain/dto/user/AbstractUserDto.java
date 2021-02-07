@@ -1,6 +1,5 @@
 package com.novoseltsev.dictionaryapi.domain.dto.user;
 
-import com.novoseltsev.dictionaryapi.domain.dto.AbstractDto;
 import com.novoseltsev.dictionaryapi.domain.dto.DtoMapper;
 import com.novoseltsev.dictionaryapi.domain.entity.User;
 import javax.validation.constraints.NotBlank;
@@ -17,7 +16,7 @@ import static com.novoseltsev.dictionaryapi.validation.ValidationMessage.LAST_NA
 @Getter
 @Setter
 @NoArgsConstructor
-public abstract class AbstractUserDto extends AbstractDto implements DtoMapper<User> {
+public abstract class AbstractUserDto implements DtoMapper<User> {
 
     @NotBlank(message = FIRST_NAME_ERROR)
     @Pattern(regexp = NAME_PATTERN, message = FIRST_NAME_ERROR)

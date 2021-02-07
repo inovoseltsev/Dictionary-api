@@ -36,7 +36,7 @@ public class Activity extends AbstractEntity {
 
     @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL,
             orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<TermGroupFolder> folders = new ArrayList<>();
+    private List<Folder> folders = new ArrayList<>();
 
     @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL,
             orphanRemoval = true, fetch = FetchType.LAZY)
@@ -55,10 +55,10 @@ public class Activity extends AbstractEntity {
         this.description = description;
     }
 
-    public void addTermGroupFolder(TermGroupFolder folder) {
+    public void addFolder(Folder folder) {
         folder.setActivity(this);
         this.folders.add(folder);
-        this.user.addTermGroupFolder(folder);
+        this.user.addFolder(folder);
     }
 
     public void addTermGroup(TermGroup termGroup) {

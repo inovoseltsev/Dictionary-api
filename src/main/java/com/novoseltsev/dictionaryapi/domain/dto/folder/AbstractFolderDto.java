@@ -1,7 +1,7 @@
-package com.novoseltsev.dictionaryapi.domain.dto.termGroupFolder;
+package com.novoseltsev.dictionaryapi.domain.dto.folder;
 
 import com.novoseltsev.dictionaryapi.domain.dto.DtoMapper;
-import com.novoseltsev.dictionaryapi.domain.entity.TermGroupFolder;
+import com.novoseltsev.dictionaryapi.domain.entity.Folder;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import static com.novoseltsev.dictionaryapi.validation.ValidationMessage.DESCRIP
 
 @Getter
 @NoArgsConstructor
-public abstract class AbstractTermGroupFolderDto implements DtoMapper<TermGroupFolder> {
+public abstract class AbstractFolderDto implements DtoMapper<Folder> {
 
     @NotBlank
     private String name;
@@ -21,13 +21,13 @@ public abstract class AbstractTermGroupFolderDto implements DtoMapper<TermGroupF
     @Pattern(regexp = DESCRIPTION_PATTERN, message = DESCRIPTION_ERROR)
     private String description;
 
-    public AbstractTermGroupFolderDto(String name, String description) {
+    public AbstractFolderDto(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
     @Override
-    public TermGroupFolder toEntity() {
-        return new TermGroupFolder(name, description);
+    public Folder toEntity() {
+        return new Folder(name, description);
     }
 }

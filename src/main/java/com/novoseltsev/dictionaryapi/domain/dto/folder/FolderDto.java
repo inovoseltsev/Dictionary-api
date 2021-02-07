@@ -1,7 +1,7 @@
-package com.novoseltsev.dictionaryapi.domain.dto.termGroupFolder;
+package com.novoseltsev.dictionaryapi.domain.dto.folder;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.novoseltsev.dictionaryapi.domain.entity.TermGroupFolder;
+import com.novoseltsev.dictionaryapi.domain.entity.Folder;
 import javax.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,25 +11,25 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TermGroupFolderDto extends AbstractTermGroupFolderDto {
+public class FolderDto extends AbstractFolderDto {
 
     @Positive
     private Long id;
 
-    public TermGroupFolderDto(Long id, String name, String description) {
+    public FolderDto(Long id, String name, String description) {
         super(name, description);
         this.id = id;
     }
 
     @Override
-    public TermGroupFolder toEntity() {
-        TermGroupFolder folder = super.toEntity();
+    public Folder toEntity() {
+        Folder folder = super.toEntity();
         folder.setId(id);
         return folder;
     }
 
-    public static TermGroupFolderDto from(TermGroupFolder folder) {
-        return new TermGroupFolderDto(
+    public static FolderDto from(Folder folder) {
+        return new FolderDto(
                 folder.getId(),
                 folder.getName(),
                 folder.getDescription()

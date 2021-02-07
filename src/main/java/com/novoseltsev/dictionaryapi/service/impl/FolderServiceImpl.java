@@ -1,12 +1,12 @@
 package com.novoseltsev.dictionaryapi.service.impl;
 
 import com.novoseltsev.dictionaryapi.domain.entity.Activity;
-import com.novoseltsev.dictionaryapi.domain.entity.TermGroupFolder;
+import com.novoseltsev.dictionaryapi.domain.entity.Folder;
 import com.novoseltsev.dictionaryapi.domain.entity.User;
 import com.novoseltsev.dictionaryapi.exception.ObjectNotFoundException;
-import com.novoseltsev.dictionaryapi.repository.TermGroupFolderRepository;
+import com.novoseltsev.dictionaryapi.repository.FolderRepository;
 import com.novoseltsev.dictionaryapi.service.ActivityService;
-import com.novoseltsev.dictionaryapi.service.TermGroupFolderService;
+import com.novoseltsev.dictionaryapi.service.FolderService;
 import com.novoseltsev.dictionaryapi.service.UserService;
 import java.util.List;
 import org.springframework.context.support.MessageSourceAccessor;
@@ -16,67 +16,67 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @Transactional
-public class TermGroupFolderServiceImpl implements TermGroupFolderService {
+public class FolderServiceImpl implements FolderService {
 
-    private final TermGroupFolderRepository termGroupFolderRepository;
+    private final FolderRepository folderRepository;
     private final UserService userService;
     private final ActivityService activityService;
     private final MessageSourceAccessor messageAccessor;
 
 
-    public TermGroupFolderServiceImpl(TermGroupFolderRepository termGroupFolderRepository, UserService userService,
-                                      ActivityService activityService, MessageSourceAccessor messageAccessor) {
-        this.termGroupFolderRepository = termGroupFolderRepository;
+    public FolderServiceImpl(FolderRepository folderRepository, UserService userService,
+                             ActivityService activityService, MessageSourceAccessor messageAccessor) {
+        this.folderRepository = folderRepository;
         this.userService = userService;
         this.activityService = activityService;
         this.messageAccessor = messageAccessor;
     }
 
     @Override
-    public TermGroupFolder createForUser(TermGroupFolder folder) {
+    public Folder createForUser(Folder folder) {
         Long userId = folder.getUser().getId();
         User user = userService.findById(userId);
-        user.addTermGroupFolder(folder);
-        return termGroupFolderRepository.save(folder);
+        user.addFolder(folder);
+        return folderRepository.save(folder);
     }
 
     @Override
-    public TermGroupFolder createForActivity(TermGroupFolder folder) {
+    public Folder createForActivity(Folder folder) {
         Long activityId = folder.getActivity().getId();
         Activity activity = activityService.findById(activityId);
-        activity.addTermGroupFolder(folder);
-        return termGroupFolderRepository.save(folder);
+        activity.addFolder(folder);
+        return folderRepository.save(folder);
     }
 
     @Override
-    public TermGroupFolder update(TermGroupFolder folder) {
-        TermGroupFolder savedFolder = findById(folder.getId());
+    public Folder update(Folder folder) {
+        Folder savedFolder = findById(folder.getId());
         savedFolder.setName(folder.getName());
         savedFolder.setDescription(folder.getDescription());
-        return termGroupFolderRepository.save(savedFolder);
+        return folderRepository.save(savedFolder);
     }
 
     @Override
     public void deleteById(Long id) {
-        termGroupFolderRepository.delete(findById(id));
+        folderRepository.delete(findById(id));
     }
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public TermGroupFolder findById(Long id) {
+    public Folder findById(Long id) {
         String errorMessage = messageAccessor.getMessage("term.group.folder.not.found");
-        return termGroupFolderRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(errorMessage));
+        return folderRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(errorMessage));
     }
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public List<TermGroupFolder> findAllByUserId(Long userId) {
-        return termGroupFolderRepository.findAllByUserIdOrderByIdDesc(userId);
+    public List<Folder> findAllByUserId(Long userId) {
+        return folderRepository.findAllByUserIdOrderByIdDesc(userId);
     }
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public List<TermGroupFolder> findAllByActivityId(Long activityId) {
-        return termGroupFolderRepository.findAllByActivityIdOrderByIdDesc(activityId);
+    public List<Folder> findAllByActivityId(Long activityId) {
+        return folderRepository.findAllByActivityIdOrderByIdDesc(activityId);
     }
 }
