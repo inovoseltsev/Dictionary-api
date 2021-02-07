@@ -6,6 +6,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -24,8 +25,8 @@ import static com.novoseltsev.dictionaryapi.validation.ValidationMessage.DESCRIP
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Entity
-@Table(schema = "dictionary_schema")
-public class Specialization extends AbstractEntity {
+@Table(name = "folder", schema = "dictionary_schema")
+public class Folder extends AbstractEntity {
 
     @Column(nullable = false)
     @NotBlank
@@ -34,35 +35,31 @@ public class Specialization extends AbstractEntity {
     @Pattern(regexp = DESCRIPTION_PATTERN, message = DESCRIPTION_ERROR)
     private String description;
 
-    @OneToMany(mappedBy = "specialization", cascade = CascadeType.ALL,
-            orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<TermGroupFolder> folders = new ArrayList<>();
-
-    @OneToMany(mappedBy = "specialization", cascade = CascadeType.ALL,
-            orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "folder", cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER)
     private List<TermGroup> termGroups = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "activity_id")
+    @ToString.Exclude
+    private Activity activity;
+
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
     @ToString.Exclude
     private User user;
 
-    public Specialization(Long id) {
+    public Folder(Long id) {
         super(id);
     }
 
-    public Specialization(String name, String description) {
+    public Folder(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
-    public void addTermGroupFolder(TermGroupFolder folder) {
-        folder.setSpecialization(this);
-        this.folders.add(folder);
-        this.user.addTermGroupFolder(folder);
-    }
-
     public void addTermGroup(TermGroup termGroup) {
-        termGroup.setSpecialization(this);
+        termGroup.setFolder(this);
         this.termGroups.add(termGroup);
         this.user.addTermGroup(termGroup);
     }

@@ -1,7 +1,7 @@
-package com.novoseltsev.dictionaryapi.domain.dto.specialization;
+package com.novoseltsev.dictionaryapi.domain.dto.folder;
 
 import com.novoseltsev.dictionaryapi.domain.dto.DtoMapper;
-import com.novoseltsev.dictionaryapi.domain.entity.Specialization;
+import com.novoseltsev.dictionaryapi.domain.entity.Folder;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import lombok.Getter;
@@ -13,21 +13,21 @@ import static com.novoseltsev.dictionaryapi.validation.ValidationMessage.DESCRIP
 
 @Getter
 @NoArgsConstructor
-public abstract class AbstractSpecializationDto implements DtoMapper<Specialization> {
+public abstract class AbstractFolderDto implements DtoMapper<Folder> {
 
     @NotBlank
-    String name;
+    private String name;
 
     @Pattern(regexp = DESCRIPTION_PATTERN, message = DESCRIPTION_ERROR)
-    String description;
+    private String description;
 
-    public AbstractSpecializationDto(String name, String description) {
+    public AbstractFolderDto(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
     @Override
-    public Specialization toEntity() {
-        return new Specialization(name, description);
+    public Folder toEntity() {
+        return new Folder(name, description);
     }
 }

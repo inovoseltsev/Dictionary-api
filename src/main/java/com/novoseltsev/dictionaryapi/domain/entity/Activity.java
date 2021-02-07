@@ -6,7 +6,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -25,8 +24,8 @@ import static com.novoseltsev.dictionaryapi.validation.ValidationMessage.DESCRIP
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Entity
-@Table(name = "term_group_folder", schema = "dictionary_schema")
-public class TermGroupFolder extends AbstractEntity {
+@Table(name = "activity", schema = "dictionary_schema")
+public class Activity extends AbstractEntity {
 
     @Column(nullable = false)
     @NotBlank
@@ -35,30 +34,35 @@ public class TermGroupFolder extends AbstractEntity {
     @Pattern(regexp = DESCRIPTION_PATTERN, message = DESCRIPTION_ERROR)
     private String description;
 
-    @OneToMany(mappedBy = "termGroupFolder", cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Folder> folders = new ArrayList<>();
+
+    @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)
     private List<TermGroup> termGroups = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @ToString.Exclude
-    private Specialization specialization;
-
-    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
-    @ToString.Exclude
     private User user;
 
-    public TermGroupFolder(Long id) {
+    public Activity(Long id) {
         super(id);
     }
 
-    public TermGroupFolder(String name, String description) {
+    public Activity(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
+    public void addFolder(Folder folder) {
+        folder.setActivity(this);
+        this.folders.add(folder);
+        this.user.addFolder(folder);
+    }
+
     public void addTermGroup(TermGroup termGroup) {
-        termGroup.setTermGroupFolder(this);
+        termGroup.setActivity(this);
         this.termGroups.add(termGroup);
         this.user.addTermGroup(termGroup);
     }

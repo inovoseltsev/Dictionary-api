@@ -40,14 +40,14 @@ public class TermGroup extends AbstractEntity {
     private List<Term> terms = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-    @JoinColumn(name = "term_group_folder_id")
+    @JoinColumn(name = "folder_id")
     @ToString.Exclude
-    private TermGroupFolder termGroupFolder;
+    private Folder folder;
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
-    @JoinColumn(name = "specialization_id")
+    @JoinColumn(name = "activity_id")
     @ToString.Exclude
-    private Specialization specialization;
+    private Activity activity;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(nullable = false)

@@ -1,7 +1,7 @@
 package com.novoseltsev.dictionaryapi.controller.v1;
 
+import com.novoseltsev.dictionaryapi.domain.dto.termGroup.ActivityTermGroupDto;
 import com.novoseltsev.dictionaryapi.domain.dto.termGroup.FolderTermGroupDto;
-import com.novoseltsev.dictionaryapi.domain.dto.termGroup.SpecializationTermGroupDto;
 import com.novoseltsev.dictionaryapi.domain.dto.termGroup.TermGroupDto;
 import com.novoseltsev.dictionaryapi.domain.dto.termGroup.UserTermGroupDto;
 import com.novoseltsev.dictionaryapi.domain.entity.TermGroup;
@@ -44,14 +44,14 @@ public class TermGroupController {
     }
 
     @GetMapping("/term-group-folders/{folderId}")
-    public List<TermGroupDto> findAllByTermGroupFolderId(@PathVariable Long folderId) {
-        return termGroupService.findAllByTermGroupFolderId(folderId).stream().map(TermGroupDto::from)
+    public List<TermGroupDto> findAllByFolderId(@PathVariable Long folderId) {
+        return termGroupService.findAllByFolderId(folderId).stream().map(TermGroupDto::from)
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/specializations/{specializationId}")
-    public List<TermGroupDto> findAllBySpecializationId(@PathVariable Long specializationId) {
-        return termGroupService.findAllBySpecializationId(specializationId).stream().map(TermGroupDto::from)
+    @GetMapping("/activities/{activityId}")
+    public List<TermGroupDto> findAllByActivityId(@PathVariable Long activityId) {
+        return termGroupService.findAllByActivityId(activityId).stream().map(TermGroupDto::from)
                 .collect(Collectors.toList());
     }
 
@@ -63,16 +63,16 @@ public class TermGroupController {
     }
 
     @PostMapping("/term-group-folders")
-    public ResponseEntity<TermGroupDto> createForTermGroupFolder(
+    public ResponseEntity<TermGroupDto> createForFolder(
             @Valid @RequestBody FolderTermGroupDto termGroupDto) {
-        TermGroup createdTermGroup = termGroupService.createForTermGroupFolder(termGroupDto.toEntity());
+        TermGroup createdTermGroup = termGroupService.createForFolder(termGroupDto.toEntity());
         return new ResponseEntity<>(TermGroupDto.from(createdTermGroup), HttpStatus.CREATED);
     }
 
-    @PostMapping("/specializations")
-    public ResponseEntity<TermGroupDto> createForSpecialization(
-            @Valid @RequestBody SpecializationTermGroupDto termGroupDto) {
-        TermGroup createdTermGroup = termGroupService.createForSpecialization(termGroupDto.toEntity());
+    @PostMapping("/activities")
+    public ResponseEntity<TermGroupDto> createForActivity(
+            @Valid @RequestBody ActivityTermGroupDto termGroupDto) {
+        TermGroup createdTermGroup = termGroupService.createForActivity(termGroupDto.toEntity());
         return new ResponseEntity<>(TermGroupDto.from(createdTermGroup), HttpStatus.CREATED);
     }
 

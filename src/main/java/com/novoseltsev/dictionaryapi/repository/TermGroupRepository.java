@@ -10,7 +10,7 @@ public interface TermGroupRepository extends CrudRepository<TermGroup, Long> {
 
     List<TermGroup> findAllByUserIdOrderByIdDesc(Long userId);
 
-    List<TermGroup> findAllByTermGroupFolderIdOrderByIdDesc(Long folderId);
+    List<TermGroup> findAllByFolderIdOrderByIdDesc(Long folderId);
 
-    List<TermGroup> findAllBySpecializationIdOrderByIdDesc(Long specializationId);
+    List<TermGroup> findAllByActivityIdOrderByIdDesc(Long activityId);
 }
