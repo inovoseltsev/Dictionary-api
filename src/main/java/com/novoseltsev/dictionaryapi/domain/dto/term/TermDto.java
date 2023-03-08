@@ -2,16 +2,20 @@ package com.novoseltsev.dictionaryapi.domain.dto.term;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.novoseltsev.dictionaryapi.domain.entity.Term;
+import com.novoseltsev.dictionaryapi.domain.model.study.StudyTerm;
 import com.novoseltsev.dictionaryapi.domain.status.TermAwareStatus;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.validation.constraints.Positive;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import javax.validation.constraints.Positive;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -25,6 +29,8 @@ public class TermDto extends AbstractTermDto {
     TermAwareStatus awareStatus;
 
     private Map<String, Object> imageFile;
+
+    private List<AnswerDto> answers;
 
     public TermDto(Long id, String name, String definition, String keyword, TermAwareStatus awareStatus,
                    Map<String, Object> imageFile) {
@@ -47,7 +53,26 @@ public class TermDto extends AbstractTermDto {
         return term;
     }
 
-    public static TermDto from(Term term) {
+    public static TermDto toTermDto(Term term) {
+        return new TermDto(
+                term.getId(),
+                term.getName(),
+                term.getDefinition(),
+                term.getKeyword(),
+                term.getAwareStatus()
+        );
+    }
+
+    public static TermDto toTermDto(StudyTerm studyTerm) {
+        var termDto = toTermDto(studyTerm.getTerm());
+        var answerDtos = studyTerm.getAnswers().stream()
+                .map(it -> new AnswerDto(it.getId(), it.getDefinition(), it.isCorrect()))
+                .collect(Collectors.toList());
+        termDto.setAnswers(answerDtos);
+        return termDto;
+    }
+
+    public static TermDto toTermDtoWithImage(Term term) {
         Map<String, Object> imageFile = new HashMap<>();
         byte[] imageContent = new byte[]{};
         String imagePath = term.getImagePath();
@@ -72,14 +97,13 @@ public class TermDto extends AbstractTermDto {
         );
     }
 
-    public static TermDto fromTermWithoutImages(Term term) {
-        return new TermDto(
-                term.getId(),
-                term.getName(),
-                term.getDefinition(),
-                term.getKeyword(),
-                term.getAwareStatus()
-        );
+    public static TermDto toTermDtoWithImage(StudyTerm studyTerm) {
+        var termDto = toTermDtoWithImage(studyTerm.getTerm());
+        var answerDtos = studyTerm.getAnswers().stream()
+                .map(it -> new AnswerDto(it.getId(), it.getDefinition(), it.isCorrect()))
+                .collect(Collectors.toList());
+        termDto.setAnswers(answerDtos);
+        return termDto;
     }
 }
 

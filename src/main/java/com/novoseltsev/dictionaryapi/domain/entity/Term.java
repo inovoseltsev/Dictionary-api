@@ -1,6 +1,11 @@
 package com.novoseltsev.dictionaryapi.domain.entity;
 
 import com.novoseltsev.dictionaryapi.domain.status.TermAwareStatus;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,11 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-
 
 import static com.novoseltsev.dictionaryapi.validation.Pattern.KEY_WORD_PATTERN;
 
@@ -24,7 +24,7 @@ import static com.novoseltsev.dictionaryapi.validation.Pattern.KEY_WORD_PATTERN;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Entity
-@Table(schema = "dictionary_schema")
+@Table
 public class Term extends AbstractEntity {
 
     @Column(nullable = false)

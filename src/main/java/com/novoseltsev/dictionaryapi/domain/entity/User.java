@@ -2,8 +2,10 @@ package com.novoseltsev.dictionaryapi.domain.entity;
 
 import com.novoseltsev.dictionaryapi.domain.role.UserRole;
 import com.novoseltsev.dictionaryapi.domain.status.UserStatus;
-import java.util.ArrayList;
-import java.util.List;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,10 +16,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.novoseltsev.dictionaryapi.validation.Pattern.LOGIN_PATTERN;
 import static com.novoseltsev.dictionaryapi.validation.Pattern.NAME_PATTERN;
@@ -30,7 +30,7 @@ import static com.novoseltsev.dictionaryapi.validation.ValidationMessage.PASSWOR
 @EqualsAndHashCode(callSuper = true, of = "login")
 @NoArgsConstructor
 @Entity
-@Table(name = "usr", schema = "dictionary_schema")
+@Table(name = "usr")
 public class User extends AbstractEntity {
 
     @Column(name = "first_name")
