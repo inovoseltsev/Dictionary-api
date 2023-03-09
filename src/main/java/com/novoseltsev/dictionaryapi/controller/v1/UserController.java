@@ -1,6 +1,6 @@
 package com.novoseltsev.dictionaryapi.controller.v1;
 
-import com.novoseltsev.dictionaryapi.domain.dto.request.PasswordDto;
+import com.novoseltsev.dictionaryapi.domain.dto.auth.PasswordDto;
 import com.novoseltsev.dictionaryapi.domain.dto.user.AdminUserDto;
 import com.novoseltsev.dictionaryapi.domain.dto.user.SignUpUserDto;
 import com.novoseltsev.dictionaryapi.domain.dto.user.UserDto;

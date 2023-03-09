@@ -67,7 +67,9 @@ public class TermServiceImpl implements TermService {
     private String updateImagePathIfNeeded(String newPath, String previousPath) throws IOException {
         String imagePath = previousPath;
         if (newPath != null && !newPath.isBlank()) {
-            Files.delete(Paths.get(previousPath));
+            if (previousPath != null && !previousPath.isBlank()) {
+                Files.delete(Paths.get(previousPath));
+            }
             imagePath = newPath;
         }
         return imagePath;

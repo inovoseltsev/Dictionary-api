@@ -1,4 +1,4 @@
-package com.novoseltsev.dictionaryapi.domain.dto.request;
+package com.novoseltsev.dictionaryapi.domain.dto.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.validation.constraints.NotBlank;

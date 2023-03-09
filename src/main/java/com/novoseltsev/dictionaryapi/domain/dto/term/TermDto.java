@@ -26,14 +26,13 @@ public class TermDto extends AbstractTermDto {
     @Positive
     private Long id;
 
-    TermAwareStatus awareStatus;
+    private TermAwareStatus awareStatus;
 
     private Map<String, Object> imageFile;
 
     private List<AnswerDto> answers;
 
-    public TermDto(Long id, String name, String definition, String keyword, TermAwareStatus awareStatus,
-                   Map<String, Object> imageFile) {
+    public TermDto(Long id, String name, String definition, String keyword, TermAwareStatus awareStatus, Map<String, Object> imageFile) {
         super(name, definition, keyword);
         this.id = id;
         this.awareStatus = awareStatus;
@@ -66,8 +65,8 @@ public class TermDto extends AbstractTermDto {
     public static TermDto toTermDto(StudyTerm studyTerm) {
         var termDto = toTermDto(studyTerm.getTerm());
         var answerDtos = studyTerm.getAnswers().stream()
-                .map(it -> new AnswerDto(it.getId(), it.getDefinition(), it.isCorrect()))
-                .collect(Collectors.toList());
+            .map(it -> new AnswerDto(it.getId(), it.getDefinition(), it.isCorrect()))
+            .collect(Collectors.toList());
         termDto.setAnswers(answerDtos);
         return termDto;
     }
