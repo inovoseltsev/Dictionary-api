@@ -34,12 +34,10 @@ public class Activity extends AbstractEntity {
     @Pattern(regexp = DESCRIPTION_PATTERN, message = DESCRIPTION_ERROR)
     private String description;
 
-    @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL,
-            orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Folder> folders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL,
-            orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<TermGroup> termGroups = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)

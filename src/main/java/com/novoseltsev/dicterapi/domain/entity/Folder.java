@@ -35,8 +35,7 @@ public class Folder extends AbstractEntity {
     @Pattern(regexp = DESCRIPTION_PATTERN, message = DESCRIPTION_ERROR)
     private String description;
 
-    @OneToMany(mappedBy = "folder", cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "folder", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<TermGroup> termGroups = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)

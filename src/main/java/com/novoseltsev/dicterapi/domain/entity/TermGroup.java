@@ -35,8 +35,7 @@ public class TermGroup extends AbstractEntity {
     @Pattern(regexp = DESCRIPTION_PATTERN, message = DESCRIPTION_ERROR)
     private String description;
 
-    @OneToMany(mappedBy = "termGroup", cascade = CascadeType.ALL,
-            orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "termGroup", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Term> terms = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)

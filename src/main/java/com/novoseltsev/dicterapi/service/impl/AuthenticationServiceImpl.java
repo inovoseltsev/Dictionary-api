@@ -6,7 +6,7 @@ import com.novoseltsev.dicterapi.domain.entity.User;
 import com.novoseltsev.dicterapi.repository.UserRepository;
 import com.novoseltsev.dicterapi.security.jwt.JwtProvider;
 import com.novoseltsev.dicterapi.service.AuthenticationService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
@@ -21,15 +22,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final MessageSourceAccessor messageAccessor;
-
-    @Autowired
-    public AuthenticationServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtProvider jwtProvider,
-                                     MessageSourceAccessor messageAccessor) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtProvider = jwtProvider;
-        this.messageAccessor = messageAccessor;
-    }
 
     @Override
     public String login(String login, String password) {

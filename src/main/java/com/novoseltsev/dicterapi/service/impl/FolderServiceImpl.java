@@ -9,11 +9,13 @@ import com.novoseltsev.dicterapi.service.ActivityService;
 import com.novoseltsev.dicterapi.service.FolderService;
 import com.novoseltsev.dicterapi.service.UserService;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+@RequiredArgsConstructor
 @Component
 @Transactional
 public class FolderServiceImpl implements FolderService {
@@ -22,15 +24,6 @@ public class FolderServiceImpl implements FolderService {
     private final UserService userService;
     private final ActivityService activityService;
     private final MessageSourceAccessor messageAccessor;
-
-
-    public FolderServiceImpl(FolderRepository folderRepository, UserService userService,
-                             ActivityService activityService, MessageSourceAccessor messageAccessor) {
-        this.folderRepository = folderRepository;
-        this.userService = userService;
-        this.activityService = activityService;
-        this.messageAccessor = messageAccessor;
-    }
 
     @Override
     public Folder createForUser(Folder folder) {

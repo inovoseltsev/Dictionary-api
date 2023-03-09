@@ -32,9 +32,9 @@ import java.util.stream.Collectors;
 import static com.novoseltsev.dicterapi.domain.status.TermAwareStatus.BAD;
 import static com.novoseltsev.dicterapi.domain.status.TermAwareStatus.PERFECT;
 
+@RequiredArgsConstructor
 @Component
 @Transactional
-@RequiredArgsConstructor
 public class TermServiceImpl implements TermService {
 
     @Value("${upload.path}")
@@ -43,7 +43,6 @@ public class TermServiceImpl implements TermService {
     private final TermRepository termRepository;
     private final TermGroupService termGroupService;
     private final MessageSourceAccessor messageAccessor;
-
 
     @Override
     public Term createForTermGroup(Term term) {
@@ -120,8 +119,8 @@ public class TermServiceImpl implements TermService {
     public List<StudyTerm> getStudySetWithKeywords(Long groupId) {
         var groupTerms = findAllByTermGroupId(groupId);
         var termsWithKeywords = groupTerms.stream()
-                .filter(el -> Objects.nonNull(el.getKeyword()) && !el.getKeyword().isBlank())
-                .collect(Collectors.toList());
+            .filter(el -> Objects.nonNull(el.getKeyword()) && !el.getKeyword().isBlank())
+            .collect(Collectors.toList());
         return createSortedStudySet(termsWithKeywords, groupTerms);
     }
 
@@ -132,8 +131,8 @@ public class TermServiceImpl implements TermService {
     public List<StudyTerm> getStudySetWithImages(Long termGroupId) {
         var groupTerms = findAllByTermGroupId(termGroupId);
         var termsWithImage = groupTerms.stream()
-                .filter(el -> Objects.nonNull(el.getImagePath()))
-                .collect(Collectors.toList());
+            .filter(el -> Objects.nonNull(el.getImagePath()))
+            .collect(Collectors.toList());
         return createSortedStudySet(termsWithImage, groupTerms);
     }
 
@@ -142,8 +141,8 @@ public class TermServiceImpl implements TermService {
     public List<List<StudyTerm>> getStudySetInChunks(Long termGroupId) {
         var groupTerms = findAllByTermGroupId(termGroupId);
         var unlearnedTerms = groupTerms.stream()
-                .filter(el -> !el.getAwareStatus().equals(PERFECT))
-                .collect(Collectors.toList());
+            .filter(el -> !el.getAwareStatus().equals(PERFECT))
+            .collect(Collectors.toList());
         Collections.shuffle(unlearnedTerms);
         return ListUtils.partition(createStudySet(unlearnedTerms, groupTerms), 3);
     }
@@ -164,8 +163,8 @@ public class TermServiceImpl implements TermService {
 
     private List<StudyTerm> createStudySet(List<Term> unlearnedTerms, List<Term> groupTerms) {
         return unlearnedTerms.stream()
-                .map(it -> new StudyTerm(it, generateAnswersForTerm(it, groupTerms)))
-                .collect(Collectors.toList());
+            .map(it -> new StudyTerm(it, generateAnswersForTerm(it, groupTerms)))
+            .collect(Collectors.toList());
     }
 
     private List<StudyTerm> createSortedStudySet(List<Term> unlearnedTerms, List<Term> groupTerms) {
@@ -175,9 +174,9 @@ public class TermServiceImpl implements TermService {
 
     private List<Term> getUnlearnedTermsSortedByAwareStatus(List<Term> terms) {
         return terms.stream()
-                .filter(term -> !term.getAwareStatus().equals(PERFECT))
-                .sorted(Comparator.comparing(Term::getAwareStatus))
-                .collect(Collectors.toList());
+            .filter(term -> !term.getAwareStatus().equals(PERFECT))
+            .sorted(Comparator.comparing(Term::getAwareStatus))
+            .collect(Collectors.toList());
     }
 
     private List<Answer> generateAnswersForTerm(Term term, List<Term> groupTerms) {
@@ -185,14 +184,14 @@ public class TermServiceImpl implements TermService {
         Collections.shuffle(shuffledTerms);
 
         var answerTerms = shuffledTerms.stream()
-                .filter(it -> !it.getId().equals(term.getId()))
-                .limit(3)
-                .collect(Collectors.toList());
+            .filter(it -> !it.getId().equals(term.getId()))
+            .limit(3)
+            .collect(Collectors.toList());
         answerTerms.add(term);
         Collections.shuffle(answerTerms);
 
         return answerTerms.stream()
-                .map(it -> new Answer(it.getId(), it.getDefinition(), it.getId().equals(term.getId())))
-                .collect(Collectors.toList());
+            .map(it -> new Answer(it.getId(), it.getDefinition(), it.getId().equals(term.getId())))
+            .collect(Collectors.toList());
     }
 }

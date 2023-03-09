@@ -7,7 +7,7 @@ import com.novoseltsev.dicterapi.service.ActivityService;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,16 +19,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("activities")
 public class ActivityController {
 
     private final ActivityService activityService;
-
-    @Autowired
-    public ActivityController(ActivityService activityService) {
-        this.activityService = activityService;
-    }
 
     @GetMapping("/{id}")
     public ActivityDto findById(@PathVariable Long id) {

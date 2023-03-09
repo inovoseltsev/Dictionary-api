@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 public class JwtProvider {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String BEARER = "Bearer_";
+    private static final String BEARER = "Bearer ";
 
     @Value("${jwt.secret}")
     private String secret;

@@ -60,16 +60,13 @@ public class User extends AbstractEntity {
     @Enumerated(value = EnumType.STRING)
     private UserStatus status;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
-            orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<TermGroup> termGroups = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
-            orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Folder> folders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
-            orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Activity> activities = new ArrayList<>();
 
 

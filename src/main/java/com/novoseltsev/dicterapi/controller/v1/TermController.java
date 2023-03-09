@@ -32,7 +32,6 @@ public class TermController {
 
     private final TermService termService;
 
-
     @GetMapping("/{id}")
     public TermDto findById(@PathVariable Long id) {
         return TermDto.toTermDtoWithImage(termService.findById(id));
@@ -94,7 +93,8 @@ public class TermController {
     }
 
     @PutMapping("/{id}")
-    public TermDto update(@PathVariable Long id, @RequestPart @Valid TermDto termDto,
+    public TermDto update(@PathVariable Long id,
+                          @RequestPart @Valid TermDto termDto,
                           @RequestPart(required = false) MultipartFile termImage) throws IOException {
         termDto.setId(id);
         Term term = termDto.toEntity();

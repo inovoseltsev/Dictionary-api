@@ -11,13 +11,14 @@ import com.novoseltsev.dicterapi.repository.UserRepository;
 import com.novoseltsev.dicterapi.service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+@RequiredArgsConstructor
 @Component
 @Transactional
 public class UserServiceImpl implements UserService {
@@ -25,14 +26,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final MessageSourceAccessor messageAccessor;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
-                           MessageSourceAccessor messageAccessor) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.messageAccessor = messageAccessor;
-    }
 
     @Override
     public User create(User user) {

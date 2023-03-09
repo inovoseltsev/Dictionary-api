@@ -7,12 +7,13 @@ import com.novoseltsev.dicterapi.repository.ActivityRepository;
 import com.novoseltsev.dicterapi.service.ActivityService;
 import com.novoseltsev.dicterapi.service.UserService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+@RequiredArgsConstructor
 @Component
 @Transactional
 public class ActivityServiceImpl implements ActivityService {
@@ -20,14 +21,6 @@ public class ActivityServiceImpl implements ActivityService {
     private final ActivityRepository activityRepository;
     private final UserService userService;
     private final MessageSourceAccessor messageAccessor;
-
-    @Autowired
-    public ActivityServiceImpl(UserService userService, ActivityRepository activityRepository,
-                               MessageSourceAccessor messageAccessor) {
-        this.userService = userService;
-        this.activityRepository = activityRepository;
-        this.messageAccessor = messageAccessor;
-    }
 
     @Override
     public Activity create(Activity activity) {

@@ -11,12 +11,13 @@ import com.novoseltsev.dicterapi.service.FolderService;
 import com.novoseltsev.dicterapi.service.TermGroupService;
 import com.novoseltsev.dicterapi.service.UserService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+@RequiredArgsConstructor
 @Component
 @Transactional
 public class TermGroupServiceImpl implements TermGroupService {
@@ -26,17 +27,6 @@ public class TermGroupServiceImpl implements TermGroupService {
     private final ActivityService activityService;
     private final UserService userService;
     private final MessageSourceAccessor messageAccessor;
-
-    @Autowired
-    public TermGroupServiceImpl(TermGroupRepository termGroupRepository, FolderService folderService,
-                                ActivityService activityService, UserService userService,
-                                MessageSourceAccessor messageAccessor) {
-        this.termGroupRepository = termGroupRepository;
-        this.userService = userService;
-        this.folderService = folderService;
-        this.activityService = activityService;
-        this.messageAccessor = messageAccessor;
-    }
 
     @Override
     public TermGroup createForUser(TermGroup termGroup) {
