@@ -37,6 +37,8 @@ import static com.novoseltsev.dicterapi.domain.status.TermAwareStatus.PERFECT;
 @Transactional
 public class TermServiceImpl implements TermService {
 
+    private static final Integer CHUNK_SIZE = 3;
+
     @Value("${upload.path}")
     private String uploadPath;
 
@@ -54,8 +56,8 @@ public class TermServiceImpl implements TermService {
 
     @Override
     public Term update(Term term) throws IOException {
-        Term savedTerm = findById(term.getId());
-        String imagePath = updateImagePathIfNeeded(term.getImagePath(), savedTerm.getImagePath());
+        var savedTerm = findById(term.getId());
+        var imagePath = updateImagePathIfNeeded(term.getImagePath(), savedTerm.getImagePath());
         savedTerm.setName(term.getName());
         savedTerm.setDefinition(term.getDefinition());
         savedTerm.setKeyword(term.getKeyword());
@@ -64,7 +66,7 @@ public class TermServiceImpl implements TermService {
     }
 
     private String updateImagePathIfNeeded(String newPath, String previousPath) throws IOException {
-        String imagePath = previousPath;
+        var imagePath = previousPath;
         if (newPath != null && !newPath.isBlank()) {
             if (previousPath != null && !previousPath.isBlank()) {
                 Files.delete(Paths.get(previousPath));
@@ -82,7 +84,7 @@ public class TermServiceImpl implements TermService {
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public Term findById(Long id) {
-        String errorMessage = messageAccessor.getMessage("term.not.found");
+        var errorMessage = messageAccessor.getMessage("term.not.found");
         return termRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(errorMessage));
     }
 
@@ -125,7 +127,7 @@ public class TermServiceImpl implements TermService {
     }
 
 
-    //TODO Make images be available by url
+    //TODO Make images available by url
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<StudyTerm> getStudySetWithImages(Long termGroupId) {
@@ -144,19 +146,19 @@ public class TermServiceImpl implements TermService {
             .filter(el -> !el.getAwareStatus().equals(PERFECT))
             .collect(Collectors.toList());
         Collections.shuffle(unlearnedTerms);
-        return ListUtils.partition(createStudySet(unlearnedTerms, groupTerms), 3);
+        return ListUtils.partition(createStudySet(unlearnedTerms, groupTerms), CHUNK_SIZE);
     }
 
     @Override
     public void updateAwareStatus(Long termId, TermAwareStatus awareStatus) {
-        Term term = findById(termId);
+        var term = findById(termId);
         term.setAwareStatus(awareStatus);
         termRepository.save(term);
     }
 
     @Override
     public void resetAwareStatusForAllInTermGroup(Long groupId) {
-        List<Term> terms = findAllByTermGroupId(groupId);
+        var terms = findAllByTermGroupId(groupId);
         terms.forEach(el -> el.setAwareStatus(TermAwareStatus.BAD));
         termRepository.saveAll(terms);
     }
@@ -168,15 +170,12 @@ public class TermServiceImpl implements TermService {
     }
 
     private List<StudyTerm> createSortedStudySet(List<Term> unlearnedTerms, List<Term> groupTerms) {
-        var sortedUnlearnedTerms = getUnlearnedTermsSortedByAwareStatus(unlearnedTerms);
-        return createStudySet(sortedUnlearnedTerms, groupTerms);
-    }
-
-    private List<Term> getUnlearnedTermsSortedByAwareStatus(List<Term> terms) {
-        return terms.stream()
+        var sortedUnlearnedTerms = unlearnedTerms.stream()
             .filter(term -> !term.getAwareStatus().equals(PERFECT))
             .sorted(Comparator.comparing(Term::getAwareStatus))
             .collect(Collectors.toList());
+
+        return createStudySet(sortedUnlearnedTerms, groupTerms);
     }
 
     private List<Answer> generateAnswersForTerm(Term term, List<Term> groupTerms) {
