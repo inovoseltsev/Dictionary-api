@@ -94,11 +94,4 @@ public class UserServiceImpl implements UserService {
         }
         return user;
     }
-
-    @Override
-    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-    public User findByLogin(String login) {
-        String errorMessage = messageAccessor.getMessage("user.not.found");
-        return userRepository.findByLogin(login).orElseThrow(() -> new ObjectNotFoundException(errorMessage));
-    }
 }
