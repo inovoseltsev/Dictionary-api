@@ -18,8 +18,8 @@ public class AuthUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        String userRole = user.getRole().name();
-        SimpleGrantedAuthority grantedAuthority = new SimpleGrantedAuthority(userRole);
+        var userRole = user.getRole().name();
+        var grantedAuthority = new SimpleGrantedAuthority(userRole);
         return Collections.singletonList(grantedAuthority);
     }
 

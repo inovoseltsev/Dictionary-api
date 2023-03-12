@@ -5,6 +5,10 @@ import com.novoseltsev.dicterapi.domain.dto.term.TermDto;
 import com.novoseltsev.dicterapi.domain.entity.Term;
 import com.novoseltsev.dicterapi.domain.status.TermAwareStatus;
 import com.novoseltsev.dicterapi.service.TermService;
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.Valid;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("terms")
@@ -39,37 +37,30 @@ public class TermController {
 
     @GetMapping("/term-groups/{groupId}")
     public List<TermDto> findAllByTermGroupId(@PathVariable Long groupId) {
-        return termService.findAllByTermGroupId(groupId).stream().map(TermDto::toTermDtoWithImage).collect(Collectors.toList());
+        return termService.findAllByTermGroupId(groupId).stream()
+            .map(TermDto::toTermDtoWithImage)
+            .collect(Collectors.toList());
     }
 
     @GetMapping("/studying/term-groups/{groupId}")
-    public List<TermDto> getStudySet(@PathVariable Long groupId, @RequestParam(required = false) boolean shuffle) {
+    public List<TermDto> getStudySet(@PathVariable Long groupId) {
         var studySet = termService.getDefaultStudySet(groupId);
-        if (shuffle) {
-            Collections.shuffle(studySet);
-        }
         return studySet.stream()
                 .map(TermDto::toTermDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/studying/keywords/term-groups/{groupId}")
-    public List<TermDto> getStudySetWithKeywords(@PathVariable Long groupId, @RequestParam(required = false) boolean shuffle) {
+    public List<TermDto> getStudySetWithKeywords(@PathVariable Long groupId) {
         var studySet = termService.getStudySetWithKeywords(groupId);
-        if (shuffle) {
-            Collections.shuffle(studySet);
-        }
         return studySet.stream()
                 .map(TermDto::toTermDto)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/studying/images/term-groups/{groupId}")
-    public List<TermDto> getStudySetWithImages(@PathVariable Long groupId, @RequestParam(required = false) boolean shuffle) {
+    public List<TermDto> getStudySetWithImages(@PathVariable Long groupId) {
         var studySet = termService.getStudySetWithImages(groupId);
-        if (shuffle) {
-            Collections.shuffle(studySet);
-        }
         return studySet.stream()
                 .map(TermDto::toTermDtoWithImage)
                 .collect(Collectors.toList());

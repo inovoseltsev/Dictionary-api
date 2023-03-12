@@ -3,9 +3,7 @@ package com.novoseltsev.dicterapi.service;
 import com.novoseltsev.dicterapi.domain.entity.User;
 import com.novoseltsev.dicterapi.domain.status.UserStatus;
 import java.util.List;
-import org.springframework.stereotype.Service;
 
-@Service
 public interface UserService {
 
     User create(User user);
@@ -21,6 +19,4 @@ public interface UserService {
     List<User> findAll();
 
     User findById(Long id);
-
-    User findByLogin(String login);
 }

@@ -1,5 +1,6 @@
 package com.novoseltsev.dicterapi.config;
 
+import com.novoseltsev.dicterapi.domain.role.UserRole;
 import com.novoseltsev.dicterapi.security.jwt.JwtConfigurer;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,9 @@ public class SecurityConfiguration {
         this.jwtConfigurer = jwtConfigurer;
     }
 
+    private static final List<String> ADMIN_ENDPOINTS = List.of(
+        "/users"
+    );
     private static final List<String> OPEN_ENDPOINTS = List.of(
         "/users/registration",
         "/auth",
@@ -44,7 +48,7 @@ public class SecurityConfiguration {
             .authorizeRequests()
             .antMatchers(HttpMethod.OPTIONS, "**").permitAll()
             .antMatchers(OPEN_ENDPOINTS.toArray(String[]::new)).permitAll()
-            .antMatchers(HttpMethod.GET, "/users").hasAuthority("ADMIN")
+            .antMatchers(ADMIN_ENDPOINTS.toArray(String[]::new)).hasAuthority(UserRole.ADMIN.name())
             .anyRequest().authenticated()
             .and()
             .apply(jwtConfigurer);

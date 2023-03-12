@@ -2,7 +2,7 @@ package com.novoseltsev.dicterapi.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.novoseltsev.dicterapi.exception.JwtAuthenticationException;
-import com.novoseltsev.dicterapi.exception.util.ExceptionUtils;
+import com.novoseltsev.dicterapi.exception.model.ErrorResponse;
 import com.novoseltsev.dicterapi.security.jwt.JwtProvider;
 import java.io.IOException;
 import javax.servlet.Filter;
@@ -12,18 +12,18 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+
 
 @Component
 public class JwtFilter implements Filter {
 
     private final JwtProvider jwtProvider;
 
-    @Autowired
     public JwtFilter(@Lazy JwtProvider jwtProvider) {
         this.jwtProvider = jwtProvider;
     }
@@ -45,10 +45,10 @@ public class JwtFilter implements Filter {
     }
 
     private void handleBadTokenResponse(ServletResponse response, JwtAuthenticationException e) throws IOException {
-        String errorResponse = new ObjectMapper().writeValueAsString(ExceptionUtils.getErrorResponse(e));
+        var errorResponse = new ObjectMapper().writeValueAsString(new ErrorResponse(HttpStatus.UNAUTHORIZED, e));
         HttpServletResponse resp = (HttpServletResponse) response;
         resp.setContentType("application/json; charset=utf-8");
-        resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        resp.setStatus(HttpStatus.UNAUTHORIZED.value());
         resp.getWriter().write(errorResponse);
         response.getWriter().flush();
         response.getWriter().close();

@@ -10,7 +10,7 @@ import java.util.Base64;
 import java.util.Date;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+@RequiredArgsConstructor
 @Component
 public class JwtProvider {
 
@@ -32,12 +33,6 @@ public class JwtProvider {
 
     private final UserService userService;
     private final MessageSourceAccessor messageAccessor;
-
-    @Autowired
-    public JwtProvider(UserService userService, MessageSourceAccessor messageAccessor) {
-        this.userService = userService;
-        this.messageAccessor = messageAccessor;
-    }
 
     @PostConstruct
     private void init() {
