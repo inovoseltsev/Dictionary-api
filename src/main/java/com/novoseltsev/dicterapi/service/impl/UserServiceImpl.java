@@ -6,7 +6,7 @@ import com.novoseltsev.dicterapi.domain.status.UserStatus;
 import com.novoseltsev.dicterapi.exception.InvalidOldPasswordException;
 import com.novoseltsev.dicterapi.exception.LoginIsAlreadyUsedException;
 import com.novoseltsev.dicterapi.exception.ObjectNotFoundException;
-import com.novoseltsev.dicterapi.exception.UserAccountAccessForbiddenException;
+import com.novoseltsev.dicterapi.exception.UserAccessForbiddenException;
 import com.novoseltsev.dicterapi.repository.UserRepository;
 import com.novoseltsev.dicterapi.service.UserService;
 import java.util.List;
@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
         String errorMessage = messageAccessor.getMessage("user.not.found");
         User user = userRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(errorMessage));
         if (!user.getStatus().equals(UserStatus.ACTIVE)) {
-            throw new UserAccountAccessForbiddenException(messageAccessor.getMessage("no.user.account.access"));
+            throw new UserAccessForbiddenException(messageAccessor.getMessage("no.user.account.access"));
         }
         return user;
     }

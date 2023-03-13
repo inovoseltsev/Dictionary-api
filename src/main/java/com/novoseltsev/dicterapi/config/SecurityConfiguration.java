@@ -3,6 +3,7 @@ package com.novoseltsev.dicterapi.config;
 import com.novoseltsev.dicterapi.domain.role.UserRole;
 import com.novoseltsev.dicterapi.security.jwt.JwtConfigurer;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,14 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+@RequiredArgsConstructor
 @Configuration
 public class SecurityConfiguration {
-
-    private final JwtConfigurer jwtConfigurer;
-
-    public SecurityConfiguration(JwtConfigurer jwtConfigurer) {
-        this.jwtConfigurer = jwtConfigurer;
-    }
 
     private static final List<String> ADMIN_ENDPOINTS = List.of(
         "/users"
@@ -34,6 +30,8 @@ public class SecurityConfiguration {
         "/swagger-resources/**",
         "/webjars/**"
     );
+
+    private final JwtConfigurer jwtConfigurer;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
