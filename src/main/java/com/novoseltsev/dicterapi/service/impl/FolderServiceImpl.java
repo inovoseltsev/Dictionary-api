@@ -10,7 +10,6 @@ import com.novoseltsev.dicterapi.service.FolderService;
 import com.novoseltsev.dicterapi.service.UserService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +22,6 @@ public class FolderServiceImpl implements FolderService {
     private final FolderRepository folderRepository;
     private final UserService userService;
     private final ActivityService activityService;
-    private final MessageSourceAccessor messageAccessor;
 
     @Override
     public Folder createForUser(Folder folder) {
@@ -57,8 +55,7 @@ public class FolderServiceImpl implements FolderService {
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public Folder findById(Long id) {
-        String errorMessage = messageAccessor.getMessage("term.group.folder.not.found");
-        return folderRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(errorMessage));
+        return folderRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Term group folder not found"));
     }
 
     @Override

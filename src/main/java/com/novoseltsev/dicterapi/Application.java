@@ -18,8 +18,8 @@ public class Application extends SpringBootServletInitializer {
 
     @Bean
     public MessageSourceAccessor messageAccessor() {
-        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasename("error-messages");
+        var messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasename("messages");
         messageSource.setDefaultEncoding("UTF-8");
         messageSource.setUseCodeAsDefaultMessage(true);
         return new MessageSourceAccessor(messageSource);

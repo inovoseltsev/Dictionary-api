@@ -1,6 +1,7 @@
 package com.novoseltsev.dicterapi.controller.v1;
 
-import com.novoseltsev.dicterapi.domain.dto.auth.AuthDto;
+import com.novoseltsev.dicterapi.controller.v1.api.AuthenticationApi;
+import com.novoseltsev.dicterapi.domain.dto.auth.AuthenticationDto;
 import com.novoseltsev.dicterapi.service.AuthenticationService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,13 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("auth")
-public class AuthenticationController {
+@RequestMapping("authentication")
+public class AuthenticationController implements AuthenticationApi {
 
     private final AuthenticationService authenticationService;
 
+    @Override
     @PostMapping
-    public String authenticate(@Valid @RequestBody AuthDto authDto) {
-        return authenticationService.login(authDto.getLogin(), authDto.getPassword());
+    public String authenticate(@Valid @RequestBody AuthenticationDto authenticationDto) {
+        return authenticationService.authenticateUser(authenticationDto.getLogin(), authenticationDto.getPassword());
     }
 }

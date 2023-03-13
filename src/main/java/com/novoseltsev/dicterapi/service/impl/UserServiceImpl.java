@@ -12,7 +12,6 @@ import com.novoseltsev.dicterapi.service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -25,20 +24,15 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final MessageSourceAccessor messageAccessor;
 
     @Override
     public User create(User user) {
-        checkLoginUniqueness(user.getLogin());
+        if (userRepository.findByLogin(user.getLogin()).isPresent()) {
+            throw new LoginIsAlreadyUsedException("Login is already used");
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setStatus(UserStatus.ACTIVE);
         return userRepository.save(user);
-    }
-
-    private void checkLoginUniqueness(String login) {
-        if (userRepository.findByLogin(login).isPresent()) {
-            throw new LoginIsAlreadyUsedException(messageAccessor.getMessage("login.is.used"));
-        }
     }
 
     @Override
@@ -52,14 +46,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updatePassword(Long userId, String oldPassword, String newPassword) {
         User user = findById(userId);
-        checkIfValidOldPassword(user, oldPassword);
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
-    }
-
-    private void checkIfValidOldPassword(User user, String oldPassword) {
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-            throw new InvalidOldPasswordException(messageAccessor.getMessage("incorrect.old.password"));
+        if (passwordEncoder.matches(oldPassword, user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user);
+        } else {
+            throw new InvalidOldPasswordException("Old password is incorrect");
         }
     }
 
@@ -80,17 +71,16 @@ public class UserServiceImpl implements UserService {
     public List<User> findAll() {
         List<User> users = (List<User>) userRepository.findAll();
         return users.stream()
-                .filter(user -> !user.getRole().equals(UserRole.ADMIN))
-                .collect(Collectors.toList());
+            .filter(user -> !user.getRole().equals(UserRole.ADMIN))
+            .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public User findById(Long id) {
-        String errorMessage = messageAccessor.getMessage("user.not.found");
-        User user = userRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(errorMessage));
+        User user = userRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("User not found"));
         if (!user.getStatus().equals(UserStatus.ACTIVE)) {
-            throw new UserAccessForbiddenException(messageAccessor.getMessage("no.user.account.access"));
+            throw new UserAccessForbiddenException("User is not allowed");
         }
         return user;
     }

@@ -1,5 +1,6 @@
 package com.novoseltsev.dicterapi.controller.v1;
 
+import com.novoseltsev.dicterapi.controller.v1.api.UserApi;
 import com.novoseltsev.dicterapi.domain.dto.auth.PasswordDto;
 import com.novoseltsev.dicterapi.domain.dto.user.AdminUserDto;
 import com.novoseltsev.dicterapi.domain.dto.user.SignUpUserDto;
@@ -25,42 +26,49 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("users")
-public class UserController {
+public class UserController implements UserApi {
 
     private final UserService userService;
 
+    @Override
     @GetMapping("/{id}")
     public UserDto findById(@PathVariable Long id) {
         return UserDto.from(userService.findById(id));
     }
 
+    @Override
     @GetMapping
     public List<AdminUserDto> findAll() {
         return userService.findAll().stream().map(AdminUserDto::from).collect(Collectors.toList());
     }
 
+    @Override
     @PostMapping("/registration")
     public ResponseEntity<UserDto> create(@Valid @RequestBody SignUpUserDto signUpUserDto) {
         User createdUser = userService.create(signUpUserDto.toEntity());
         return new ResponseEntity<>(UserDto.from(createdUser), HttpStatus.CREATED);
     }
 
+    @Override
     @PutMapping("/{id}")
     public UserDto update(@Valid @RequestBody UserDto userDto) {
         User updatedUser = userService.update(userDto.toEntity());
         return UserDto.from(updatedUser);
     }
 
+    @Override
     @PutMapping("/password/{id}")
     public void updatePassword(@PathVariable Long id, @Valid @RequestBody PasswordDto passwordDto) {
         userService.updatePassword(id, passwordDto.getOldPassword(), passwordDto.getNewPassword());
     }
 
+    @Override
     @PutMapping("/user-status/{id}")
     public void updateUserStatus(@PathVariable Long id, UserStatus status) {
         userService.updateUserStatus(id, status);
     }
 
+    @Override
     @DeleteMapping("/full-deletion/{id}")
     public ResponseEntity<HttpStatus> deleteById(@PathVariable Long id) {
         userService.deleteById(id);

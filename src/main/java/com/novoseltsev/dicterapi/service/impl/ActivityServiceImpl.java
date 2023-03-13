@@ -8,7 +8,6 @@ import com.novoseltsev.dicterapi.service.ActivityService;
 import com.novoseltsev.dicterapi.service.UserService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +19,6 @@ public class ActivityServiceImpl implements ActivityService {
 
     private final ActivityRepository activityRepository;
     private final UserService userService;
-    private final MessageSourceAccessor messageAccessor;
 
     @Override
     public Activity create(Activity activity) {
@@ -46,8 +44,7 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public Activity findById(Long id) {
-        String errorMessage = messageAccessor.getMessage("activity.not.found");
-        return activityRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(errorMessage));
+        return activityRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Activity not found"));
     }
 
     @Override

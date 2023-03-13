@@ -12,7 +12,6 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,7 +31,6 @@ public class JwtProvider {
     private long validityTime;
 
     private final UserService userService;
-    private final MessageSourceAccessor messageAccessor;
 
     @PostConstruct
     private void init() {
@@ -80,7 +78,7 @@ public class JwtProvider {
         try {
             Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
         } catch (Exception e) {
-            throw new JwtAuthenticationException(messageAccessor.getMessage("bad.token"));
+            throw new JwtAuthenticationException("Token is expired or invalid");
         }
     }
 }

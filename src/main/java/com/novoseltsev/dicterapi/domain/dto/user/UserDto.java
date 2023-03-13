@@ -2,6 +2,7 @@ package com.novoseltsev.dicterapi.domain.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.novoseltsev.dicterapi.domain.entity.User;
+import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import lombok.Getter;
@@ -16,6 +17,7 @@ public class UserDto extends AbstractUserDto {
 
     @NotNull
     @Positive
+    @Schema(example = "123")
     private Long id;
 
     public UserDto(Long id, String firstName, String lastName) {

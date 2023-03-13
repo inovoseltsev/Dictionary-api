@@ -22,7 +22,7 @@ public class SecurityConfiguration {
     );
     private static final List<String> OPEN_ENDPOINTS = List.of(
         "/users/registration",
-        "/auth",
+        "/authentication",
 
         "/v3/api-docs/**",
         "/swagger-ui/**",

@@ -8,15 +8,6 @@ import com.novoseltsev.dicterapi.exception.ObjectNotFoundException;
 import com.novoseltsev.dicterapi.repository.TermRepository;
 import com.novoseltsev.dicterapi.service.TermGroupService;
 import com.novoseltsev.dicterapi.service.TermService;
-import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections4.ListUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,7 +19,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.ListUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import static com.novoseltsev.dicterapi.domain.status.TermAwareStatus.BAD;
 import static com.novoseltsev.dicterapi.domain.status.TermAwareStatus.PERFECT;
 
@@ -44,7 +41,6 @@ public class TermServiceImpl implements TermService {
 
     private final TermRepository termRepository;
     private final TermGroupService termGroupService;
-    private final MessageSourceAccessor messageAccessor;
 
     @Override
     public Term createForTermGroup(Term term) {
@@ -84,8 +80,7 @@ public class TermServiceImpl implements TermService {
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public Term findById(Long id) {
-        var errorMessage = messageAccessor.getMessage("term.not.found");
-        return termRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(errorMessage));
+        return termRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Term not found"));
     }
 
     @Override

@@ -31,7 +31,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({IOException.class, ObjectNotFoundException.class})
-    public ErrorResponse handleIOException(Exception e) {
+    public ErrorResponse handleBadRequestExceptions(Exception e) {
         return new ErrorResponse(HttpStatus.BAD_REQUEST, e);
     }
 }

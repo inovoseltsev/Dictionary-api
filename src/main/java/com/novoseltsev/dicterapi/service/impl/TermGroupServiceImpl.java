@@ -12,7 +12,6 @@ import com.novoseltsev.dicterapi.service.TermGroupService;
 import com.novoseltsev.dicterapi.service.UserService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +25,6 @@ public class TermGroupServiceImpl implements TermGroupService {
     private final FolderService folderService;
     private final ActivityService activityService;
     private final UserService userService;
-    private final MessageSourceAccessor messageAccessor;
 
     @Override
     public TermGroup createForUser(TermGroup termGroup) {
@@ -68,8 +66,7 @@ public class TermGroupServiceImpl implements TermGroupService {
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public TermGroup findById(Long id) {
-        String errorMessage = messageAccessor.getMessage("term.group.not.found");
-        return termGroupRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(errorMessage));
+        return termGroupRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Term group not found"));
     }
 
     @Override
