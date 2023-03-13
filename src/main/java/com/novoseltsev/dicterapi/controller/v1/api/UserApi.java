@@ -8,20 +8,16 @@ import com.novoseltsev.dicterapi.domain.status.UserStatus;
 import com.novoseltsev.dicterapi.exception.model.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
-import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "user", description = "User API")
 public interface UserApi {
@@ -46,8 +42,78 @@ public interface UserApi {
             )
         })
     @ApiResponse(
-        responseCode = "401",
-        description = "Token is not valid",
+        responseCode = "403",
+        description = "User status is not active",
+        content = {
+            @Content(
+                schema = @Schema(implementation = ErrorResponse.class),
+                mediaType = MediaType.APPLICATION_JSON_VALUE
+            )
+        })
+    UserDto findById(@Parameter(description = "User id", required = true) Long id);
+
+    @Operation(summary = "Get all non-admin users", tags = "user")
+    @ApiResponse(
+        responseCode = "200",
+        description = "List of all non-admin users",
+        content = {
+            @Content(
+                array = @ArraySchema(schema = @Schema(implementation = AdminUserDto.class)),
+                mediaType = MediaType.APPLICATION_JSON_VALUE
+            )
+        })
+    List<AdminUserDto> findAll();
+
+    @Operation(summary = "User registration", tags = "user")
+    @RequestBody(
+        description = "User registration data",
+        required = true,
+        content = @Content(
+            schema = @Schema(implementation = SignUpUserDto.class),
+            mediaType = MediaType.APPLICATION_JSON_VALUE
+        )
+    )
+    @ApiResponse(
+        responseCode = "201",
+        description = "Created user",
+        content = {
+            @Content(
+                schema = @Schema(implementation = UserDto.class),
+                mediaType = MediaType.APPLICATION_JSON_VALUE
+            )
+        })
+    @ApiResponse(
+        responseCode = "400",
+        description = "User data validation failed",
+        content = {
+            @Content(
+                schema = @Schema(implementation = ErrorResponse.class),
+                mediaType = MediaType.APPLICATION_JSON_VALUE
+            )
+        })
+    @ApiResponse(
+        responseCode = "409",
+        description = "User login is already used",
+        content = {
+            @Content(
+                schema = @Schema(implementation = ErrorResponse.class),
+                mediaType = MediaType.APPLICATION_JSON_VALUE
+            )
+        })
+    ResponseEntity<UserDto> create(SignUpUserDto signUpUserDto);
+
+    @Operation(summary = "Update user data", tags = "user")
+    @RequestBody(
+        description = "User with updated data",
+        required = true,
+        content = @Content(
+            schema = @Schema(implementation = UserDto.class),
+            mediaType = MediaType.APPLICATION_JSON_VALUE
+        )
+    )
+    @ApiResponse(
+        responseCode = "400",
+        description = "User data validation failed or user not found",
         content = {
             @Content(
                 schema = @Schema(implementation = ErrorResponse.class),
@@ -63,41 +129,20 @@ public interface UserApi {
                 mediaType = MediaType.APPLICATION_JSON_VALUE
             )
         })
-    UserDto findById(@Parameter(description = "User id", required = true) Long id);
+    UserDto update(UserDto userDto);
 
-    @Operation(summary = "Get all users", tags = "user")
-    @ApiResponse(
-        responseCode = "200",
-        description = "User",
-        content = {
-            @Content(
-                schema = @Schema(implementation = AdminUserDto.class),
-                mediaType = MediaType.APPLICATION_JSON_VALUE
-            )
-        })
-    @ApiResponse(
-        responseCode = "401",
-        description = "Token is not valid",
-        content = {
-            @Content(
-                schema = @Schema(implementation = ErrorResponse.class),
-                mediaType = MediaType.APPLICATION_JSON_VALUE
-            )
-        })
-    List<AdminUserDto> findAll();
+    @Operation(summary = "Update user password", tags = "user")
+    @RequestBody(
+        description = "Old password to verify and new password to update",
+        required = true,
+        content = @Content(
+            schema = @Schema(implementation = UserDto.class),
+            mediaType = MediaType.APPLICATION_JSON_VALUE
+        )
+    )
+    void updatePassword(@Parameter(description = "User id", required = true) Long id, PasswordDto passwordDto);
 
-    @PostMapping("/registration")
-    ResponseEntity<UserDto> create(@Valid SignUpUserDto signUpUserDto);
+    void updateUserStatus(@Parameter(description = "User id", required = true) Long id, UserStatus status);
 
-    @PutMapping("/{id}")
-    UserDto update(@Valid @RequestBody UserDto userDto);
-
-    @PutMapping("/password/{id}")
-    void updatePassword(@PathVariable Long id, PasswordDto passwordDto);
-
-    @PutMapping("/user-status/{id}")
-    void updateUserStatus(@PathVariable Long id, UserStatus status);
-
-    @DeleteMapping("/full-deletion/{id}")
-    ResponseEntity<HttpStatus> deleteById(@PathVariable Long id);
+    ResponseEntity<HttpStatus> deleteById(@Parameter(description = "User id", required = true) Long id);
 }

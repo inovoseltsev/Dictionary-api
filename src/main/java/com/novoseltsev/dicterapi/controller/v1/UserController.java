@@ -39,7 +39,9 @@ public class UserController implements UserApi {
     @Override
     @GetMapping
     public List<AdminUserDto> findAll() {
-        return userService.findAll().stream().map(AdminUserDto::from).collect(Collectors.toList());
+        return userService.findAll().stream()
+            .map(AdminUserDto::from)
+            .collect(Collectors.toList());
     }
 
     @Override

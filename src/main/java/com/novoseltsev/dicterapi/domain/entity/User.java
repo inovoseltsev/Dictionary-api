@@ -2,10 +2,8 @@ package com.novoseltsev.dicterapi.domain.entity;
 
 import com.novoseltsev.dicterapi.domain.role.UserRole;
 import com.novoseltsev.dicterapi.domain.status.UserStatus;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,9 +14,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import java.util.ArrayList;
-import java.util.List;
-
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import static com.novoseltsev.dicterapi.validation.Pattern.LOGIN_PATTERN;
 import static com.novoseltsev.dicterapi.validation.Pattern.NAME_PATTERN;
 import static com.novoseltsev.dicterapi.validation.ValidationMessage.FIRST_NAME_ERROR;
@@ -72,11 +70,6 @@ public class User extends AbstractEntity {
 
     public User(Long id) {
         super(id);
-    }
-
-    public User(String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
     }
 
     public void addTermGroup(TermGroup termGroup) {

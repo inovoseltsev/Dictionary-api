@@ -9,7 +9,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import lombok.Getter;
 import static com.novoseltsev.dicterapi.validation.Pattern.LOGIN_PATTERN;
+import static com.novoseltsev.dicterapi.validation.Pattern.NAME_PATTERN;
 import static com.novoseltsev.dicterapi.validation.Pattern.PASSWORD_PATTERN;
+import static com.novoseltsev.dicterapi.validation.ValidationMessage.FIRST_NAME_ERROR;
+import static com.novoseltsev.dicterapi.validation.ValidationMessage.LAST_NAME_ERROR;
 import static com.novoseltsev.dicterapi.validation.ValidationMessage.LOGIN_ERROR;
 import static com.novoseltsev.dicterapi.validation.ValidationMessage.PASSWORD_ERROR;
 import static com.novoseltsev.dicterapi.validation.ValidationMessage.USER_ROLE_ERROR;
@@ -17,7 +20,17 @@ import static com.novoseltsev.dicterapi.validation.ValidationMessage.USER_ROLE_E
 
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SignUpUserDto extends AbstractUserDto {
+public class SignUpUserDto {
+
+    @NotBlank(message = FIRST_NAME_ERROR)
+    @Pattern(regexp = NAME_PATTERN, message = FIRST_NAME_ERROR)
+    @Schema(example = "Illia", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String firstName;
+
+    @NotBlank(message = LAST_NAME_ERROR)
+    @Pattern(regexp = NAME_PATTERN, message = LAST_NAME_ERROR)
+    @Schema(example = "Novoseltsev", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String lastName;
 
     @NotBlank(message = LOGIN_ERROR)
     @Pattern(regexp = LOGIN_PATTERN, message = LOGIN_ERROR)
@@ -33,9 +46,10 @@ public class SignUpUserDto extends AbstractUserDto {
     @Schema(example = "ADMIN", requiredMode = Schema.RequiredMode.REQUIRED)
     private UserRole role;
 
-    @Override
     public User toEntity() {
-        User user = super.toEntity();
+        User user = new User();
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
         user.setLogin(login);
         user.setPassword(password);
         user.setRole(role);

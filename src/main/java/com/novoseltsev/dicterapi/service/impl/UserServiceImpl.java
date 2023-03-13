@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public List<User> findAll() {
-        List<User> users = (List<User>) userRepository.findAll();
+        List<User> users = userRepository.findAll();
         return users.stream()
             .filter(user -> !user.getRole().equals(UserRole.ADMIN))
             .collect(Collectors.toList());
