@@ -2,6 +2,7 @@ package com.novoseltsev.dicterapi.exception.handler;
 
 import com.novoseltsev.dicterapi.exception.ObjectNotFoundException;
 import com.novoseltsev.dicterapi.exception.model.ErrorResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.io.IOException;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpHeaders;
@@ -30,6 +31,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(validationErrors, HttpStatus.BAD_REQUEST);
     }
 
+    @ApiResponse(responseCode = "400")
     @ExceptionHandler({IOException.class, ObjectNotFoundException.class})
     public ErrorResponse handleBadRequestExceptions(Exception e) {
         return new ErrorResponse(HttpStatus.BAD_REQUEST, e);

@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -23,33 +24,20 @@ import org.springframework.http.ResponseEntity;
 public interface UserApi {
 
     @Operation(summary = "Get user by id", tags = "user")
-    @ApiResponse(
-        responseCode = "200",
-        description = "User",
-        content = {
-            @Content(
-                schema = @Schema(implementation = UserDto.class),
-                mediaType = MediaType.APPLICATION_JSON_VALUE
-            )
-        })
-    @ApiResponse(
-        responseCode = "400",
-        description = "User not found",
-        content = {
-            @Content(
-                schema = @Schema(implementation = ErrorResponse.class),
-                mediaType = MediaType.APPLICATION_JSON_VALUE
-            )
-        })
-    @ApiResponse(
-        responseCode = "403",
-        description = "User status is not active",
-        content = {
-            @Content(
-                schema = @Schema(implementation = ErrorResponse.class),
-                mediaType = MediaType.APPLICATION_JSON_VALUE
-            )
-        })
+    @ApiResponses(value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "User",
+            content = {
+                @Content(
+                    schema = @Schema(implementation = UserDto.class),
+                    mediaType = MediaType.APPLICATION_JSON_VALUE
+                )
+            }),
+        @ApiResponse(responseCode = "400", description = "User not found"),
+        @ApiResponse(responseCode = "401", description = "User token is not valid"),
+        @ApiResponse(responseCode = "403", description = "User status is not active"),
+    })
     UserDto findById(@Parameter(description = "User id", required = true) Long id);
 
     @Operation(summary = "Get all non-admin users", tags = "user")

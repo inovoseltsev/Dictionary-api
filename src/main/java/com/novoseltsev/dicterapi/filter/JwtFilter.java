@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -46,8 +47,8 @@ public class JwtFilter implements Filter {
 
     private void handleBadTokenResponse(ServletResponse response, JwtAuthenticationException e) throws IOException {
         var errorResponse = new ObjectMapper().writeValueAsString(new ErrorResponse(HttpStatus.UNAUTHORIZED, e));
-        HttpServletResponse resp = (HttpServletResponse) response;
-        resp.setContentType("application/json; charset=utf-8");
+        var resp = (HttpServletResponse) response;
+        resp.setContentType(MediaType.APPLICATION_JSON_VALUE);
         resp.setStatus(HttpStatus.UNAUTHORIZED.value());
         resp.getWriter().write(errorResponse);
         response.getWriter().flush();
